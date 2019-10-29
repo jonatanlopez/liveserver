@@ -1,0 +1,76 @@
+@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+	Layout = null;
+	var home = (Home)Model.Content.Site();
+	@*var description =  Umbraco.GetPreValueAsString(home.description);*@
+    @*var colorTheme = Umbraco.GetPreValueAsString(home.ColorTheme);*@
+    @*var font = Umbraco.GetPreValueAsString(home.Font);*@
+}
+
+@* the fun starts here *@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+        <title>@Model.Content.Name - @home.Sitename</title>
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link href="https://fonts.googleapis.com/css?family=Oxygen" rel="stylesheet">
+        <!--<link rel="stylesheet" href="@* @Url.Content("~/css/umbraco-starterkit-style.css")*@" /> -->
+        <link rel="stylesheet" href="//cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.css" >
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+        <link rel="stylesheet" href="@Url.Content("~/css/style.css")" />
+        @*@RenderSection("Header", required: false)*@
+    </head>
+    <body>
+         <header class="header">
+            <div class="headerbar">
+                <div class="logo">
+                    @if (home.SiteLogo != null && !string.IsNullOrEmpty(home.SiteLogo.Url))
+                    {
+                        <div class="nav-link--home">
+                            <img class="logo-image" src="@home.SiteLogo.Url" alt="@home.Sitename">
+                        </div>
+                    }
+                </div>
+                
+                @Html.Partial("~/Views/Partials/Navigation/TopExplore.cshtml")
+            </div>
+        </header>
+        <main>
+            @RenderBody()
+        </main>
+        <div class="footer">
+            <div class="menu">
+                <ul>
+                    <li>Privacy policy</li>
+                    <li>Terms of use</li>
+                    <li>Disclosure</li>
+                </ul>
+            </div>
+            <div class="copy">@home.Copyright</div>
+        </div>
+        <div class="back_shade">
+            <div class="sidemenu"></div>
+            <div class="modalw">
+                <div class="x"></div>
+                <!--<div class="modal_content"><div class="spinner"></div></div>-->
+                <div class="modal_content">@Html.Partial("SearchExplore")</div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"></script>
+        <script src="https://ajax.aspnetcdn.com/ajax/mvc/5.2.3/jquery.validate.unobtrusive.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.0/baguetteBox.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+        <script type="text/javascript" src="@Url.Content("~/scripts/controls.js")"></script>
+        <script src="@Url.Content("~/scripts/umbraco-starterkit-app.js")"></script>
+    </body>
+</html>

@@ -1,0 +1,18 @@
+@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.SectionPage>
+@using ContentModels = Umbraco.Web.PublishedContentModels;
+
+@*@inherits Umbraco.Web.Mvc.UmbracoTemplatePage*@
+@{
+	Layout = "SectionMaster.cshtml";
+}
+
+@* the fun starts here *@
+
+<!--<a class="nav-link call_search_up" s_type="https://guatemalancoffees.azurewebsites.net/umbraco/api/productiveunits/options">Explore <i class="fas fa-search"></i></a>-->
+
+@Html.Partial("Carousel")
+<section class="section">
+    <div class="container">
+    @Html.GetGridHtml(Model.Content, "bodyText", "bootstrap3-fluid")
+    </div>
+</section>
