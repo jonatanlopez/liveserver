@@ -17,20 +17,20 @@
 
 
     <!-- Load required Bootstrap and BootstrapVue CSS -->
-    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
-    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
 
     <link rel="stylesheet" href="style.css">
 
-
     <!-- Load polyfills to support older browsers -->
-    <script src="//polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"
+    <script src="http://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"
         crossorigin="anonymous"></script>
 
     <!-- Load Vue followed by BootstrapVue -->
-    <script src="//unpkg.com/vue@latest/dist/vue.js"></script>
-    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+    <script src="https://unpkg.com/vue@latest/dist/vue.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
 
@@ -45,7 +45,7 @@
         <div id="vapp">
 
 
-            <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="xl" title="Detalle Unidad Productiva" >
+            <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="xl" title="Detalle Unidad Productiva">
 
                 <div class="media mb-5 p-2">
                     <img width="64" height="64" :src="item.coverPhoto | defaultCover" class="mr-3 img-img-thumbnail"
@@ -197,6 +197,14 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="altitudes">Altitudes</label>
+                    <select id="altitudes" v-model="filterOptions.altitudes" multiple class="form-control">
+                        <option v-for="item in options['altitudes']" :value="item.id">{{ item.name}}
+                            [{{item.minimum}}-{{item.maximum}}] </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
                     <label for="minAltitude">Altitud Minima - Maxima</label>
                     <div class="row">
                         <div class="col-md-6">
@@ -284,10 +292,6 @@
                         </button>
                     </div>
 
-                    <!-- <productive-unit v-for="item in dataList" :key="item.id" :item="item">
-
-                    </productive-unit> -->
-
                 </div>
 
             </div>
@@ -302,6 +306,8 @@
 
     var endPoint = 'https://coffeesearch.azurewebsites.net';
     // var endPoint = 'https://localhost:5001';
+
+    // Vue.use(require('vue-moment'));
 
     Vue.component('ColoredBox', {
         template: `<div class="box"> Colored Box </div>`
@@ -348,6 +354,7 @@
                 "city": 0,
                 "town": 0,
                 "processes": [],
+                "altitudes": [],
                 "minAltitude": 0,
                 "maxAltitude": 0,
                 "certifications": [],
@@ -380,6 +387,9 @@
                 } else {
                     return `${endPoint}/uploads/${fileName}`;
                 }
+            },
+            moment: function (date, format) {
+                return moment(date).format(format);
             }
         },
 
