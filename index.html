@@ -14,6 +14,10 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/vuex"></script> -->
 
+    <link href="https://fonts.googleapis.com/css?family=Oxygen" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
 
     <!-- Load required Bootstrap and BootstrapVue CSS -->
@@ -38,170 +42,43 @@
 
 <body>
 
-    <div class="container-fluid">
-
-        <h3>Busqueda de unidades productivas modificado por Avitolas</h3>
-
-        <div id="vapp">
 
 
-            <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="xl" title="Detalle Unidad Productiva">
-
-                <div class="media mb-5 p-2">
-                    <img width="64" height="64" :src="item.coverPhoto | defaultCover" class="mr-3 img-img-thumbnail"
-                        alt="..." />
-                    <div class="media-body">
-                        <span class="float-right text-black-50">
-                            {{
-                                item.publicationDate 
-                                }}
-                        </span>
-                        <h5 class="mt-0">{{ item.name }}</h5>
-                        <div class="mb-2">
-                            <span v-for="att in item.tags" :key="att" class="badge badge-secondary mr-2"
-                                :title="att">{{ att }}</span>
-                        </div>
-
-                        <div class="text-muted mb-3">{{ item.description }}</div>
-
-                        <div class="mb-3">
-
-                            <div>
-                                <span class="text-secondary">{{ item.city}} - {{ item.town}}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Ubicacion .</span>
-                                lon: {{ item.location ? item.location.longitude : 0 }} - lat:
-                                {{ item.location ? item.location.latitude : 0 }}
-                            </div>
-                            <div>
-                                <span class="text-secondary">Altitude .</span>
-                                {{ item.altitude}}
-                            </div>
-                            <div>
-                                <span class="text-secondary">Area .</span>
-                                {{item.cultivatedArea}} / {{ item.totalArea }}
-                            </div>
-                            <div>
-                                <span class="text-secondary">Afiliado .</span>
-                                {{ item.ownerName }}
-                            </div>
+    <div id="vapp" class="m-4 border border-dark">
 
 
-                            <div>
-                                <span class="text-secondary">Tipo Unidad Productiva .</span>
-                                {{ item.productiveUnitType}}
-                            </div>
+        <div class="row mb-5" v-if="!showFiltersFlag">
 
-                            <div>
-                                <span class="text-secondary">Contact .</span>
-                                {{ item.website}}
-                                <br />
-                                <span class="badge badge-info" v-for="it in item.phones" :key="it">{{ it}}</span>
-                                <br />
-                                <span class="badge badge-info" v-for="it in item.email" :key="it">{{ it}}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Soil Types .</span>
-                                <span class="badge badge-info" v-for="it in item.soilTypes"
-                                    :key="it.id">{{ it.name }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Varieties .</span>
-                                <span class="badge badge-info" v-for="it in item.varieties"
-                                    :key="it.id">{{ it.name }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Processes .</span>
-                                <span class="badge badge-info" v-for="it in item.processes"
-                                    :key="it.id">{{ it.name }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">AnualProduction .</span>
-                                {{ item.anualProduction}} toneladas metricas anuales
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Shadow Types .</span>
-                                <span class="badge badge-info" v-for="it in item.shadowTypes"
-                                    :key="it.id">{{ it.name }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Drying Types .</span>
-                                <span class="badge badge-info" v-for="it in item.dryingTypes"
-                                    :key="it.id">{{ it.name }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Certifications .</span>
-                                <span class="badge badge-info" v-for="it in item.certifications"
-                                    :key="it.id">{{ it.name }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Awards .</span>
-                                <span class="badge badge-info" v-for="it in item.awards"
-                                    :key="it.id">{{ it.name }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Amenities .</span>
-                                <span class="badge" v-for="it in item.amenities" :key="it">{{ it }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Services .</span>
-                                <span class="badge" v-for="it in item.services" :key="it">{{ it }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Gallery .</span>
-
-                                <b-container fluid class="p-4">
-                                    <b-row>
-                                        <b-col v-for="it in item.gallery" :key="it">
-                                            <b-img thumbnail fluid :src="it" :alt="it" width="125" height="125"></b-img>
-                                        </b-col>
-                                    </b-row>
-                                </b-container>
+            <div class="col">
 
 
 
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-
-            </b-modal>
+                <b-input-group class="mt-3">
+                    <b-form-input placeholder="Buscar" v-model="filterOptions.name"></b-form-input>
+                    <b-input-group-append>
+                        <b-button v-on:click="searchProductiveUnits"><i class="fa fa-search"></i></b-button>
+                    </b-input-group-append>
+                </b-input-group>
 
 
-            <b-modal id="productiveUnitFilter" ref="productiveUnitFilter" title="Busqueda Unidad Productiva"
-                @ok="getFilteredProductiveUnits">
 
-                <h5>Por favor seleccione las opciones que necesita para filtrar</h5>
+            </div>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col">
+                <b-link v-on:click="toggleFilters">Toggle Filters <i class="fa fa-filter"></i> </b-link>
+            </div>
+        </div>
 
 
+        <div class="row mb-5" v-if="showFiltersFlag">
+
+            <div class="col">
                 <div class="form-group">
                     <label for="name">Nombre</label>
                     <input type="text" id="name" name="name" class="form-control" placeholder="Nombre" autocomplete="on"
                         v-model="filterOptions.name" />
-                </div>
-
-                <div class="form-group">
-                    <label for="altitudes">Altitudes</label>
-                    <select id="altitudes" v-model="filterOptions.altitudes" multiple class="form-control">
-                        <option v-for="item in options['altitudes']" :value="item.id">{{ item.name}}
-                            [{{item.minimum}}-{{item.maximum}}] </option>
-                    </select>
                 </div>
 
                 <div class="form-group">
@@ -254,224 +131,394 @@
                     </select>
                 </div>
 
-                <!-- <button type="button" class="btn btn-outline-primary" v-on:click="getFilteredProductiveUnits">Get
-                    Filtered Productive Units</button> -->
+                <b-link v-on:click="getFilteredProductiveUnits">Apply Filters</b-link>
+            </div>
+        </div>
 
 
-            </b-modal>
 
 
 
-            <div class="row mb-5">
-                <div class="col-md-12">
-                    <h5>Opciones seleccionadas</h5>
 
-                    <div>Filtros activos</div>
-                    <div>
+        <div class="row mb-5">
+            <div class="col-md-12">
+                <div>Filtros activos</div>
+                <div>
+                    <div v-for="key in Object.keys(filterOptions)" :key="key">
                         <code>
-                        {{filterOptions}}
-                        </code>
+                {{key}} : {{ filterOptions[key]}}
+                    </code>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="row">
+        <div class="row">
 
-                <div class="col-sm-12">
+            <div class="col-sm-12">
 
-                    <button class="btn btn-primary" @click="showFilterModal">Filtrar</button>
+                <button class="btn btn-primary" v-on:click="showFilterModal">Filtrar</button>
 
-                    <div v-for="item in dataList" class="blogpost">
-                        <button type="button" @click="showDetails(item)" class="btn btn-block btn-outline-secondary">
-                            <div>
-                                {{item.id}} - {{item.name}}
-                            </div>
-                            <div>
-                                {{item.town}}, {{item.city}}
-                            </div>
-                        </button>
-                    </div>
-
+                <div v-for="item in dataList" class="blogpost">
+                    <button type="button" v-on:click="showDetails(item)" class="btn btn-block btn-outline-secondary">
+                        <div>
+                            {{item.id}} - {{item.name}}
+                        </div>
+                        <div>
+                            {{item.town}}, {{item.city}}
+                        </div>
+                    </button>
                 </div>
 
-            </div>
+                <!-- <productive-unit v-for="item in dataList" :key="item.id" :item="item">
 
+            </productive-unit> -->
+
+            </div>
 
         </div>
 
+
+        <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="xl" title="Detalle Unidad Productiva">
+
+                <div class="media mb-5 p-2">
+                    <img width="64" height="64" :src="item.coverPhoto | defaultCover" class="mr-3 img-img-thumbnail"
+                        alt="..." />
+                    <div class="media-body">
+                        <span class="float-right text-black-50">
+                            {{
+                            item.publicationDate 
+                            }}
+                        </span>
+                        <h5 class="mt-0">{{ item.name }}</h5>
+                        <div class="mb-2">
+                            <span v-for="att in item.tags" :key="att" class="badge badge-secondary mr-2"
+                                :title="att">{{ att }}</span>
+                        </div>
+    
+                        <div class="text-muted mb-3">{{ item.description }}</div>
+    
+                        <div class="mb-3">
+    
+                            <div>
+                                <span class="text-secondary">{{ item.city}} - {{ item.town}}</span>
+                            </div>
+    
+                            <div>
+                                <span class="text-secondary">Ubicacion .</span>
+                                lon: {{ item.location ? item.location.longitude : 0 }} - lat:
+                                {{ item.location ? item.location.latitude : 0 }}
+                            </div>
+                            <div>
+                                <span class="text-secondary">Altitude .</span>
+                                {{ item.altitude}}
+                            </div>
+                            <div>
+                                <span class="text-secondary">Area .</span>
+                                {{item.cultivatedArea}} / {{ item.totalArea }}
+                            </div>
+                            <div>
+                                <span class="text-secondary">Afiliado .</span>
+                                {{ item.ownerName }}
+                            </div>
+    
+    
+                            <div>
+                                <span class="text-secondary">Tipo Unidad Productiva .</span>
+                                {{ item.productiveUnitType}}
+                            </div>
+    
+                            <div>
+                                <span class="text-secondary">Contact .</span>
+                                {{ item.website}}
+                                <br />
+                                <span class="badge badge-info" v-for="it in item.phones" :key="it">{{ it}}</span>
+                                <br />
+                                <span class="badge badge-info" v-for="it in item.email" :key="it">{{ it}}</span>
+                            </div>
+    
+                            <div>
+                                <span class="text-secondary">Soil Types .</span>
+                                <span class="badge badge-info" v-for="it in item.soilTypes"
+                                    :key="it.id">{{ it.name }}</span>
+                            </div>
+    
+                            <div>
+                                <span class="text-secondary">Varieties .</span>
+                                <span class="badge badge-info" v-for="it in item.varieties"
+                                    :key="it.id">{{ it.name }}</span>
+                            </div>
+    
+                            <div>
+                                <span class="text-secondary">Processes .</span>
+                                <span class="badge badge-info" v-for="it in item.processes"
+                                    :key="it.id">{{ it.name }}</span>
+                            </div>
+    
+                            <div>
+                                <span class="text-secondary">AnualProduction .</span>
+                                {{ item.anualProduction}} toneladas metricas anuales
+                            </div>
+    
+                            <div>
+                                <span class="text-secondary">Shadow Types .</span>
+                                <span class="badge badge-info" v-for="it in item.shadowTypes"
+                                    :key="it.id">{{ it.name }}</span>
+                            </div>
+    
+                            <div>
+                                <span class="text-secondary">Drying Types .</span>
+                                <span class="badge badge-info" v-for="it in item.dryingTypes"
+                                    :key="it.id">{{ it.name }}</span>
+                            </div>
+    
+                            <div>
+                                <span class="text-secondary">Certifications .</span>
+                                <span class="badge badge-info" v-for="it in item.certifications"
+                                    :key="it.id">{{ it.name }}</span>
+                            </div>
+    
+                            <div>
+                                <span class="text-secondary">Awards .</span>
+                                <span class="badge badge-info" v-for="it in item.awards" :key="it.id">{{ it.name }}</span>
+                            </div>
+    
+                            <div>
+                                <span class="text-secondary">Amenities .</span>
+                                <span class="badge" v-for="it in item.amenities" :key="it">{{ it }}</span>
+                            </div>
+    
+                            <div>
+                                <span class="text-secondary">Services .</span>
+                                <span class="badge" v-for="it in item.services" :key="it">{{ it }}</span>
+                            </div>
+    
+                            <div>
+                                <span class="text-secondary">Gallery .</span>
+    
+                                <b-container fluid class="p-4">
+                                    <b-row>
+                                        <b-col v-for="it in item.gallery" :key="it">
+                                            <b-img thumbnail fluid :src="it" :alt="it" width="125" height="125"></b-img>
+                                        </b-col>
+                                    </b-row>
+                                </b-container>
+    
+    
+    
+    
+                            </div>
+    
+                        </div>
+                    </div>
+                </div>
+    
+    
+            </b-modal>
+    
+    
+            <b-modal id="productiveUnitFilter" ref="productiveUnitFilter" title="Busqueda Unidad Productiva"
+                v-on:ok="getFilteredProductiveUnits">
+    
+                <h5>Por favor seleccione las opciones que necesita para filtrar</h5>
+    
+                <h1>Esto ya no </h1>
+    
+    
+            </b-modal>
     </div>
-</body>
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    var endPoint = 'https://coffeesearch.azurewebsites.net';
-    // var endPoint = 'https://localhost:5001';
+        var endPoint = 'https://coffeesearch.azurewebsites.net';
+        // var endPoint = 'https://localhost:5001';
 
-    // Vue.use(require('vue-moment'));
+        // Vue.use(require('vue-moment'));
 
-    Vue.component('ColoredBox', {
-        template: `<div class="box"> Colored Box </div>`
-    })
+        Vue.component('ColoredBox', {
+            template: `<div class="box"> Colored Box </div>`
+        })
 
 
-    Vue.component('ProductiveUnit', {
-        template: `<div class="blogpost">
-    <div class="blogpost-title"> {{item.id}} - {{item.name}} </div>
-    <div class="blogpost-meta"> {{item.town}}, {{item.city}} </div>
+        Vue.component('ProductiveUnit', {
+            template: `<div class="blogpost">
+<div class="blogpost-title"> {{item.id}} - {{item.name}} </div>
+<div class="blogpost-meta"> {{item.town}}, {{item.city}} </div>
 </div>`,
-        props: {
-            item: {
-                type: Object,
-                required: true
+            props: {
+                item: {
+                    type: Object,
+                    required: true
+                }
             }
-        }
-    })
+        })
 
-    const vueApp = new Vue({
-        el: '#vapp',
-        data: {
-            loading: false,
-            display: 'redbox',
-            serverRoot: endPoint,
-            item: {},
-            dataList: [],
-            optionsSelected:
-            {
-                "altitudes": [],
-                "awards": [],
-                "certifications": [],
-                "cities": [],
-                "processes": [],
-                "regions": [],
-                "shades": [],
-                "varieties": [],
-                "soils": [],
-                "dryings": []
-            },
+        const vueApp = new Vue({
+            el: '#vapp',
+            data: {
+                loading: false,
+                display: 'redbox',
+                showFiltersFlag: false,
+                serverRoot: endPoint,
+                item: {},
+                dataList: [],
+                optionsSelected:
+                {
+                    "altitudes": [],
+                    "awards": [],
+                    "certifications": [],
+                    "cities": [],
+                    "processes": [],
+                    "regions": [],
+                    "shades": [],
+                    "varieties": [],
+                    "soils": [],
+                    "dryings": []
+                },
 
-            filterOptions: {
-                "name": "",
-                "city": 0,
-                "town": 0,
-                "processes": [],
-                "altitudes": [],
-                "minAltitude": 0,
-                "maxAltitude": 0,
-                "certifications": [],
-                "regions": [],
-                "awards": [],
-                "varieties": []
-            },
+                filterOptions: {
+                    "name": "",
+                    "city": 0,
+                    "town": 0,
+                    "processes": [],
+                    "altitudes": [],
+                    "minAltitude": 0,
+                    "maxAltitude": 0,
+                    "certifications": [],
+                    "regions": [],
+                    "awards": [],
+                    "varieties": []
+                },
 
-            options: {
-                "altitudes": [],
-                "awards": [],
-                "certifications": [],
-                "cities": [],
-                "processes": [],
-                "regions": [],
-                "shades": [],
-                "varieties": [],
-                "soils": [],
-                "dryings": []
-            }
-        },
-
-        filters: {
-            pretty: function (value) {
-                return JSON.stringify(JSON.parse(value), null, 2);
-            },
-            defaultCover(fileName) {
-                if (fileName == null || fileName == "") {
-                    return `${endPoint}/uploads/coverPhoto.png`;
-                } else {
-                    return `${endPoint}/uploads/${fileName}`;
+                options: {
+                    "altitudes": [],
+                    "awards": [],
+                    "certifications": [],
+                    "cities": [],
+                    "processes": [],
+                    "regions": [],
+                    "shades": [],
+                    "varieties": [],
+                    "soils": [],
+                    "dryings": []
                 }
             },
-            moment: function (date, format) {
-                return moment(date).format(format);
+
+            filters: {
+                pretty: function (value) {
+                    return JSON.stringify(JSON.parse(value), null, 2);
+                },
+                defaultCover(fileName) {
+                    if (fileName == null || fileName == "") {
+                        return `${endPoint}/uploads/coverPhoto.png`;
+                    } else {
+                        return `${endPoint}/uploads/${fileName}`;
+                    }
+                },
+                moment: function (date, format) {
+                    return moment(date).format(format);
+                }
+            },
+
+            methods: {
+
+                toggleFilters() {
+                    this.showFiltersFlag = !this.showFiltersFlag;
+                },
+
+                showFilterModal() {
+
+                    this.$refs.productiveUnitFilter.show();
+
+                },
+
+                showDetails(item) {
+
+                    this.loading = true;
+                    axios
+                        .get(`${endPoint}/api/productiveunits/${item.id}`)
+                        .then(response => {
+                            this.item = response.data;
+                            this.loading = false;
+                        })
+                        .catch(error => {
+                            this.loading = false;
+                        });
+
+
+                    this.$refs.productiveUnitDetails.show();
+                },
+
+
+                getAllProductiveUnits() {
+                    this.loading = true;
+                    axios
+                        .get(`${endPoint}/api/productiveunits/getall`)
+                        .then(response => {
+                            this.dataList = response.data;
+                            this.loading = false;
+                        })
+                        .catch(error => {
+                            this.loading = false;
+                        });
+                },
+
+                getFilteredProductiveUnits() {
+                    this.loading = true;
+                    axios
+                        .post(`${endPoint}/api/productiveunits/filter`, this.filterOptions)
+                        .then(response => {
+                            this.dataList = response.data;
+                            this.loading = false;
+                            this.$refs.productiveUnitFilter.hide();
+                        })
+                        .catch(error => {
+                            this.loading = false;
+                        });
+                },
+
+                searchProductiveUnits() {
+                    this.loading = true;
+                    axios
+                        .get(`${endPoint}/api/productiveunits/search?q=${this.filterOptions.name}`)
+                        .then(response => {
+                            this.dataList = response.data;
+                            this.loading = false;
+                            this.$refs.productiveUnitFilter.hide();
+                        })
+                        .catch(error => {
+                            this.loading = false;
+                        });
+                },
+
+
+                getProductiveUnitsOptions() {
+                    this.loading = true;
+                    axios
+                        .get(`${endPoint}/api/productiveunits/options`)
+                        .then(response => {
+                            this.options = response.data;
+                            this.loading = false;
+                        })
+                        .catch(error => {
+                            this.loading = false;
+                        });
+                },
+
+                addProperty(propertyName) {
+                    console.log(this.optionsSelected[propertyName]);
+                }
+            },
+
+            mounted() {
+                this.getProductiveUnitsOptions();
             }
-        },
 
-        methods: {
+        })
 
-            showFilterModal() {
+    </script>
 
-                this.$refs.productiveUnitFilter.show();
-
-            },
-
-            showDetails(item) {
-
-                this.loading = true;
-                axios
-                    .get(`${endPoint}/api/productiveunits/${item.id}`)
-                    .then(response => {
-                        this.item = response.data;
-                        this.loading = false;
-                    })
-                    .catch(error => {
-                        this.loading = false;
-                    });
-
-
-                this.$refs.productiveUnitDetails.show();
-            },
-
-
-            getAllProductiveUnits() {
-                this.loading = true;
-                axios
-                    .get(`${endPoint}/api/productiveunits/getall`)
-                    .then(response => {
-                        this.dataList = response.data;
-                        this.loading = false;
-                    })
-                    .catch(error => {
-                        this.loading = false;
-                    });
-            },
-
-            getFilteredProductiveUnits() {
-                this.loading = true;
-                axios
-                    .post(`${endPoint}/api/productiveunits/filter`, this.filterOptions)
-                    .then(response => {
-                        this.dataList = response.data;
-                        this.loading = false;
-                        this.$refs.productiveUnitFilter.hide();
-                    })
-                    .catch(error => {
-                        this.loading = false;
-                    });
-            },
-
-
-            getProductiveUnitsOptions() {
-                this.loading = true;
-                axios
-                    .get(`${endPoint}/api/productiveunits/options`)
-                    .then(response => {
-                        this.options = response.data;
-                        this.loading = false;
-                    })
-                    .catch(error => {
-                        this.loading = false;
-                    });
-            },
-
-            addProperty(propertyName) {
-                console.log(this.optionsSelected[propertyName]);
-            }
-        },
-
-        mounted() {
-            this.getProductiveUnitsOptions();
-        }
-
-    })
-
-</script>
+</body>
 
 
 </html>

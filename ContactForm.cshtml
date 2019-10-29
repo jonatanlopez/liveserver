@@ -1,0 +1,30 @@
+@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+
+
+<div class="container-fluid p-5">
+    <div class="h4 mb-4">@Model.Content.GetPropertyValue("PageTitle")</div>
+    <p>@Model.Content.GetPropertyValue("contactFormHeader")</p>
+    
+    
+    <form class="" action="/contact/" enctype="multipart/form-data" method="post">
+        <input name="__RequestVerificationToken" type="hidden" value="YoU-aPVQeHASvxff7jRDmjmMBYx0AEPyT2ZMuiPGFYnSxapQd1gultkt0dATj-9U1lgrLwsZo08SbjVa0SjMFO5-Ygj6KTVqzjowRuvuV3Y1">
+        <div class="form-group pink-border-focus">
+            <label for="FirstName">First Name:</label>
+            <input class="form-control mb-4" id="FirstName" name="FirstName" type="text" value="" >
+        </div>
+        <div class="form-group pink-border-focus">
+            <label for="LastName">Last Name:</label>
+            <input class="form-control mb-4" id="LastName" name="LastName" type="text" value="">
+        </div>
+        <div class="form-group pink-border-focus">
+            <label for="EmailAddress">Email Address:</label>
+            <input class="form-control mb-4" id="EmailAddress" name="EmailAddress" type="text" value="">
+        </div>
+        <div class="form-group pink-border-focus">
+            <label for="Message">Message:</label>
+            <textarea class="form-control mb-4" id="Message" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-rounded">Submit</button>
+        <input name="ufprt" type="hidden" value="E8343BE3B35B4B6714811E0CDFEE7603BAFA7F368848DD9AC7C38A6306FFB75F241780D9BE8291B9E1F1694750E4E3E45E1B3F72027FC25162CD5C684B5F71EB892105D6554143F4517E49481F852346ABEDD8C5D944FE5A5E2E662F86937F3737A472FBB75F9E85ED0B9E0E3F1EEB95055621114C6411EA03FF873CCE271782DBB4F42CFAE4F2126D94F8D2A362AD89">
+    </form>
+</div>
