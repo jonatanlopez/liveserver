@@ -46,92 +46,94 @@
 
     <div id="vapp" class="m-4 border border-dark">
 
+        <h4>What are you looking for?</h4>
+
 
         <div class="row mb-5" v-if="!showFiltersFlag">
 
             <div class="col">
 
-
-
                 <b-input-group class="mt-3">
-                    <b-form-input placeholder="Buscar" v-model="filterOptions.name"></b-form-input>
+                    <b-form-input placeholder="Search forn name, location or description" v-model="filterOptions.name">
+                    </b-form-input>
                     <b-input-group-append>
                         <b-button v-on:click="searchProductiveUnits"><i class="fa fa-search"></i></b-button>
                     </b-input-group-append>
                 </b-input-group>
-
-
-
-            </div>
-        </div>
-
-        <div class="row mb-5">
-            <div class="col">
-                <b-link v-on:click="toggleFilters">Toggle Filters <i class="fa fa-filter"></i> </b-link>
-            </div>
-        </div>
-
-
-        <div class="row mb-5" v-if="showFiltersFlag">
-
-            <div class="col">
-                <div class="form-group">
-                    <label for="name">Nombre</label>
-                    <input type="text" id="name" name="name" class="form-control" placeholder="Nombre" autocomplete="on"
-                        v-model="filterOptions.name" />
+                <div>
+                    <b-link class="text-info" v-on:click="toggleFilters">or be more specific</b-link>
                 </div>
 
-                <div class="form-group">
-                    <label for="minAltitude">Altitud Minima - Maxima</label>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <input type="number" id="minAltitude" name="name" class="form-control"
-                                placeholder="Altitud Minima" v-model="filterOptions.minAltitude" />
-                        </div>
-                        <div class="col-md-6">
-                            <input type="number" id="maxAltitude" name="name" class="form-control"
-                                placeholder="Altitud Maxima" v-model="filterOptions.maxAltitude" />
+
+
+            </div>
+        </div>
+
+        <div class="row mb-5" v-if="showFiltersFlag">
+            <div class="col">
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="name">Farm Name</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Farm Name"
+                            autocomplete="on" v-model="filterOptions.name" />
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label" for="minAltitude">Altitude range (feet)</label>
+                    <div class="col-sm-10">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input type="number" id="minAltitude" name="name" class="form-control" placeholder="Min"
+                                    v-model="filterOptions.minAltitude" />
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="number" id="maxAltitude" name="name" class="form-control" placeholder="Max"
+                                    v-model="filterOptions.maxAltitude" />
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="processes">Procesos</label>
-                    <select id="processes" v-model="filterOptions.processes" multiple class="form-control">
-                        <option v-for="item in options['processes']" :value="item.id">{{ item.name}}</option>
-                    </select>
-                </div>
 
                 <div class="form-group">
-                    <label for="certifications">Certificaciones</label>
-                    <select id="certifications" v-model="filterOptions.certifications" multiple class="form-control">
-                        <option v-for="item in options['certifications']" :value="item.id">{{ item.name}}</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="regions">Regiones</label>
-                    <select id="regions" v-model="filterOptions.regions" multiple class="form-control">
-                        <option v-for="item in options['regions']" :value="item">{{ item}}</option>
-                    </select>
-                </div>
-
-
-                <div class="form-group">
-                    <label for="varieties">Variedades</label>
+                    <label for="varieties">Varieties</label>
                     <select id="varieties" v-model="filterOptions.varieties" multiple class="form-control">
                         <option v-for="item in options['varieties']" :value="item.id">{{ item.name}}</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="awards">Premios</label>
+                    <label for="processes">Processes</label>
+                    <select id="processes" v-model="filterOptions.processes" multiple class="form-control">
+                        <option v-for="item in options['processes']" :value="item.id">{{ item.name}}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="certifications">Certifications</label>
+                    <select id="certifications" v-model="filterOptions.certifications" multiple class="form-control">
+                        <option v-for="item in options['certifications']" :value="item.id">{{ item.name}}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="regions">Regions</label>
+                    <select id="regions" v-model="filterOptions.regions" multiple class="form-control">
+                        <option v-for="item in options['regions']" :value="item">{{ item}}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="awards">Awards</label>
                     <select id="awards" v-model="filterOptions.awards" multiple class="form-control">
                         <option v-for="item in options['awards']" :value="item.id">{{ item.name}}</option>
                     </select>
                 </div>
-
-                <b-link v-on:click="getFilteredProductiveUnits">Apply Filters</b-link>
+                <div class="text-center">
+                    <b-btn variant="primary" v-on:click="getFilteredProductiveUnits">Let's Go</b-btn>
+                </div>
             </div>
         </div>
 
@@ -140,7 +142,7 @@
 
 
 
-        <div class="row mb-5">
+        <!-- <div class="row mb-5">
             <div class="col-md-12">
                 <div>Filtros activos</div>
                 <div>
@@ -151,23 +153,44 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
-        <div class="row">
+        <div class="row" v-show="dataList.length>0">
 
             <div class="col-sm-12">
 
-                <button class="btn btn-primary" v-on:click="showFilterModal">Filtrar</button>
+                <div>
+                    <span class="badge" style="font-size: xx-large;">{{dataList.length}}</span> results for
+                    <span v-for="key in Object.keys(filterOptions)" :key="key" v-if="filterOptions[key].length>0">
 
-                <div v-for="item in dataList" class="blogpost">
-                    <button type="button" v-on:click="showDetails(item)" class="btn btn-block btn-outline-secondary">
-                        <div>
-                            {{item.id}} - {{item.name}}
-                        </div>
-                        <div>
-                            {{item.town}}, {{item.city}}
-                        </div>
-                    </button>
+                        {{key}} : {{ filterOptions[key]}} +
+                    </span>
+
+
+                </div>
+
+
+
+                <div v-for="item in dataList" v-on:click="showDetails(item)" class="m-3 p-3 border">
+                    <div class="float-right">
+                        <i class="fa fa-fw fa-check"></i> {{item.altitude}} feet <br />
+                        <i class="fa fa-fw fa-check"></i> {{item.totalArea}} Ha <br />
+                        <i class="fa fa-fw fa-check"></i> {{item.anualProduction}} Ton
+                    </div>
+                    <img width="64" height="64" :src="item.coverPhoto | defaultCover"
+                        class="float-left mr-3 img-img-thumbnail" alt="..." />
+                    <div style="font-size: x-large;">
+                        {{item.name}}
+                    </div>
+                    <div class="mt-2">
+                        {{item.town}}, {{item.city}}
+                    </div>
+                    <!-- <div>
+                        <span v-for="v in item.varieties">
+                            {{v}}
+                        </span>
+                    </div> -->
+
                 </div>
 
                 <!-- <productive-unit v-for="item in dataList" :key="item.id" :item="item">
@@ -181,157 +204,147 @@
 
         <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="xl" title="Detalle Unidad Productiva">
 
-                <div class="media mb-5 p-2">
-                    <img width="64" height="64" :src="item.coverPhoto | defaultCover" class="mr-3 img-img-thumbnail"
-                        alt="..." />
-                    <div class="media-body">
-                        <span class="float-right text-black-50">
-                            {{
+            <div class="media mb-5 p-2">
+                <img width="64" height="64" :src="item.coverPhoto | defaultCover" class="mr-3 img-img-thumbnail"
+                    alt="..." />
+                <div class="media-body">
+                    <span class="float-right text-black-50">
+                        {{
                             item.publicationDate 
                             }}
-                        </span>
-                        <h5 class="mt-0">{{ item.name }}</h5>
-                        <div class="mb-2">
-                            <span v-for="att in item.tags" :key="att" class="badge badge-secondary mr-2"
-                                :title="att">{{ att }}</span>
+                    </span>
+                    <h5 class="mt-0">{{ item.name }}</h5>
+                    <div class="mb-2">
+                        <span v-for="att in item.tags" :key="att" class="badge badge-secondary mr-2"
+                            :title="att">{{ att }}</span>
+                    </div>
+
+                    <div class="text-muted mb-3">{{ item.description }}</div>
+
+                    <div class="mb-3">
+
+                        <div>
+                            <span class="text-secondary">{{ item.city}} - {{ item.town}}</span>
                         </div>
-    
-                        <div class="text-muted mb-3">{{ item.description }}</div>
-    
-                        <div class="mb-3">
-    
-                            <div>
-                                <span class="text-secondary">{{ item.city}} - {{ item.town}}</span>
-                            </div>
-    
-                            <div>
-                                <span class="text-secondary">Ubicacion .</span>
-                                lon: {{ item.location ? item.location.longitude : 0 }} - lat:
-                                {{ item.location ? item.location.latitude : 0 }}
-                            </div>
-                            <div>
-                                <span class="text-secondary">Altitude .</span>
-                                {{ item.altitude}}
-                            </div>
-                            <div>
-                                <span class="text-secondary">Area .</span>
-                                {{item.cultivatedArea}} / {{ item.totalArea }}
-                            </div>
-                            <div>
-                                <span class="text-secondary">Afiliado .</span>
-                                {{ item.ownerName }}
-                            </div>
-    
-    
-                            <div>
-                                <span class="text-secondary">Tipo Unidad Productiva .</span>
-                                {{ item.productiveUnitType}}
-                            </div>
-    
-                            <div>
-                                <span class="text-secondary">Contact .</span>
-                                {{ item.website}}
-                                <br />
-                                <span class="badge badge-info" v-for="it in item.phones" :key="it">{{ it}}</span>
-                                <br />
-                                <span class="badge badge-info" v-for="it in item.email" :key="it">{{ it}}</span>
-                            </div>
-    
-                            <div>
-                                <span class="text-secondary">Soil Types .</span>
-                                <span class="badge badge-info" v-for="it in item.soilTypes"
-                                    :key="it.id">{{ it.name }}</span>
-                            </div>
-    
-                            <div>
-                                <span class="text-secondary">Varieties .</span>
-                                <span class="badge badge-info" v-for="it in item.varieties"
-                                    :key="it.id">{{ it.name }}</span>
-                            </div>
-    
-                            <div>
-                                <span class="text-secondary">Processes .</span>
-                                <span class="badge badge-info" v-for="it in item.processes"
-                                    :key="it.id">{{ it.name }}</span>
-                            </div>
-    
-                            <div>
-                                <span class="text-secondary">AnualProduction .</span>
-                                {{ item.anualProduction}} toneladas metricas anuales
-                            </div>
-    
-                            <div>
-                                <span class="text-secondary">Shadow Types .</span>
-                                <span class="badge badge-info" v-for="it in item.shadowTypes"
-                                    :key="it.id">{{ it.name }}</span>
-                            </div>
-    
-                            <div>
-                                <span class="text-secondary">Drying Types .</span>
-                                <span class="badge badge-info" v-for="it in item.dryingTypes"
-                                    :key="it.id">{{ it.name }}</span>
-                            </div>
-    
-                            <div>
-                                <span class="text-secondary">Certifications .</span>
-                                <span class="badge badge-info" v-for="it in item.certifications"
-                                    :key="it.id">{{ it.name }}</span>
-                            </div>
-    
-                            <div>
-                                <span class="text-secondary">Awards .</span>
-                                <span class="badge badge-info" v-for="it in item.awards" :key="it.id">{{ it.name }}</span>
-                            </div>
-    
-                            <div>
-                                <span class="text-secondary">Amenities .</span>
-                                <span class="badge" v-for="it in item.amenities" :key="it">{{ it }}</span>
-                            </div>
-    
-                            <div>
-                                <span class="text-secondary">Services .</span>
-                                <span class="badge" v-for="it in item.services" :key="it">{{ it }}</span>
-                            </div>
-    
-                            <div>
-                                <span class="text-secondary">Gallery .</span>
-    
-                                <b-container fluid class="p-4">
-                                    <b-row>
-                                        <b-col v-for="it in item.gallery" :key="it">
-                                            <b-img thumbnail fluid :src="it" :alt="it" width="125" height="125"></b-img>
-                                        </b-col>
-                                    </b-row>
-                                </b-container>
-    
-    
-    
-    
-                            </div>
-    
+
+                        <div>
+                            <span class="text-secondary">Ubicacion .</span>
+                            {{ item.latitude }} , {{ item.longitude}}
                         </div>
+                        <div>
+                            <span class="text-secondary">Altitude .</span>
+                            {{ item.altitude}}
+                        </div>
+                        <div>
+                            <span class="text-secondary">Area .</span>
+                            {{item.cultivatedArea}} / {{ item.totalArea }}
+                        </div>
+                        <div>
+                            <span class="text-secondary">Afiliado .</span>
+                            {{ item.ownerName }}
+                        </div>
+
+
+                        <div>
+                            <span class="text-secondary">Tipo Unidad Productiva .</span>
+                            {{ item.productiveUnitType}}
+                        </div>
+
+                        <div>
+                            <span class="text-secondary">Contact .</span>
+                            {{ item.website}}
+                            <br />
+                            <span class="badge badge-info" v-for="it in item.phones" :key="it">{{ it}}</span>
+                            <br />
+                            <span class="badge badge-info" v-for="it in item.email" :key="it">{{ it}}</span>
+                        </div>
+
+                        <div>
+                            <span class="text-secondary">Soil Types .</span>
+                            <span class="badge badge-info" v-for="it in item.soilTypes"
+                                :key="it.id">{{ it.name }}</span>
+                        </div>
+
+                        <div>
+                            <span class="text-secondary">Varieties .</span>
+                            <span class="badge badge-info" v-for="it in item.varieties"
+                                :key="it.id">{{ it.name }}</span>
+                        </div>
+
+                        <div>
+                            <span class="text-secondary">Processes .</span>
+                            <span class="badge badge-info" v-for="it in item.processes"
+                                :key="it.id">{{ it.name }}</span>
+                        </div>
+
+                        <div>
+                            <span class="text-secondary">AnualProduction .</span>
+                            {{ item.anualProduction}} toneladas metricas anuales
+                        </div>
+
+                        <div>
+                            <span class="text-secondary">Shadow Types .</span>
+                            <span class="badge badge-info" v-for="it in item.shadowTypes"
+                                :key="it.id">{{ it.name }}</span>
+                        </div>
+
+                        <div>
+                            <span class="text-secondary">Drying Types .</span>
+                            <span class="badge badge-info" v-for="it in item.dryingTypes"
+                                :key="it.id">{{ it.name }}</span>
+                        </div>
+
+                        <div>
+                            <span class="text-secondary">Certifications .</span>
+                            <span class="badge badge-info" v-for="it in item.certifications"
+                                :key="it.id">{{ it.name }}</span>
+                        </div>
+
+                        <div>
+                            <span class="text-secondary">Awards .</span>
+                            <span class="badge badge-info" v-for="it in item.awards" :key="it.id">{{ it.name }}</span>
+                        </div>
+
+                        <div>
+                            <span class="text-secondary">Amenities .</span>
+                            <span class="badge" v-for="it in item.amenities" :key="it">{{ it }}</span>
+                        </div>
+
+                        <div>
+                            <span class="text-secondary">Services .</span>
+                            <span class="badge" v-for="it in item.services" :key="it">{{ it }}</span>
+                        </div>
+
+                        <div>
+                            <span class="text-secondary">Gallery .</span>
+
+                            <b-container fluid class="p-4">
+                                <b-row>
+                                    <b-col v-for="it in item.gallery" :key="it">
+                                        <b-img thumbnail fluid :src="it" :alt="it" width="125" height="125"></b-img>
+                                    </b-col>
+                                </b-row>
+                            </b-container>
+
+
+
+
+                        </div>
+
                     </div>
                 </div>
-    
-    
-            </b-modal>
-    
-    
-            <b-modal id="productiveUnitFilter" ref="productiveUnitFilter" title="Busqueda Unidad Productiva"
-                v-on:ok="getFilteredProductiveUnits">
-    
-                <h5>Por favor seleccione las opciones que necesita para filtrar</h5>
-    
-                <h1>Esto ya no </h1>
-    
-    
-            </b-modal>
+            </div>
+
+
+        </b-modal>
+
+
     </div>
 
     <script type="text/javascript">
 
-        var endPoint = 'https://coffeesearch.azurewebsites.net';
-        // var endPoint = 'https://localhost:5001';
+        // var endPoint = 'https://coffeesearch.azurewebsites.net';
+        var endPoint = 'https://localhost:5001';
 
         // Vue.use(require('vue-moment'));
 
@@ -377,7 +390,7 @@
                 },
 
                 filterOptions: {
-                    "name": "",
+                    "name": "violeta",
                     "city": 0,
                     "town": 0,
                     "processes": [],
