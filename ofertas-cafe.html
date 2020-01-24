@@ -25,8 +25,8 @@
     <!-- <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script> -->
 
     <!-- Load polyfills to support older browsers -->
-    <script src="http://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"
-        crossorigin="anonymous"></script>
+    <script src="http://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver" crossorigin="anonymous">
+    </script>
 
     <!-- Load Vue followed by BootstrapVue -->
     <script src="https://unpkg.com/vue@latest/dist/vue.js"></script>
@@ -34,7 +34,9 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
 
-    <!-- <script src="https://cdn.jsdelivr.net/npm/vue-moment@4.0.0/dist/vue-moment.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/es.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue-moment@4.0.0/dist/vue-moment.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
 
@@ -45,12 +47,13 @@
 
     <div class="container-fluid">
 
-        <h3>Busqueda de ofertas de cafe</h3>
+
+
 
         <div id="vapp">
 
 
-            <b-modal id="coffeeOfferingDetails" ref="coffeeOfferingDetails" size="xl" title="Detalle Unidad Productiva" >
+            <b-modal id="coffeeOfferingDetails" ref="coffeeOfferingDetails" size="xl" title="Detalle Unidad Productiva">
 
                 <div class="media mb-5 p-2">
                     <img width="64" height="64" :src="item.coverPhoto | defaultCover" class="mr-3 img-img-thumbnail"
@@ -204,7 +207,8 @@
                 <div class="form-group">
                     <label for="altitudes">Altitudes</label>
                     <select id="altitudes" v-model="filterOptions.altitudes" multiple class="form-control">
-                        <option v-for="item in options['altitudes']" :value="item.id">{{ item.name}} [{{item.minimum}}-{{item.maximum}}] </option>
+                        <option v-for="item in options['altitudes']" :value="item.id">{{ item.name}}
+                            [{{item.minimum}}-{{item.maximum}}] </option>
                     </select>
                 </div>
 
@@ -250,36 +254,145 @@
 
             </b-modal>
 
+            <h1>
+                <span class="badge badge-secondary">{{this.total}}</span> Resultados
+            </h1>
 
 
-            <div class="row mb-5">
-                <div class="col-md-12">
-                    <h5>Opciones seleccionadas</h5>
-
-                    <div>Filtros activos</div>
+            <div class="d-flex justify-content-between">
+                <div class="d-flex">
                     <div>
-                        <code>
-                        {{filterOptions}}
-                        </code>
+                        <b-button variant="link" @click="showFilterModal">
+                            Filtrar resultados
+                            <i class="fa fa-fw fa-filter"></i>
+                        </b-button>
+                    </div>
+                </div>
+
+                <!-- <div class="d-flex">
+                    <div class="mr-3">Mostrar:</div>
+                    <div>
+                        <b-form-radio-group v-model="showSelectedOption" name="radio-inline" size="sm"
+                            @change="getFilteredCoffeeOfferings">
+                            <b-form-radio name="some-radios" value="v">Vigentes</b-form-radio>
+                            <b-form-radio name="some-radios" value="t">Todas</b-form-radio>
+                        </b-form-radio-group>
+                    </div>
+                </div> -->
+
+                <div class="d-flex">
+                    <div class="mr-3">Ordenar por</div>
+                    <div>
+                        <b-form-select v-model="orderSelectedOption" size="sm" @change="getFilteredCoffeeOfferings">
+                            <option value="p|asc">Fecha de publicacion</option>
+                            <option value="v|asc">Fecha de vencimiento</option>
+                        </b-form-select>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
+
+
+            <div class="row" v-show="dataList.length>0">
 
                 <div class="col-sm-12">
 
-                    <button class="btn btn-primary" @click="showFilterModal">Filtrar</button>
 
-                    <div v-for="item in dataList" class="blogpost">
-                        <button type="button" @click="showDetails(item)" class="btn btn-block btn-outline-secondary">
-                            <div>
-                                {{item.id}} - {{item.name}}
+
+
+
+                    <div class="media border mb-5 p-2" v-for="item in dataList" :key="item.id">
+                        <div>
+                            <img :src="'https://localhost:5001/uploads/' + item.coverPhoto" class="img-thumbnail mr-3"
+                                alt="..." style="width: 120px;height: 120px;" />
+                            <div class="text-secondary mt-3">{{ item.productiveUnitName }}</div>
+                        </div>
+
+                        <div class="media-body">
+                            <span class="float-right text-black-50" style="font-size: 0.9em; font-weight: 400;">
+                                {{
+          item.publicationDate | moment("lll")
+          }}
+                            </span>
+                            <h5 class="mt-0">
+                                <span class="badge badge-info">{{ item.id }}</span>
+                                {{ item.name }}
+                            </h5>
+
+                            <div class="text-muted mb-3">{{ item.description }}</div>
+
+                            <div class="mb-3">
+                                <div class="float-right">
+                                    <div class="text-black-50" style="font-size: 1.1em; font-weight: 600;">
+                                        {{ item.quantity }} {{ item.packing }} de {{ item.sizePerUnit }}
+                                        {{ item.unitOfMeasurement }} c/u
+                                    </div>
+
+                                    <!-- <button class="btn btn-dark btn-sm" @click="clickAddToCart(item)">Add To Cart</button> -->
+                                </div>
+
+                                <div class="mb-2">
+                                    <span class="badge badge-dark" style="font-size: 1.2em;">{{item.scaScore}}</span>
+                                    <i class="fa fa-fw fa-map"></i>
+                                    {{ item.location }} .
+                                    <i class="fa fa-fw fa-cog"></i>
+                                    {{ item.process }} .
+                                    <i class="fa fa-fw fa-chevron-up"></i>
+                                    {{ item.altitude }}
+                                </div>
+
+                                <div class="mb-2">
+                                    <span v-for="variety in item.varieties" :key="variety" class="badge badge-info mr-2"
+                                        :title="variety">{{ variety }}</span>
+                                </div>
+
+                                <div class="mb-2">
+                                    <span class="text-secondary">Fecha de cosecha .</span>
+                                    {{ item.dateOfHarvest | moment("lll") }}
+                                    <br />
+                                    <span class="text-secondary">Fecha de vencimiento .</span>
+                                    {{ item.expirationDate | moment("lll") }}
+                                </div>
+
+                                <!-- <div>
+            <span class="text-secondary">Ubicacion .</span>
+            {{ item.location }}
+          </div>
+          <div>
+            <span class="text-secondary">Proceso .</span>
+            {{ item.process }}
+          </div>
+          <div>
+            <span class="text-secondary">Variedades .</span>
+            <span
+              v-for="variety in item.varieties"
+              :key="variety"
+              class="badge badge-info mr-2"
+              :title="variety"
+            >{{ variety }}</span>
+          </div>
+
+          <div>
+            <span class="text-secondary">Altitud .</span>
+            {{ item.altitude }}
+          </div>
+
+          <div>
+            <span class="text-secondary">Fecha de cosecha .</span>
+            {{ item.dateOfHarvest | moment("lll") }}
+          </div>-->
                             </div>
-                            <div>
-                                {{item.town}}, {{item.city}}
+
+                            <div class="mt-2">
+                                <span v-for="att in item.tags" :key="att" class="badge badge-secondary mr-2"
+                                    :title="att">{{ att }}</span>
                             </div>
-                        </button>
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <b-pagination-nav :number-of-pages="numberOfPages" :v-model="currentPage" align="center" />
                     </div>
 
                     <!-- <productive-unit v-for="item in dataList" :key="item.id" :item="item">
@@ -290,6 +403,15 @@
 
             </div>
 
+            <div class="row mt-5">
+                <div class="col-md-12">
+                    <div>Opciones seleccionadas</div>
+
+                    <code>
+                            {{filterOptions}}
+                        </code>
+                </div>
+            </div>
 
         </div>
 
@@ -297,7 +419,6 @@
 </body>
 
 <script type="text/javascript">
-
     //var endPoint = 'https://coffeesearch.azurewebsites.net';
     var endPoint = 'https://localhost:5001';
 
@@ -321,9 +442,20 @@
         }
     })
 
+    Vue.filter('moment', function (value, format) {
+        if (value) {
+            return moment(String(value)).format(format);
+        }
+    });
+
     const vueApp = new Vue({
         el: '#vapp',
         data: {
+            currentPage: 0,
+            numberOfPages: 0,
+            total: 0,
+            showSelectedOption: "v",
+            orderSelectedOption: "p|asc",
             loading: false,
             display: 'redbox',
             serverRoot: endPoint,
@@ -409,8 +541,10 @@
                 axios
                     .get(`${endPoint}/api/coffeeofferings/getall`)
                     .then(response => {
-                        this.dataList = response.data;
                         this.loading = false;
+                        this.dataList = response.data;
+                        this.total = response.data.length;
+
                     })
                     .catch(error => {
                         this.loading = false;
@@ -422,8 +556,9 @@
                 axios
                     .post(`${endPoint}/api/coffeeofferings/filter`, this.filterOptions)
                     .then(response => {
-                        this.dataList = response.data;
                         this.loading = false;
+                        this.dataList = response.data;
+                        this.total = response.data.length;
                         this.$refs.coffeeOfferingFilter.hide();
                     })
                     .catch(error => {
@@ -447,6 +582,11 @@
 
             addProperty(propertyName) {
                 console.log(this.optionsSelected[propertyName]);
+            },
+
+            filterResults() {
+                console.log("filtering results");
+                alert("Que pasa cuando filtro???");
             }
         },
 
@@ -454,8 +594,9 @@
             this.getCoffeeOfferingsOptions();
         }
 
-    })
 
+
+    })
 </script>
 
 
