@@ -7,13 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Ofertas de cafe</title>
 
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.css"> -->
-
-    <!-- 
-
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/vuex"></script> -->
-
 
 
     <!-- Load required Bootstrap and BootstrapVue CSS -->
@@ -193,7 +186,7 @@
 
 
             <b-modal id="coffeeOfferingFilter" ref="coffeeOfferingFilter" title="Busqueda de Ofertas de Cafe"
-                @ok="getFilteredCoffeeOfferings">
+                v-on:ok="getFilteredCoffeeOfferings">
 
                 <h5>Por favor seleccione las opciones que necesita para filtrar</h5>
 
@@ -262,28 +255,30 @@
             <div class="d-flex justify-content-between">
                 <div class="d-flex">
                     <div>
-                        <b-button variant="link" @click="showFilterModal">
+                        <b-button variant="link" v-on:click="showFilterModal">
                             Filtrar resultados
                             <i class="fa fa-fw fa-filter"></i>
                         </b-button>
                     </div>
                 </div>
 
-                <!-- <div class="d-flex">
+                <div class="d-flex">
                     <div class="mr-3">Mostrar:</div>
                     <div>
-                        <b-form-radio-group v-model="showSelectedOption" name="radio-inline" size="sm"
-                            @change="getFilteredCoffeeOfferings">
-                            <b-form-radio name="some-radios" value="v">Vigentes</b-form-radio>
-                            <b-form-radio name="some-radios" value="t">Todas</b-form-radio>
+                        <b-form-radio-group v-model="filterOptions.pageSize" name="radio-inline" size="sm"
+                            v-on:change="getFilteredCoffeeOfferings">
+                            <b-form-radio name="some-radios" value="1">1</b-form-radio>
+                            <b-form-radio name="some-radios" value="10">10</b-form-radio>
+                            <b-form-radio name="some-radios" value="25">25</b-form-radio>
+                            <b-form-radio name="some-radios" value="50">50</b-form-radio>
                         </b-form-radio-group>
                     </div>
-                </div> -->
+                </div>
 
                 <div class="d-flex">
                     <div class="mr-3">Ordenar por</div>
                     <div>
-                        <b-form-select v-model="orderSelectedOption" size="sm" @change="getFilteredCoffeeOfferings">
+                        <b-form-select v-model="filterOptions.sort" size="sm" v-on:change="getFilteredCoffeeOfferings">
                             <option value="p|asc">Fecha de publicacion</option>
                             <option value="v|asc">Fecha de vencimiento</option>
                         </b-form-select>
@@ -293,68 +288,78 @@
 
 
 
-            <div class="row" v-show="dataList.length>0">
+            <div class="row">
 
                 <div class="col-sm-12">
 
 
+                    <div v-if="dataList && dataList.length>0">
 
-
-
-                    <div class="media border mb-5 p-2" v-for="item in dataList" :key="item.id">
                         <div>
-                            <img :src="'https://localhost:5001/uploads/' + item.coverPhoto" class="img-thumbnail mr-3"
-                                alt="..." style="width: 120px;height: 120px;" />
-                            <div class="text-secondary mt-3">{{ item.productiveUnitName }}</div>
+                            <span class="badge" style="font-size: xx-large;">{{total}}</span> results for
+                            <span v-for="key in Object.keys(filterOptions)" :key="key"
+                                v-if="filterOptions[key].length>0">
+
+                                {{key}} : {{ filterOptions[key]}} +
+                            </span>
                         </div>
 
-                        <div class="media-body">
-                            <span class="float-right text-black-50" style="font-size: 0.9em; font-weight: 400;">
-                                {{
+
+                        <div class="media border mb-5 p-2" v-for="item in dataList" :key="item.id">
+                            <div>
+                                <img :src="'https://localhost:5001/uploads/' + item.coverPhoto"
+                                    class="img-thumbnail mr-3" alt="..." style="width: 120px;height: 120px;" />
+                                <div class="text-secondary mt-3">{{ item.productiveUnitName }}</div>
+                            </div>
+
+                            <div class="media-body">
+                                <span class="float-right text-black-50" style="font-size: 0.9em; font-weight: 400;">
+                                    {{
           item.publicationDate | moment("lll")
           }}
-                            </span>
-                            <h5 class="mt-0">
-                                <span class="badge badge-info">{{ item.id }}</span>
-                                {{ item.name }}
-                            </h5>
+                                </span>
+                                <h5 class="mt-0">
+                                    <span class="badge badge-info">{{ item.id }}</span>
+                                    {{ item.name }}
+                                </h5>
 
-                            <div class="text-muted mb-3">{{ item.description }}</div>
+                                <div class="text-muted mb-3">{{ item.description }}</div>
 
-                            <div class="mb-3">
-                                <div class="float-right">
-                                    <div class="text-black-50" style="font-size: 1.1em; font-weight: 600;">
-                                        {{ item.quantity }} {{ item.packing }} de {{ item.sizePerUnit }}
-                                        {{ item.unitOfMeasurement }} c/u
+                                <div class="mb-3">
+                                    <div class="float-right">
+                                        <div class="text-black-50" style="font-size: 1.1em; font-weight: 600;">
+                                            {{ item.quantity }} {{ item.packing }} de {{ item.sizePerUnit }}
+                                            {{ item.unitOfMeasurement }} c/u
+                                        </div>
+
+                                        <!-- <button class="btn btn-dark btn-sm" v-on:click="clickAddToCart(item)">Add To Cart</button> -->
                                     </div>
 
-                                    <!-- <button class="btn btn-dark btn-sm" @click="clickAddToCart(item)">Add To Cart</button> -->
-                                </div>
+                                    <div class="mb-2">
+                                        <span class="badge badge-dark"
+                                            style="font-size: 1.2em;">{{item.scaScore}}</span>
+                                        <i class="fa fa-fw fa-map"></i>
+                                        {{ item.location }} .
+                                        <i class="fa fa-fw fa-cog"></i>
+                                        {{ item.process }} .
+                                        <i class="fa fa-fw fa-chevron-up"></i>
+                                        {{ item.altitude }}
+                                    </div>
 
-                                <div class="mb-2">
-                                    <span class="badge badge-dark" style="font-size: 1.2em;">{{item.scaScore}}</span>
-                                    <i class="fa fa-fw fa-map"></i>
-                                    {{ item.location }} .
-                                    <i class="fa fa-fw fa-cog"></i>
-                                    {{ item.process }} .
-                                    <i class="fa fa-fw fa-chevron-up"></i>
-                                    {{ item.altitude }}
-                                </div>
+                                    <div class="mb-2">
+                                        <span v-for="variety in item.varieties" :key="variety"
+                                            class="badge badge-info mr-2" :title="variety">{{ variety }}</span>
+                                    </div>
 
-                                <div class="mb-2">
-                                    <span v-for="variety in item.varieties" :key="variety" class="badge badge-info mr-2"
-                                        :title="variety">{{ variety }}</span>
-                                </div>
+                                    <div class="mb-2">
+                                        <span class="text-secondary">Fecha de cosecha .</span>
+                                        {{ item.dateOfHarvest | moment("lll") }}
+                                        <br />
+                                        <span class="text-secondary">Fecha de vencimiento .</span>
+                                        {{ item.expirationDate | moment("lll") }}
+                                    </div>
 
-                                <div class="mb-2">
-                                    <span class="text-secondary">Fecha de cosecha .</span>
-                                    {{ item.dateOfHarvest | moment("lll") }}
-                                    <br />
-                                    <span class="text-secondary">Fecha de vencimiento .</span>
-                                    {{ item.expirationDate | moment("lll") }}
-                                </div>
-
-                                <!-- <div>
+                                    <!-- <div>
             <span class="text-secondary">Ubicacion .</span>
             {{ item.location }}
           </div>
@@ -381,23 +386,36 @@
             <span class="text-secondary">Fecha de cosecha .</span>
             {{ item.dateOfHarvest | moment("lll") }}
           </div>-->
-                            </div>
+                                </div>
 
-                            <div class="mt-2">
-                                <span v-for="att in item.tags" :key="att" class="badge badge-secondary mr-2"
-                                    :title="att">{{ att }}</span>
+                                <div class="mt-2">
+                                    <span v-for="att in item.tags" :key="att" class="badge badge-secondary mr-2"
+                                        :title="att">{{ att }}</span>
+                                </div>
                             </div>
                         </div>
+
+
+                        <div>
+                            <b-pagination :total-rows="total" :per-page="filterOptions.pageSize"
+                                v-model="filterOptions.page" v-on:change="getFilteredCoffeeOfferings" align="center" />
+                        </div>
+
                     </div>
 
+                    <div v-if="dataList && dataList.length==0">
 
-                    <div>
-                        <b-pagination-nav :number-of-pages="numberOfPages" :v-model="currentPage" align="center" />
+                        <div>
+                            <span class="badge" style="font-size: xx-large;">{{total}}</span> results for
+                            <span v-for="key in Object.keys(filterOptions)" :key="key"
+                                v-if="filterOptions[key].length>0">
+
+                                {{key}} : {{ filterOptions[key]}} +
+                            </span>
+                        </div>
+
+                        <div class="alert alert-warning text-center mt-3">No existen datos para este criterio</div>
                     </div>
-
-                    <!-- <productive-unit v-for="item in dataList" :key="item.id" :item="item">
-
-                    </productive-unit> -->
 
                 </div>
 
@@ -451,11 +469,9 @@
     const vueApp = new Vue({
         el: '#vapp',
         data: {
-            currentPage: 0,
-            numberOfPages: 0,
+            currentPage: 1,
+            numberOfPages: 1,
             total: 0,
-            showSelectedOption: "v",
-            orderSelectedOption: "p|asc",
             loading: false,
             display: 'redbox',
             serverRoot: endPoint,
@@ -481,7 +497,10 @@
                 "certifications": [],
                 "regions": [],
                 "awards": [],
-                "varieties": []
+                "varieties": [],
+                "pageSize": 10,
+                "sort": "p|asc",
+                "page": 1
             },
 
             options: {
@@ -557,8 +576,10 @@
                     .post(`${endPoint}/api/coffeeofferings/filter`, this.filterOptions)
                     .then(response => {
                         this.loading = false;
-                        this.dataList = response.data;
-                        this.total = response.data.length;
+                        this.dataList = response.data.data;
+                        this.total = response.data.total;
+                        this.currentPage = response.data.currentPage;
+                        this.numberOfPages = response.data.lastPage;
                         this.$refs.coffeeOfferingFilter.hide();
                     })
                     .catch(error => {
