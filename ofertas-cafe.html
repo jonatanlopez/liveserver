@@ -541,7 +541,7 @@
 
                 this.loading = true;
                 axios
-                    .get(`${endPoint}/api/coffeeofferings/${item.id}`)
+                    .get(`${endPoint}/api/coffeeofferings/getone/${item.id}`)
                     .then(response => {
                         this.item = response.data;
                         this.loading = false;

@@ -427,6 +427,8 @@
         // var endPoint = 'https://coffeesearch.azurewebsites.net';
         var endPoint = 'https://localhost:5001';
 
+        var imagesEndPoint = 'https://coffeesearch.azurewebsites.net';
+
         // Vue.use(require('vue-moment'));
 
         Vue.component('ColoredBox', {
@@ -510,9 +512,9 @@
                 },
                 defaultCover(fileName) {
                     if (fileName == null || fileName == "") {
-                        return `${endPoint}/uploads/coverPhoto.png`;
+                        return `${imagesEndPoint}/uploads/coverPhoto.png`;
                     } else {
-                        return `${endPoint}/uploads/${fileName}`;
+                        return `${imagesEndPoint}/uploads/${fileName}`;
                     }
                 },
                 moment: function (date, format) {
@@ -536,7 +538,7 @@
 
                     this.loading = true;
                     axios
-                        .get(`${endPoint}/api/productiveunits/${item.id}`)
+                        .get(`${endPoint}/api/productiveunits/getone/${item.id}`)
                         .then(response => {
                             this.item = response.data;
                             this.loading = false;
