@@ -72,7 +72,15 @@ ul {
     vertical-align: middle;
     cursor: pointer;
 }
-
+.btn_float {
+    /* position: -webkit-sticky;  // required for Safari */
+    position: fixed;
+    /* float: right; */
+    right: 20px;
+    top: 180px;
+}
+.btn_float span { display: none; padding: 0 4px; margin-right: 4px;}
+.btn_float:hover span { display: inline; }
 .read_more {
 	margin: 10px;
 }
@@ -547,8 +555,13 @@ ul {
 	padding: 10px 24px;
 	/* margin: 20px; */
 	border-radius: 24px;
-	background: rgba(255,255,255,0.7);
-	border: 2px solid rgba(255,255,255,0.3);
+    /* background: rgba(255,255,255,0.7); */
+    background: #ED1556;
+    border: 2px solid rgba(255,255,255,0.3);
+
+}
+a.call_search_up {
+    color: #fff;
 }
 blockquote {
 	padding: 10px 24px;
