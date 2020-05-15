@@ -562,7 +562,7 @@ ul {
 
 }
 a.call_search_up {
-    color: #fff;
+    color: #fff!important;
 }
 blockquote {
 	padding: 10px 24px;
