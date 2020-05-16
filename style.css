@@ -288,6 +288,11 @@ ul {
 	right: 8px;
 	bottom: 8px;
 }
+.submenu {}
+.submenu .nav-item { 
+    font-size: 0.8em;
+    line-height: 12px;
+}
 .carousel-item img {
 	/* max-height: 768px;
 	min-width: auto; */
@@ -626,6 +631,14 @@ blockquote {
         padding: 0 10px;
 		color: #fff;
     }
+	.submenu {
+		position: absolute;
+		left: -50%;
+		width: 100vw;
+    }
+    .submenu .nav-item { 
+		line-height: inherit;
+	}
     .modalw {
         width: 80%;
         max-width: 720px;
