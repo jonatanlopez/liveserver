@@ -154,11 +154,11 @@ ul {
 }
 .search_basic {
     display: block;
-    display: none;
+    /* display: none; */
 }
 .search_extended {
     display: none;
-    display: block;
+    /* display: block; */
 }
 
 .results_block {}
