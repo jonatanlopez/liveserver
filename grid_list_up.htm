@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue Live Server</title>
+
+
+    <link href="https://fonts.googleapis.com/css?family=Oxygen" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" />
+
+
+    <!-- Load required Bootstrap and BootstrapVue CSS -->
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Load polyfills to support older browsers -->
+    <script src="http://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver" crossorigin="anonymous">
+    </script>
+
+    <!-- Load Vue followed by BootstrapVue -->
+    <script src="https://unpkg.com/vue@latest/dist/vue.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
+
+    <link rel="stylesheet" href="//unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="//unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="//unpkg.com/vue2-leaflet"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+
+</head>
+
+<body>
+    <!-- *** INICIA BLOQUE DE MODAL DE BÚSQUEDA (modal_search_gral) *** -->
+    <div class="container-fluid search_block">
+        <!-- btn_explore.htm -->
+        <!-- <div class="search_modal modalw"></div> -->
+        
+        <!-- QUITAR OPCION DE STYLE AL INTEGRAR EL SHOW/HIDE -->
+        <div class="back_shade" style="display: block;">
+           <!-- QUITAR OPCION DE STYLE AL INTEGRAR EL SHOW/HIDE -->
+            <div class="modal_search" style="display: block;">
+                <button type="button" aria-label="Close" class="x close">×</button>
+                <!-- <div class="x"></div> -->
+                <div class="modal_content">            
+                    <div class="container-fluid px-4 pb-3 pt-3 px-sm-5 pb-sm-5 pt-sm-5">
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                <h5>What are you looking for?</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!-- Grupo de búsqueda básico -->
+                            <div class="col-md-12 pt-3 search_basic">
+                                <form>
+                                    <div class="form-group">
+                                        <!-- <label for="generalSearchBox">Search parameters</label> -->
+                                        <input type="text" class="form-control" id="generalSearchBox" placeholder="Search for name, location or description.">
+                                        <!-- Muestra search_extended y oculta search_basic -->
+                                        <small class="form-text text-primary mx-2"><a href="#" class="expand_filters">Or be more specific.</a></small>
+                                      </div>
+                                      <button type="submit" class="btn btn-primary">Lets go!</button>
+                                </form>
+                            </div>
+                            <!-- Grupo de filtros extendidos de búsqueda -->
+                            <div class="col-md-12 pt-3 search_extended">
+                                <form>
+                                    <div class="form-group row">
+                                        <label for="farmName" class="col-md-2 col-lg-3 text-md-right">Farm name</label>
+                                        <input type="text" class="form-control col-md-10 col-lg-9" id="farmName">
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="altitude" class="col-sm-2 col-lg-3 text-md-right">Altitude</label>
+                                        <input name="altitude" oninput="alt_tag.value=parseInt(this.value)" class="col-9 col-sm-8 col-lg-7 range-slider__range " type="range" value="2500" min="2500" max="5800">
+                                        <output name="alt_tag" for="altitude" unit="ft" class="col-3 col-sm-1 col-lg-2 range-slider__value">2500</output>
+                                    </div>
+                                    <div class="form-group row">
+                                        <!-- INTEGRAR OPCION DE MULTISELECT -->
+                                        <label for="varieties" class="col-md-2 text-md-right">Varieties</label>
+                                        <select class="custom-select col-md-4" id="varieties">
+                                            <option selected>–- choose --</option>
+                                            <option value="1">Caturra</option>
+                                            <option value="2">Catuaí</option>
+                                            <option value="3">Geisha</option>
+                                        </select>
+                                        <!-- INTEGRAR OPCION DE MULTISELECT -->
+                                        <label for="processes" class="col-md-2 text-md-right">Processes</label>
+                                        <select class="custom-select col-md-4" id="processes">
+                                            <option selected>–- choose --</option>
+                                            <option value="1">Natural</option>
+                                            <option value="2">Honey</option>
+                                            <option value="3">Fully washed</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="GCregion" class="col-md-2 text-md-right">Region</label>
+                                        <select class="custom-select col-md-4" id="GCregion">
+                                            <option selected>–- choose --</option>
+                                            <option value="1">Acatenango Valley</option>
+                                            <option value="2">Antigua Coffee</option>
+                                            <option value="3">Traditional Atitlán</option>
+                                            <option value="4">Rainforest Cobán</option>
+                                            <option value="5">Fraijanes Plateau</option>
+                                            <option value="6">Highland Huehue</option>
+                                            <option value="7">New Oriente</option>
+                                            <option value="8">Volcanic San Marcos</option>
+                                        </select>
+                                        <!-- INTEGRAR OPCION DE MULTISELECT -->
+                                        <label for="certifications" class="col-md-2 text-md-right">Certified</label>
+                                        <select class="custom-select col-md-4" id="certifications">
+                                            <option selected>–- choose --</option>
+                                            <option value="1">USDA Organic</option>
+                                            <option value="2">Rainforest Alliance</option>
+                                            <option value="3">C.A.F.E. Practices</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group row">
+                                        <!-- Oculta search_extended y muestra search_basic -->
+                                        <div class="col"><small class="form-text text-primary mx-2"><a href="#" class="collapse_filters">Clear filters</a></small></div>
+                                        <div class="col text-center">
+                                        <button type="submit" class="btn btn-primary">Lets go!</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BLOQUE DE GRID DE RESULTADOS DE BÚSQUEDA -->
+        <div class="results_block"></div>
+        
+    </div>
+    <!-- *** FINALIZA BLOQUE DE MODAL DE BÚSQUEDA *** -->
+
+    <div class="container-fluid content_block">        
+        <!-- CONTENIDO DE WP -->
+    </div>
+</body>
+
+
+</html>

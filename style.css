@@ -19,6 +19,114 @@ ul {
     -webkit-padding-start: 0;
     list-style: none;
 }
+
+ ::-webkit-input-placeholder {
+    font-size: 13px!important;
+    line-height: 1.5rem;
+ }
+ 
+ :-moz-placeholder { /* Firefox 18- */
+       font-size: 13px!important;
+       line-height: 1.5rem;
+ }
+ ::-moz-placeholder {  /* Firefox 19+ */
+       font-size: 13px!important;
+       line-height: 1.5rem;
+ }
+
+/* RANGE SLIDER */
+/* .range-slider {
+    margin: 60px 0 0 0%;
+}
+.range-slider {
+    width: 100%;
+}
+   */
+.range-slider__range {
+    -webkit-appearance: none;
+    width: calc(100% - (73px));
+    height: 10px;
+    border-radius: 5px;
+    background: #d7dcdf;
+    outline: none;
+    padding: 0;
+    margin-top: 10px!important;
+}
+.range-slider__range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+            appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #2c3e50;
+    cursor: pointer;
+    -webkit-transition: background .15s ease-in-out;
+    transition: background .15s ease-in-out;
+}
+.range-slider__range::-webkit-slider-thumb:hover {
+    background: #1abc9c;
+}
+.range-slider__range:active::-webkit-slider-thumb {
+    background: #1abc9c;
+}
+.range-slider__range::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border: 0;
+    border-radius: 50%;
+    background: #2c3e50;
+    cursor: pointer;
+    -moz-transition: background .15s ease-in-out;
+    transition: background .15s ease-in-out;
+}
+.range-slider__range::-moz-range-thumb:hover {
+    background: #1abc9c;
+}
+.range-slider__range:active::-moz-range-thumb {
+    background: #1abc9c;
+}
+.range-slider__range:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 0 3px #fff, 0 0 0 6px #1abc9c;
+}
+
+.range-slider__value {
+    display: inline-block;
+    position: relative;
+    width: 60px;
+    color: #fff;
+    line-height: 20px;
+    height: 20px;
+    text-align: center;
+    border-radius: 3px;
+    background: #2c3e50;
+    padding: 5px 10px;
+    margin-left: 8px;
+    max-width: fit-content;
+    box-sizing: content-box;
+}
+.range-slider__value:before {
+    position: absolute;
+    top: 8px;
+    left: -7px;
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-right: 7px solid #2c3e50;
+    border-bottom: 7px solid transparent;
+    content: '';
+}
+.range-slider__value:after {
+    content: attr(unit);
+    padding: 0 2px;
+    display: inline;
+}
+
+::-moz-range-track {
+    background: #d7dcdf;
+    border: 0;
+}
+
+
 /* *** LAYOUT *** */
 .header {
     position: relative;
@@ -40,6 +148,24 @@ ul {
     display: block;
     min-height: 200px;
 }
+/* BLOQUES BUSQUEDA UP */
+.search_block {
+    padding-top: 10px;
+}
+.search_basic {
+    display: block;
+    display: none;
+}
+.search_extended {
+    display: none;
+    display: block;
+}
+
+.results_block {}
+
+.content_block {}
+
+
 .article_spaced {
 	padding-top: 60px;
 } 
@@ -95,10 +221,9 @@ ul {
 }
 
 /* *** MODAL *** */
-.modalw {
+.modalw, .modal_search {
     display: none;
     position: absolute;
-    border-radius: 20px;
     min-height: 100px;
     max-height: 100vh;
     width: 100%;
@@ -111,10 +236,10 @@ ul {
     overflow: auto;
     z-index: 999;
 }
-.modalw p {
+.modalw p, .modal_search p {
     font-size: 0.9em;
 }
-.modalw .btn {
+.modalw .btn, .modal_search .btn  {
 /*    border: 1px solid #fff;*/
     position: relative;
     background: #ed1556;
@@ -125,15 +250,23 @@ ul {
     left: 50%;
     transform: translateX(-50%);
 }
+.modal_search .btn {
+    margin: 0;
+}
 .modalw .btn:hover, .read_more .btn:hover {
     background: #555;
 }
-
+.modal_search label {
+    line-height: 2.2rem;
+}
 .modalw label {
     padding-left: 10px;
 }
 .modalw input {
     margin: 10px;
+}
+.modal_search input {
+    margin: 0;
 }
 .btn.txt {
 	border: none;
@@ -280,7 +413,7 @@ ul {
 	display: block;
 	width: 100%;
 	vertical-align: middle;
-	line-height: 36px;
+	line-height: 40px;
 }
 .menu_icon {
 	display: block;
@@ -639,7 +772,8 @@ blockquote {
     .submenu .nav-item { 
 		line-height: inherit;
 	}
-    .modalw {
+    .modalw, .modal_search {
+        border-radius: 20px;
         width: 80%;
         max-width: 720px;
     }
