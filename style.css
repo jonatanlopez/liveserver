@@ -150,7 +150,7 @@ ul {
 }
 /* BLOQUES BUSQUEDA UP */
 .search_block {
-    padding-top: 10px;
+    padding: 20px;
 }
 .search_basic {
     display: block;
@@ -163,6 +163,88 @@ ul {
 
 .results_block {}
 
+.summary_results > div {
+    display: inline-grid;
+    vertical-align: top;
+    margin: 0 8px;
+    text-align: left;
+    padding: 8px 0;
+}
+.num_results {
+    flex: 0 0 100px;
+    font-size: 1.5em;
+    font-weight: 600;
+    padding: 4px 14px;
+    border: 1px solid #707070;
+    border-radius: 10px;
+    color: #707070;
+}
+.title_results {
+    font-size: 1em;
+    color: #707070;
+}
+.view_modes {
+    font-weight: 300;
+    color: #707070;
+    margin: 0;
+}
+.view_modes * { vertical-align: top; }
+.view_modes span {
+    display: none;
+    font-size: 0.9em;
+}
+.view_modes i {
+    font-size: 1.3em;
+    margin-left: 6px;
+    margin-right: 14px;
+    color: #007bff;
+}
+.actions i {
+    font-size: 1em;
+    margin-left: 6px;
+    margin-right: 14px;
+    color: #707070;
+}
+.actions ul {
+    margin: auto 0;
+}
+.results_header, .results_list {
+    padding: 12px;
+}
+.results_list {
+    display: flex;
+    flex: 1;
+}
+
+.results_list .entry { 
+    display: flex;
+    flex: 1;
+    border: 1px solid #707070;
+    position: relative;
+    padding: 12px;
+    margin: 10px;
+}
+
+.results_list .entry img, .results_list .entry .img {
+    width: 85px;
+    height: 85px;
+    background: #1abc9c;
+}
+.results_list .entry .nom {
+    margin: 0 12px;
+    display: flex;
+    flex: 1;
+}
+.results_list .entry .actions { 
+    width: 15%;
+    min-width: 105px;
+}
+
+.results_grid {}
+.results_map {}
+.map_results {
+    display: none;
+}
 .content_block {}
 
 
@@ -723,7 +805,7 @@ blockquote {
 	}
 	.padgrid {
 		max-width: 960px;
-	}
+    }
 }
 @media only screen and (min-width: 768px) {
 	.ttl_mod {
@@ -739,7 +821,9 @@ blockquote {
 	}
 	.link_list li:hover {
 		font-size: 0.96em;
-	}
+    }
+    .view_modes { margin: auto 0; }
+    .view_modes * { vertical-align: middle;}
 }
 /* AJUSTE PANTALLAS HORIZONTALES Y DISPOSITIVOS DE MAS DE 1280px de ancho */
 @media only screen and (min-width: 992px) {
@@ -829,5 +913,6 @@ blockquote {
 	}
 	.carousel-item img {
 	  /* max-height: 400px; */
-	}
+    }
+    .view_modes span { display: inline;}
 }
