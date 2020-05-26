@@ -37,430 +37,495 @@
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
 
+    <style>
+        .modal-header-custom {
+            border-bottom: 0px solid #dee2e6;
+        }
+    </style>
+
 </head>
 
 <body>
-
-    <div class="container-fluid">
-
-        <div id="vapp" class="m-4">
-
-            <b-modal id="productiveUnitFilter" ref="productiveUnitFilter" size="lg" title="Busqueda de Ofertas de Cafe"
-                v-on:ok="getFilteredProductiveUnits">
-
-                <h5>Por favor seleccione las opciones que necesita para filtrar</h5>
-
-                <div class="form-group row">
-                    <label class="col-sm-2 col-form-label" for="name">Farm Name</label>
-                    <div class="col-sm-10">
-                        <input type="text" id="name" name="name" class="form-control" placeholder="Farm Name"
-                            autocomplete="on" v-model="filterOptions.name" />
-                    </div>
-                </div>
-
-                <!-- <div class="form-group row">
-                    <label class="col-sm-2 col-form-label" for="minAltitude">Altitude range (feet)</label>
-                    <div class="col-sm-10">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <input type="number" id="minAltitude" name="name" class="form-control" placeholder="Min"
-                                    v-model="filterOptions.minAltitude" />
-                            </div>
-                            <div class="col-sm-6">
-                                <input type="number" id="maxAltitude" name="name" class="form-control" placeholder="Max"
-                                    v-model="filterOptions.maxAltitude" />
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-
-                <div class="form-group">
-                    <label for="varieties">Varieties</label>
-                    <select id="varieties" v-model="filterOptions.varieties" multiple class="form-control">
-                        <option v-for="item in options['varieties']" :value="item.id">{{ item.name}}</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="processes">Processes</label>
-                    <select id="processes" v-model="filterOptions.processes" multiple class="form-control">
-                        <option v-for="item in options['processes']" :value="item.id">{{ item.name}}</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="certifications">Certifications</label>
-                    <select id="certifications" v-model="filterOptions.certifications" multiple class="form-control">
-                        <option v-for="item in options['certifications']" :value="item.id">{{ item.name}}</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="regions">Regions</label>
-                    <select id="regions" v-model="filterOptions.regions" multiple class="form-control">
-                        <option v-for="item in options['regions']" :value="item">{{ item}}</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="awards">Awards</label>
-                    <select id="awards" v-model="filterOptions.awards" multiple class="form-control">
-                        <option v-for="item in options['awards']" :value="item.id">{{ item.name}}</option>
-                    </select>
-                </div>
-                <!-- <div class="text-center">
-                <b-btn variant="primary" v-on:click="getFilteredProductiveUnits">Let's Go</b-btn>
-            </div> -->
-
-
-
-            </b-modal>
-
-            <!-- <h1>
-                <span class="badge badge-secondary">{{this.total}}</span> Resultados
-            </h1> -->
-
-
-            <div class="d-flex justify-content-between">
-                <div class="d-flex">
-                    <div>
-                        <b-input-group>
-                            <b-form-input placeholder="Search forn name, location or description"
-                                v-model="filterOptions.name">
-                            </b-form-input>
-                            <b-input-group-append>
-                                <b-button v-on:click="getFilteredProductiveUnits"><i class="fa fa-search"></i>
-                                </b-button>
-                            </b-input-group-append>
-                        </b-input-group>
-                    </div>
-                </div>
-                <div class="d-flex">
-                    <div>
-                        <b-button variant="link" v-on:click="showFilterModal">
-                            Filtrar resultados
-                            <i class="fa fa-fw fa-filter"></i>
-                        </b-button>
-                    </div>
-                </div>
-
-                <div class="d-flex">
-                    <div class="mr-3">Mostrar:</div>
-                    <div>
-                        <b-form-radio-group v-model="filterOptions.pageSize" name="radio-inline" size="sm"
-                            v-on:change="getFilteredProductiveUnits">
-                            <b-form-radio name="some-radios" value="1">1</b-form-radio>
-                            <b-form-radio name="some-radios" value="10">10</b-form-radio>
-                            <b-form-radio name="some-radios" value="25">25</b-form-radio>
-                            <b-form-radio name="some-radios" value="50">50</b-form-radio>
-                        </b-form-radio-group>
-                    </div>
-                </div>
-
-                <div class="d-flex">
-                    <div class="mr-3">Ordenar por</div>
-                    <div>
-                        <b-form-select v-model="filterOptions.sort" size="sm" v-on:change="getFilteredProductiveUnits">
-                            <option value="n|asc">Nombre</option>
-                            <option value="a|asc">Area</option>
-                        </b-form-select>
-                    </div>
+    <header class="header">
+        <div class="headerbar">
+            <div class="logo">
+                <div class="nav-link--home">
+                    <img class="logo-image" src="/media/1062/logogc.png" alt="Guatemalan Coffees">
                 </div>
             </div>
 
 
-            <!-- <h4>What are you looking for?</h4> -->
+            <!-- uncomment this line if you don't want it to appear in the top navigation -->
+            <!--<a class="nav-link " href="/main/">Main</a>-->
 
+            <div class="hello">
+                <div class="btn lnk_m" lnk_m="/contact/">Say hello!</div>
+                <!--link modal-->
+                <div class="redes">
+                    <div class="fb lnk_e" lnk_e="https://www.facebook.com/GuatemalanCoffeesAnacafe/" tar="new"></div>
+                    <!--link externo target new-->
+                    <div class="tw lnk_e" lnk_e="https://twitter.com/guatemalacoffee/" tar="new"></div>
+                    <div class="ig lnk_e" lnk_e="https://www.instagram.com/guatemalancoffees/" tar="new"></div>
+                </div>
+            </div>
+            <button class="navbar-toggler navbar-dark navbar-toggler-right menu_icon" type="button"
+                data-toggle="collapse" data-target="#mainMenuOptions" aria-controls="mainMenuOptions"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <nav class="navbar navbar-expand-lg top-nav mainmenu">
+                <div class="collapse navbar-collapse" id="mainMenuOptions">
+                    <ul class="nav navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/main/history/">History</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/main/coffee-types/">Coffee Types</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/main/regions-and-profiles/">Regions and profiles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/main/impact/">Impact</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <!-- *** INICIA BLOQUE DE MODAL DE BÚSQUEDA (modal_search_gral) *** -->
+        <div class="container-fluid search_block">
+            <div id="vapp" class="m-4">
 
-            <!-- <div class="row mb-5" v-if="!showFiltersFlag">
-
-            <div class="col">
-
-                <b-input-group class="mt-3">
-                    <b-form-input placeholder="Search forn name, location or description" v-model="filterOptions.name">
-                    </b-form-input>
-                    <b-input-group-append>
-                        <b-button v-on:click="searchProductiveUnits"><i class="fa fa-search"></i></b-button>
-                    </b-input-group-append>
-                </b-input-group>
+                <!-- btn_explore.htm -->
+                <!-- <div class="search_modal modalw"></div> -->
                 <div>
-                    <b-link class="text-info" v-on:click="toggleFilters">or be more specific</b-link>
+                    <a class="btn btn_float nav-link call_search_up"
+                        v-on:click.prevent="showFilterModal"><span>Explore</span><i class="fas fa-search"></i></a>
                 </div>
 
+                <!-- BLOQUE DE GRID DE RESULTADOS DE BÚSQUEDA -->
+                <div class="results_block">
+                    <div class="row">
 
-
-            </div>
-        </div> -->
-
-
-
-            <!-- <div class="row mb-5">
-            <div class="col-md-12">
-                <div>Filtros activos</div>
-                <div>
-                    <div v-for="key in Object.keys(filterOptions)" :key="key">
-                        <code>
-                {{key}} : {{ filterOptions[key]}}
-                    </code>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-
-            <div class="row">
-
-                <div class="col-sm-4">
+                        <div class="col-sm-4">
 
 
 
-                    <div v-if="dataList && dataList.length>0">
-                        <div class="float-right">
-                            <b-btn size="sm" v-on:click="showMap = !showMap" title="Mostrar Mapa">
-                                <i class="fa fa-fw fa-map"></i>
-                            </b-btn>
-                        </div>
+                            <div v-if="dataList && dataList.length>0">
+                                <div class="float-right">
+                                    <b-btn size="sm" v-on:click="showMap = !showMap" title="Mostrar Mapa">
+                                        <i class="fa fa-fw fa-map"></i>
+                                    </b-btn>
+                                </div>
 
-                        <div>
-                            <span class="badge" style="font-size: xx-large;">{{total}}</span> results for
-                            <span v-for="key in Object.keys(filterOptions)" :key="key"
-                                v-if="filterOptions[key].length>0">
+                                <div>
+                                    <span class="badge" style="font-size: xx-large;">{{total}}</span> results for
+                                    <span v-for="key in Object.keys(filterOptions)" :key="key"
+                                        v-if="filterOptions[key].length>0">
 
-                                {{key}} : {{ filterOptions[key]}} +
-                            </span>
-
-
-                        </div>
-
-                        <div class="media m-3 p-2 border" v-for="item in dataList" :key="item.id">
-                            <img width="64" height="64" :src="item.coverPhoto | defaultCover"
-                                class="mr-3 img-img-thumbnail" alt="..." v-on:click="showDetails(item)" />
-                            <div class="media-body">
-                                <div class="d-flex justify-content-end">
-                                    <div class="flex-grow-1">
-                                        <div class="mt-0" v-on:click="showDetails(item)">{{ item.name }}</div>
-                                        <div class="text-secondary">{{ item.town}} - {{ item.city}}</div>
-                                        <div class="text-black-50 font-italic mb-3">{{ item.description }}</div>
-                                        <div class="text-muted mb-3">
-                                            <span v-for="att in item.tags" :key="att" class="badge badge-secondary mr-2"
-                                                :title="att">{{ att }}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex flex-column">
-                                        <div class="text-black-50">
-                                            <i class="fa fa-lg fa-fw fa-caret-square-up"></i>
-                                            {{item.altitude | number}} ft above sea level
-                                        </div>
-                                        <div class="text-black-50">
-                                            <i class="fa fa-lg fa-fw fa-chart-pie"></i>
-                                            {{item.totalArea | number}} mz
-                                        </div>
-                                        <div class="text-black-50">
-                                            <i class="fa fa-lg fa-fw fa-tree"></i>
-                                            {{item.anualProduction | number}} ton
-                                        </div>
-                                        <div v-if="showMap" class="text-primary" style="cursor: pointer;"
-                                            v-on:click="flyTo(item)">
-
-                                            <i class="fa fa-lg fa-fw fa-plane"></i> Fly To
-                                        </div>
-                                    </div>
+                                        {{key}} : {{ filterOptions[key]}} +
+                                    </span>
 
 
                                 </div>
+
+                                <div class="media m-3 p-2 border" v-for="item in dataList" :key="item.id">
+                                    <img width="64" height="64" :src="item.coverPhoto | defaultCover"
+                                        class="mr-3 img-img-thumbnail" alt="..." v-on:click="showDetails(item)" />
+                                    <div class="media-body">
+                                        <div class="d-flex justify-content-end">
+                                            <div class="flex-grow-1">
+                                                <div class="mt-0" v-on:click="showDetails(item)">{{ item.name }}</div>
+                                                <div class="text-secondary">{{ item.town}} - {{ item.city}}</div>
+                                                <div class="text-black-50 font-italic mb-3">{{ item.description }}</div>
+                                                <div class="text-muted mb-3">
+                                                    <span v-for="att in item.tags" :key="att"
+                                                        class="badge badge-secondary mr-2" :title="att">{{ att }}</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex flex-column">
+                                                <div class="text-black-50">
+                                                    <i class="fa fa-lg fa-fw fa-caret-square-up"></i>
+                                                    {{item.altitude | number}} ft above sea level
+                                                </div>
+                                                <div class="text-black-50">
+                                                    <i class="fa fa-lg fa-fw fa-chart-pie"></i>
+                                                    {{item.totalArea | number}} mz
+                                                </div>
+                                                <div class="text-black-50">
+                                                    <i class="fa fa-lg fa-fw fa-tree"></i>
+                                                    {{item.anualProduction | number}} ton
+                                                </div>
+                                                <div v-if="showMap" class="text-primary" style="cursor: pointer;"
+                                                    v-on:click="flyTo(item)">
+
+                                                    <i class="fa fa-lg fa-fw fa-plane"></i> Fly To
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <b-pagination :total-rows=" total" :per-page="filterOptions.pageSize"
+                                        v-model="filterOptions.page" v-on:change="getFilteredProductiveUnits"
+                                        align="center" />
+                                </div>
+                            </div>
+
+                            <div v-if="dataList && dataList.length==0">
+
+
+                                <div>
+                                    <span class="badge" style="font-size: xx-large;">{{total}}</span> results
+                                    for
+                                    <span v-for="key in Object.keys(filterOptions)" :key="key"
+                                        v-if="filterOptions[key].length>0">
+
+                                        {{key}} : {{ filterOptions[key]}} +
+                                    </span>
+                                </div>
+
+                                <div class="alert alert-warning text-center mt-3">No existen datos para este
+                                    criterio</div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="col-sm-8">
+                            <div style="height: 80vh; width: 100%" v-if="showMap">
+                                <div class="text-center small mt-3">
+                                    <p>Center is at {{ currentCenter }} and the zoom is: {{ currentZoom }}</p>
+                                </div>
+
+                                <l-map ref="myMap" :zoom="zoom" :center="center" :options="mapOptions"
+                                    v-on:update:center="centerUpdate" v-on:update:zoom="zoomUpdate">
+
+
+                                    <l-marker v-for="marker in dataList" :key="marker.id" :visible="true"
+                                        :lat-lng="{lat:marker.latitude, lon:marker.longitude}">
+                                        <l-popup
+                                            :content=" `<span class='text-primary'>${marker.name}</span> <br/> (${marker.latitude} ${marker.longitude}) <br/> ${marker.town} - ${marker.city} ` "
+                                            v-on:click="showDetails(marker)" />
+                                        <!-- <l-tooltip :options="{ permanent: true, interactive: true }"
+                                    :content=" `<span class='text-primary'>${marker.name}</span> <br/> (${marker.latitude} ${marker.longitude}) <br/> ${marker.town} - ${marker.city} ` " /> -->
+                                    </l-marker>
+
+                                    <l-tile-layer :url="url" :attribution="attribution" />
+
+                                </l-map>
                             </div>
                         </div>
 
-                        <div>
-                            <b-pagination :total-rows=" total" :per-page="filterOptions.pageSize"
-                                v-model="filterOptions.page" v-on:change="getFilteredProductiveUnits" align="center" />
-                        </div>
-                    </div>
-
-                    <div v-if="dataList && dataList.length==0">
-
-
-                        <div>
-                            <span class="badge" style="font-size: xx-large;">{{total}}</span> results
-                            for
-                            <span v-for="key in Object.keys(filterOptions)" :key="key"
-                                v-if="filterOptions[key].length>0">
-
-                                {{key}} : {{ filterOptions[key]}} +
-                            </span>
-                        </div>
-
-                        <div class="alert alert-warning text-center mt-3">No existen datos para este
-                            criterio</div>
-                    </div>
-
-
-                </div>
-
-                <div class="col-sm-8">
-                    <div style="height: 80vh; width: 100%" v-if="showMap">
-                        <div class="text-center small mt-3">
-                            <p>Center is at {{ currentCenter }} and the zoom is: {{ currentZoom }}</p>
-                        </div>
-
-                        <l-map ref="myMap" :zoom="zoom" :center="center" :options="mapOptions"
-                            v-on:update:center="centerUpdate" v-on:update:zoom="zoomUpdate">
-
-
-                            <l-marker v-for="marker in dataList" :key="marker.id" :visible="true"
-                                :lat-lng="{lat:marker.latitude, lon:marker.longitude}">
-                                <l-popup
-                                    :content=" `<span class='text-primary'>${marker.name}</span> <br/> (${marker.latitude} ${marker.longitude}) <br/> ${marker.town} - ${marker.city} ` "
-                                    v-on:click="showDetails(marker)" />
-                                <!-- <l-tooltip :options="{ permanent: true, interactive: true }"
-                                    :content=" `<span class='text-primary'>${marker.name}</span> <br/> (${marker.latitude} ${marker.longitude}) <br/> ${marker.town} - ${marker.city} ` " /> -->
-                            </l-marker>
-
-                            <l-tile-layer :url="url" :attribution="attribution" />
-
-                        </l-map>
                     </div>
                 </div>
 
-            </div>
+                <!-- Filtros -->
+                <b-modal id="productiveUnitFilter" ref="productiveUnitFilter" size="lg" hide-footer
+                    header-class="modal-header-custom">
+
+                    <div class="container-fluid px-4 pb-3 px-sm-5 pb-sm-5 ">
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                <h5>What are you looking for?</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <!-- Grupo de búsqueda básico -->
+                            <div class="col-md-12 pt-3" v-if="searchExtended==false">
+                                <form>
+                                    <div class="form-group">
+                                        <input type="text" id="name" name="name" class="form-control"
+                                            placeholder="Search for name, location or description." autocomplete="on"
+                                            v-model="filterOptions.name" />
+                                        <!-- Muestra search_extended y oculta search_basic -->
+                                        <small class="form-text text-primary mx-2"><a href="#" class="expand_filters"
+                                                v-on:click.prevent="showSearchExtended">Or be
+                                                more specific.</a></small>
+                                    </div>
+                                    <button type="button" class="btn btn-primary"
+                                        v-on:click.prevent="getFilteredProductiveUnits">Lets go!</button>
+                                </form>
+                            </div>
+
+                            <div class="col-md-12 pt-3" v-if="searchExtended==true">
+                                <form>
+                                    <div class="form-group row">
+                                        <label for="farmName" class="col-md-2 col-lg-3 text-md-right">Farm name</label>
+                                        <input type="text" class="form-control col-md-10 col-lg-9" id="farmName">
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="altitude" class="col-sm-2 col-lg-3 text-md-right">Altitude</label>
+                                        <input name="altitude" oninput="alt_tag.value=parseInt(this.value)"
+                                            class="col-9 col-sm-8 col-lg-7 range-slider__range " type="range"
+                                            value="2500" min="2500" max="5800">
+                                        <output id="alt_tag" name="alt_tag" for="altitude" unit="ft"
+                                            class="col-3 col-sm-1 col-lg-2 range-slider__value">2500</output>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="varieties" class="col-md-2 text-md-right">Varieties</label>
+                                        <select class="custom-select col-md-4" id="varieties"
+                                            v-model="filterOptions.varieties" multiple>
+                                            <template slot="first">
+                                                <!-- this slot appears above the options from 'options' prop -->
+                                                <option :value="null" disabled>-- choose --</option>
+                                            </template>
+                                            <option v-for="item in options['varieties']" :value="item.id">{{ item.name}}
+
+                                            </option>
+                                        </select>
+
+                                        <label for="processes" class="col-md-2 text-md-right">Processes</label>
+                                        <select class="custom-select col-md-4" id="processes"
+                                            v-model="filterOptions.processes" multiple>
+                                            <template slot="first">
+                                                <!-- this slot appears above the options from 'options' prop -->
+                                                <option :value="null" disabled>-- choose --</option>
+                                            </template>
+                                            <option v-for="item in options['processes']" :value="item.id">{{ item.name}}
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="regions" class="col-md-2 text-md-right">Regions</label>
+                                        <select class="custom-select col-md-4" id="regions"
+                                            v-model="filterOptions.regions" multiple>
+                                            <template slot="first">
+                                                <!-- this slot appears above the options from 'options' prop -->
+                                                <option :value="null" disabled>-- choose --</option>
+                                            </template>
+                                            <option v-for="item in options['regions']" :value="item">{{ item}}</option>
+                                        </select>
+
+                                        <label for="certifications"
+                                            class="col-md-2 text-md-right">Certifications</label>
+                                        <select class="custom-select col-md-4" id="certifications"
+                                            v-model="filterOptions.certifications" multiple>
+                                            <template slot="first">
+                                                <!-- this slot appears above the options from 'options' prop -->
+                                                <option :value="null" disabled>-- choose --</option>
+                                            </template>
+                                            <option v-for="item in options['certifications']" :value="item.id">
+                                                {{ item.name}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group row">
+                                        <!-- Oculta search_extended y muestra search_basic -->
+                                        <div class="col">
+                                            <small class="form-text text-primary mx-2">
+                                                <a href="#" v-on:click.prevent="clearSearchExtended"
+                                                    class="collapse_filters">Clear filters</a>
+                                            </small>
+                                        </div>
+                                        <div class="col text-center">
+                                            <button type="button" class="btn btn-primary"
+                                                v-on:click.prevent="getFilteredProductiveUnits">Lets go!</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
 
 
+                        </div>
+                    </div>
+                </b-modal>
 
-            <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="lg" title="Detalle Unidad Productiva">
+                <!-- Detalles -->
+                <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="lg"
+                    title="Detalle Unidad Productiva">
 
-                <div class="media mb-5 p-2">
-                    <img width="64" height="64" :src="item.coverPhoto | defaultCover" class="mr-3 img-img-thumbnail"
-                        alt="..." />
-                    <div class="media-body">
-                        <span class="float-right text-black-50">
-                            {{
+                    <div class="media mb-5 p-2">
+                        <img width="64" height="64" :src="item.coverPhoto | defaultCover" class="mr-3 img-img-thumbnail"
+                            alt="..." />
+                        <div class="media-body">
+                            <span class="float-right text-black-50">
+                                {{
                             item.publicationDate 
                             }}
-                        </span>
-                        <h5 class="mt-0">{{ item.name }}</h5>
-
-                        <div>
-                            <span class="text-secondary"> {{ item.town}} - {{ item.city}}</span>
-                        </div>
-                        <div class="mb-2">
-                            <span v-for="att in item.tags" :key="att" class="badge badge-secondary mr-2"
-                                :title="att">{{ att }}</span>
-                        </div>
-
-                        <div class="text-muted mb-3">{{ item.description }}</div>
-
-                        <div class="mb-3">
-
-
+                            </span>
+                            <h5 class="mt-0">{{ item.name }}</h5>
 
                             <div>
-                                <span class="text-secondary">Location .</span>
-                                {{ item.latitude }} , {{ item.longitude}}
+                                <span class="text-secondary"> {{ item.town}} - {{ item.city}}</span>
                             </div>
-                            <div>
-                                <span class="text-secondary">Altitude .</span>
-                                {{ item.minAltitudeSource  | number}} - {{ item.maxAltitudeSource  | number}} pies s.n.m
-                            </div>
-                            <div>
-                                <span class="text-secondary">Area .</span>
-                                {{item.cultivatedAreaSource  | number}}/{{item.totalAreaSource  | number}} manzanas
-                            </div>
-                            <div>
-                                <span class="text-secondary">AnualProduction .</span>
-                                {{item.matureProduction  | number}} maduro / {{item.pergaminoProduction  | number}}
-                                pergamino /
-                                {{item.goldProduction  | number}} oro quintales anuales
-                            </div>
-                            <hr />
-                            <div>
-                                <span class="text-secondary">Afiliate .</span>
-                                {{ item.ownerName }}
-                            </div>
-                            <div>
-                                <span class="text-secondary">Type of Productive Unit .</span>
-                                {{ item.productiveUnitType}}
+                            <div class="mb-2">
+                                <span v-for="att in item.tags" :key="att" class="badge badge-secondary mr-2"
+                                    :title="att">{{ att }}</span>
                             </div>
 
-                            <div>
-                                <span class="text-secondary">Contact .</span>
-                                {{ item.website}}
-                                <br /> phones.
-                                <span v-for="it in item.phones" :key="it">{{ it}}</span>
-                                <br /> emails.
-                                <span v-for="it in item.email" :key="it">{{ it}}</span>
+                            <div class="text-muted mb-3">{{ item.description }}</div>
+
+                            <div class="mb-3">
+
+
+
+                                <div>
+                                    <span class="text-secondary">Location .</span>
+                                    {{ item.latitude }} , {{ item.longitude}}
+                                </div>
+                                <div>
+                                    <span class="text-secondary">Altitude .</span>
+                                    {{ item.minAltitudeSource  | number}} - {{ item.maxAltitudeSource  | number}} pies
+                                    s.n.m
+                                </div>
+                                <div>
+                                    <span class="text-secondary">Area .</span>
+                                    {{item.cultivatedAreaSource  | number}}/{{item.totalAreaSource  | number}} manzanas
+                                </div>
+                                <div>
+                                    <span class="text-secondary">AnualProduction .</span>
+                                    {{item.matureProduction  | number}} maduro / {{item.pergaminoProduction  | number}}
+                                    pergamino /
+                                    {{item.goldProduction  | number}} oro quintales anuales
+                                </div>
+                                <hr />
+                                <div>
+                                    <span class="text-secondary">Afiliate .</span>
+                                    {{ item.ownerName }}
+                                </div>
+                                <div>
+                                    <span class="text-secondary">Type of Productive Unit .</span>
+                                    {{ item.productiveUnitType}}
+                                </div>
+
+                                <div>
+                                    <span class="text-secondary">Contact .</span>
+                                    {{ item.website}}
+                                    <br /> phones.
+                                    <span v-for="it in item.phones" :key="it">{{ it}}</span>
+                                    <br /> emails.
+                                    <span v-for="it in item.email" :key="it">{{ it}}</span>
+                                </div>
+
+                                <div>
+                                    <span class="text-secondary">Soil Types .</span>
+                                    <span class="badge" v-for="it in item.soilTypes" :key="it.id">{{ it.name }}</span>
+                                </div>
+
+                                <div>
+                                    <span class="text-secondary">Varieties .</span>
+                                    <span class="badge " v-for="it in item.varieties" :key="it.id">{{ it.name }}</span>
+                                </div>
+
+                                <div>
+                                    <span class="text-secondary">Processes .</span>
+                                    <span class="badge " v-for="it in item.processes" :key="it.id">{{ it.name }}</span>
+                                </div>
+
+
+                                <div>
+                                    <span class="text-secondary">Shadow Types .</span>
+                                    <span class="badge " v-for="it in item.shadowTypes"
+                                        :key="it.id">{{ it.name }}</span>
+                                </div>
+
+                                <div>
+                                    <span class="text-secondary">Drying Types .</span>
+                                    <span class="badge " v-for="it in item.dryingTypes"
+                                        :key="it.id">{{ it.name }}</span>
+                                </div>
+
+                                <div>
+                                    <span class="text-secondary">Certifications .</span>
+                                    <span class="badge " v-for="it in item.certifications"
+                                        :key="it.id">{{ it.name }}</span>
+                                </div>
+
+                                <div>
+                                    <span class="text-secondary">Awards .</span>
+                                    <span class="badge" v-for="it in item.awards" :key="it.id">{{ it.name }}</span>
+                                </div>
+
+                                <div>
+                                    <span class="text-secondary">Amenities .</span>
+                                    <span class="badge" v-for="it in item.amenities" :key="it">{{ it }}</span>
+                                </div>
+
+                                <div>
+                                    <span class="text-secondary">Services .</span>
+                                    <span class="badge" v-for="it in item.services" :key="it">{{ it }}</span>
+                                </div>
+
+                                <div>
+                                    <span class="text-secondary">Gallery .</span>
+                                    <b-container fluid class="p-4">
+                                        <b-row>
+                                            <b-col v-for="it in item.gallery" :key="it">
+                                                <b-img thumbnail fluid :src="it" :alt="it" width="125" height="125">
+                                                </b-img>
+                                            </b-col>
+                                        </b-row>
+                                    </b-container>
+                                </div>
+
                             </div>
-
-                            <div>
-                                <span class="text-secondary">Soil Types .</span>
-                                <span class="badge" v-for="it in item.soilTypes" :key="it.id">{{ it.name }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Varieties .</span>
-                                <span class="badge " v-for="it in item.varieties" :key="it.id">{{ it.name }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Processes .</span>
-                                <span class="badge " v-for="it in item.processes" :key="it.id">{{ it.name }}</span>
-                            </div>
-
-
-                            <div>
-                                <span class="text-secondary">Shadow Types .</span>
-                                <span class="badge " v-for="it in item.shadowTypes" :key="it.id">{{ it.name }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Drying Types .</span>
-                                <span class="badge " v-for="it in item.dryingTypes" :key="it.id">{{ it.name }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Certifications .</span>
-                                <span class="badge " v-for="it in item.certifications" :key="it.id">{{ it.name }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Awards .</span>
-                                <span class="badge" v-for="it in item.awards" :key="it.id">{{ it.name }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Amenities .</span>
-                                <span class="badge" v-for="it in item.amenities" :key="it">{{ it }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Services .</span>
-                                <span class="badge" v-for="it in item.services" :key="it">{{ it }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Gallery .</span>
-                                <b-container fluid class="p-4">
-                                    <b-row>
-                                        <b-col v-for="it in item.gallery" :key="it">
-                                            <b-img thumbnail fluid :src="it" :alt="it" width="125" height="125"></b-img>
-                                        </b-col>
-                                    </b-row>
-                                </b-container>
-                            </div>
-
                         </div>
                     </div>
-                </div>
 
 
-            </b-modal>
+                </b-modal>
 
-
-
-
-
-
-
+            </div>
         </div>
+        <!-- *** FINALIZA BLOQUE DE MODAL DE BÚSQUEDA *** -->
+
+        <div class="container-fluid content_block">
+            <!-- CONTENIDO DE WP -->
+        </div>
+
+    </main>
+    <div class="bottom">
+        <div class="bottombar">
+            <div class="c3">
+                <div class="menu">
+                    <ul>
+                        <li class="lnk_m" lnk_m="/about/anacafe/">About Anacafé</li>
+                        <li>Market information</li>
+                        <li>Press and media</li>
+                        <li>Upcoming events</li>
+                    </ul>
+                </div>
+                <div class="bid_logos lnk_m" lnk_m="/about/idb/"><img src="/media/1097/idblab_0.png"></div>
+            </div>
+            <div class="c3"></div>
+            <div class="c3">
+                <div class="contact_info">
+                    <h3>Contact information</h3>
+                    <p>Guatemalan National Coffee Association</p>
+                    <p>Calle del Café, 0-50 zona 14</p>
+                    <p>Guatemala, Guatemala, 01014</p>
+                    <p>&nbsp;</p>
+                    <p>PBX: <strong><a href="tel:+50224213700">+502 2421-3700</a></strong></p>
+                    <p>&nbsp;</p>
+                    <div class="redes">
+                        <div class="follow_us">Follow us</div>
+                        <div class="fb lnk_e" lnk_e="https://www.facebook.com/GuatemalanCoffeesAnacafe/" tar="new">
+                        </div>
+                        <!--link externo target new-->
+                        <div class="tw lnk_e" lnk_e="https://twitter.com/guatemalacoffee/" tar="new"></div>
+                        <div class="ig lnk_e" lnk_e="https://www.instagram.com/guatemalancoffees/" tar="new"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="menu">
+            <ul>
+                <li>Privacy policy</li>
+                <li>Terms of use</li>
+                <li>Disclosure</li>
+            </ul>
+        </div>
+        <div class="copy">©2019 Guatemalan National Coffee Association</div>
     </div>
     <script type="text/javascript">
         // var endPoint = 'https://coffeesearch.azurewebsites.net';
@@ -528,6 +593,7 @@
             },
             data() {
                 return {
+                    searchExtended: false,
                     currentPage: 1,
                     numberOfPages: 1,
                     total: 0,
@@ -658,12 +724,39 @@
                     alert(marker.id + '-' + marker.name);
                 },
 
+                showSearchExtended() {
+                    this.searchExtended = true;
+                },
+
+                clearSearchExtended() {
+
+                    this.filterOptions = {
+                        "name": "",
+                        "city": 0,
+                        "town": 0,
+                        "processes": [],
+                        "altitudes": [],
+                        "minAltitude": 0,
+                        "maxAltitude": 0,
+                        "certifications": [],
+                        "regions": [],
+                        "awards": [],
+                        "varieties": [],
+                        "pageSize": 10,
+                        "sort": "n|asc",
+                        "page": 1,
+                        "approved": true
+                    };
+
+                    this.searchExtended = false;
+                },
+
                 toggleFilters() {
                     this.showFiltersFlag = !this.showFiltersFlag;
                 },
 
                 showFilterModal() {
-
+                    this.searchExtended = false;
                     this.$refs.productiveUnitFilter.show();
 
                 },
