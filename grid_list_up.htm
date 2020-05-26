@@ -157,30 +157,68 @@
                     
                 </div>
                 <div class="col-12 col-md-2 col-lg-3 text-right view_modes">
-                    <a><span>grid</span><i class="fas fa-th"></i></a><a><span>map</span><i class="fas fa-map-marked-alt"></i></a>
+                    <a class="d-none"><span>list</span><i class="fas fa-list-alt"></i></a> <!-- se oculta al mostrar listado -->
+                    <a><span>grid</span><i class="fas fa-th"></i></a> <!-- se oculta al mostrar grid -->
+                    <a><span>map</span><i class="fas fa-map-marked-alt"></i></a> <!-- se oculta al mostrar mapa -->
                 </div>
 
             </div>
-            <div class="results_list"> <!-- results_grid / results_map - cambia de acuerdo a view mode-->
-                <div class="entry"> <!-- este es el bloque de cada UP en la lista -->
-                    <div class="img"><img /></div> <!-- foto de la finca -->
-                    <div class="nom">
-                        <ul>
-                            <li><h5>Finca La Bonita</h5></li>
-                            <li>Barberena, Santa Rosa</li>
-                            <li>varieties: Pacamara, caturra</li>
-                        </ul>
+            <div class="results">
+                <div class="results_list"> <!-- results_list / results_grid / results_map - class cambia de acuerdo a view mode-->
+                    <div class="entry"> <!-- este es el bloque de cada UP en la lista -->
+                        <div class="img"><img /></div> <!-- foto de la finca -->
+                        <div class="nom">
+                            <ul>
+                                <li><h5>Finca La Bonita</h5></li>
+                                <li>Barberena, Santa Rosa</li>
+                                <li>varieties: Pacamara, caturra</li>
+                            </ul>
+                        </div>
+                        <div class="actions">
+                            <ul>
+                                <li><i class="fas fa-mountain"></i>1700 ft</li>
+                                <li><i class="fas fa-draw-polygon"></i>125 Ha</li>
+                                <li><i class="fas fa-seedling"></i>5000 lb</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="actions">
-                        <ul>
-                            <li><i class="fas fa-mountain"></i>1700 feet</li>
-                            <li><i class="fas fa-draw-polygon"></i>125 Ha</li>
-                            <li><i class="fas fa-seedling"></i>5000 lb</li>
-                        </ul>
+                    <div class="entry"> <!-- este es el bloque de cada UP en la lista -->
+                        <div class="img"><img /></div> <!-- foto de la finca -->
+                        <div class="nom">
+                            <ul>
+                                <li><h5>Finca La Ceiba</h5></li>
+                                <li>El Palmar, Quetzaltenango</li>
+                                <li>varieties: Bourbon, caturra</li>
+                            </ul>
+                        </div>
+                        <div class="actions">
+                            <ul>
+                                <li><i class="fas fa-mountain"></i>1450 ft</li>
+                                <li><i class="fas fa-draw-polygon"></i>98 Ha</li>
+                                <li><i class="fas fa-seedling"></i>2000 lb</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="entry"> <!-- este es el bloque de cada UP en la lista -->
+                        <div class="img"><img /></div> <!-- foto de la finca -->
+                        <div class="nom">
+                            <ul>
+                                <li><h5>Finca Santa Matilde</h5></li>
+                                <li>Villa Canales, Guatemala</li>
+                                <li>varieties: Pache, caturra, catimor</li>
+                            </ul>
+                        </div>
+                        <div class="actions">
+                            <ul>
+                                <li><i class="fas fa-mountain"></i>1300 ft</li>
+                                <li><i class="fas fa-draw-polygon"></i>25 Ha</li>
+                                <li><i class="fas fa-seedling"></i>980 lb</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
+                <div class="map_results">MAPA</div>
             </div>
-            <div class="map_results"></div>
         </div>
         
     </div>
