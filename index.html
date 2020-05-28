@@ -258,7 +258,7 @@
                                     </div>
                                     <div class="form-group row">
                                         <label for="altitude" class="col-sm-2 col-lg-3 text-md-right">Altitude</label>
-                                        <input name="altitude" oninput="alt_tag.value=parseInt(this.value)"
+                                        <input name="altitude" v-model="filterOptions.altitude" oninput="alt_tag.value=parseInt(this.value)"
                                             class="col-9 col-sm-8 col-lg-7 range-slider__range " type="range"
                                             value="2500" min="2500" max="5800">
                                         <output id="alt_tag" name="alt_tag" for="altitude" unit="ft"
@@ -567,7 +567,6 @@
                     item: {},
                     dataList: null,
                     optionsSelected: {
-                        "altitudes": [],
                         "awards": [],
                         "certifications": [],
                         "cities": [],
@@ -581,10 +580,10 @@
 
                     filterOptions: {
                         "name": "",
+                        "altitude": 0,
                         "city": 0,
                         "town": 0,
                         "processes": [],
-                        "altitudes": [],
                         "minAltitude": 0,
                         "maxAltitude": 0,
                         "certifications": [],
@@ -598,7 +597,6 @@
                     },
 
                     options: {
-                        "altitudes": [],
                         "awards": [],
                         "certifications": [],
                         "cities": [],
@@ -705,10 +703,10 @@
 
                     this.filterOptions = {
                         "name": "",
+                        "altitude": 0,
                         "city": 0,
                         "town": 0,
                         "processes": [],
-                        "altitudes": [],
                         "minAltitude": 0,
                         "maxAltitude": 0,
                         "certifications": [],
@@ -732,10 +730,10 @@
 
                     this.filterOptions = {
                         "name": "",
+                        "altitude": 0,
                         "city": 0,
                         "town": 0,
                         "processes": [],
-                        "altitudes": [],
                         "minAltitude": 0,
                         "maxAltitude": 0,
                         "certifications": [],
