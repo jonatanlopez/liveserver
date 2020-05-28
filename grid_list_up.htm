@@ -46,7 +46,10 @@
 
 <body>
     <!-- *** INICIA BLOQUE DE MODAL DE BÚSQUEDA (modal_search_gral) *** -->
-    <div class="container-fluid search_block">
+    <!-- Al generar búsqueda, previo a mostrar resultados, cambiar el class 
+    de search_block_off a search_block esto ocultará el artículo dentro 
+    de content_block y mostrará los resultados de búsqueda. -->
+    <div class="container-fluid search_block_off"> <!-- search_block / search_block_off -->
         <!-- btn_explore.htm -->
         <!-- <div class="search_modal modalw"></div> -->
         
@@ -245,7 +248,8 @@
     </div>
     <!-- *** FINALIZA BLOQUE DE MODAL DE BÚSQUEDA *** -->
 
-    <div class="container-fluid content_block">        
+    <div class="container-fluid content_block">     
+        CONTENIDO ARTICULO   
         <!-- CONTENIDO DE WP -->
     </div>
 </body>
