@@ -35,11 +35,22 @@
     <script src="//unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="//unpkg.com/vue2-leaflet"></script>
 
+    <script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
+    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
+
     <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
 
     <style>
         .modal-header-custom {
             border-bottom: 0px solid #dee2e6;
+        }
+
+        .number-icon {
+            background-image: url("marker-icon.png");
+            text-align: center;
+            color: #0cfd1f;
+            font-size: 2em;
+            font-weight: 700;
         }
     </style>
 
@@ -95,8 +106,8 @@
     </header>
     <main>
         <!-- *** INICIA BLOQUE DE MODAL DE BÚSQUEDA (modal_search_gral) *** -->
-        <div class="container-fluid search_block">
-            <div id="vapp" class="m-4">
+        <div id="vapp" :class="main_class" class="container-fluid">
+            <div class="m-4">
 
                 <!-- btn_explore.htm -->
                 <!-- <div class="search_modal modalw"></div> -->
@@ -107,99 +118,75 @@
 
                 <!-- BLOQUE DE GRID DE RESULTADOS DE BÚSQUEDA -->
                 <div class="results_block">
-                    <div class="row">
-
-                        <div class="col-sm-4">
-
-
-
-                            <div v-if="dataList && dataList.length>0">
-                                <div class="float-right">
-                                    <b-btn size="sm" v-on:click="showMap = !showMap" title="Mostrar Mapa">
-                                        <i class="fa fa-fw fa-map"></i>
-                                    </b-btn>
-                                </div>
-
-                                <div>
-                                    <span class="badge" style="font-size: xx-large;">{{total}}</span> results for
+                    <div class="row results_header">
+                        <div class="col-12 col-md-10 col-lg-9 summary_results">
+                            <div>
+                                <div class="num_results">{{total}}</div>
+                            </div>
+                            <div>
+                                <div class="title_results">Results for
                                     <span v-for="key in Object.keys(filterOptions)" :key="key"
                                         v-if="filterOptions[key].length>0">
 
                                         {{key}} : {{ filterOptions[key]}} +
-                                    </span>
-
-
-                                </div>
-
-                                <div class="media m-3 p-2 border" v-for="item in dataList" :key="item.id">
-                                    <img width="64" height="64" :src="item.coverPhoto | defaultCover"
-                                        class="mr-3 img-img-thumbnail" alt="..." v-on:click="showDetails(item)" />
-                                    <div class="media-body">
-                                        <div class="d-flex justify-content-end">
-                                            <div class="flex-grow-1">
-                                                <div class="mt-0" v-on:click="showDetails(item)">{{ item.name }}</div>
-                                                <div class="text-secondary">{{ item.town}} - {{ item.city}}</div>
-                                                <div class="text-black-50 font-italic mb-3">{{ item.description }}</div>
-                                                <div class="text-muted mb-3">
-                                                    <span v-for="att in item.tags" :key="att"
-                                                        class="badge badge-secondary mr-2" :title="att">{{ att }}</span>
-                                                </div>
-                                            </div>
-
-                                            <div class="d-flex flex-column">
-                                                <div class="text-black-50">
-                                                    <i class="fa fa-lg fa-fw fa-caret-square-up"></i>
-                                                    {{item.altitude | number}} ft above sea level
-                                                </div>
-                                                <div class="text-black-50">
-                                                    <i class="fa fa-lg fa-fw fa-chart-pie"></i>
-                                                    {{item.totalArea | number}} mz
-                                                </div>
-                                                <div class="text-black-50">
-                                                    <i class="fa fa-lg fa-fw fa-tree"></i>
-                                                    {{item.anualProduction | number}} ton
-                                                </div>
-                                                <div v-if="showMap" class="text-primary" style="cursor: pointer;"
-                                                    v-on:click="flyTo(item)">
-
-                                                    <i class="fa fa-lg fa-fw fa-plane"></i> Fly To
-                                                </div>
-                                            </div>
-
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <b-pagination :total-rows=" total" :per-page="filterOptions.pageSize"
-                                        v-model="filterOptions.page" v-on:change="getFilteredProductiveUnits"
-                                        align="center" />
-                                </div>
+                                    </span></div>
+                                <small class="form-text text-primary"><a href="#" class="collapse_filters">Narrow
+                                        results</a></small>
                             </div>
 
-                            <div v-if="dataList && dataList.length==0">
+                        </div>
+                        <div class="col-12 col-md-2 col-lg-3 text-right view_modes">
+                            <a v-on:click.prevent="setView('list')" v-if="this.viewMode != 'list'"><span>list</span><i
+                                    class="fas fa-list-alt"></i></a>
+                            <!-- se oculta al mostrar listado -->
+                            <a v-on:click.prevent="setView('grid')" v-if="this.viewMode != 'grid'"><span>grid</span><i
+                                    class=" fas fa-th"></i></a>
+                            <!-- se oculta al mostrar grid -->
+                            <a v-on:click.prevent="setView('map')" v-if="this.viewMode != 'map'"><span>map</span><i
+                                    class=" fas
+                                fa-map-marked-alt"></i></a>
+                            <!-- se oculta al mostrar mapa -->
+                        </div>
 
+                    </div>
 
-                                <div>
-                                    <span class="badge" style="font-size: xx-large;">{{total}}</span> results
-                                    for
-                                    <span v-for="key in Object.keys(filterOptions)" :key="key"
-                                        v-if="filterOptions[key].length>0">
-
-                                        {{key}} : {{ filterOptions[key]}} +
-                                    </span>
+                    <div class="results">
+                        <div :class="currentViewModeClass" v-if="dataList && dataList.length>0">
+                            <!-- results_list / results_grid / results_map - class cambia de acuerdo a view mode-->
+                            <div class="entry" v-for="(item, index) in dataList" :key="item.id" :data-id="item.id">
+                                <!-- este es el bloque de cada UP en la lista -->
+                                <div class="img"><img :src="item.coverPhoto | defaultCover"
+                                        style="width: 85px; height: 85px;" /></div>
+                                <!-- foto de la finca -->
+                                <div class="nom">
+                                    <ul>
+                                        <li>
+                                            <h5>{{index+1}}-{{ item.name }}</h5>
+                                        </li>
+                                        <li>{{ item.town}}, {{ item.city}}</li>
+                                        <li>varieties: Pacamara, caturra</li>
+                                    </ul>
                                 </div>
-
-                                <div class="alert alert-warning text-center mt-3">No existen datos para este
-                                    criterio</div>
+                                <div class="actions">
+                                    <ul>
+                                        <li><i class="fas fa-mountain"></i>{{item.maxAltitude | number}} ft</li>
+                                        <li><i class="fas fa-draw-polygon"></i>{{item.totalArea | number}} Ha</li>
+                                        <li><i class="fas fa-seedling"></i>{{item.goldProductionQq | number}} lb</li>
+                                    </ul>
+                                    <div class="go"><i class="fas fa-chevron-circle-right"
+                                            v-on:click="showDetails(item)"></i></div>
+                                </div>
                             </div>
-
 
                         </div>
 
-                        <div class="col-sm-8">
-                            <div style="height: 80vh; width: 100%" v-if="showMap">
+                        <!-- <div v-if="dataList && dataList.length==0">
+                            No existen unidades productivas para este criterio
+                        </div> -->
+
+
+                        <div class="map_results" v-if="viewMode == 'map'">
+                            <div style="height: 100%; width: 100%">
                                 <div class="text-center small mt-3">
                                     <p>Center is at {{ currentCenter }} and the zoom is: {{ currentZoom }}</p>
                                 </div>
@@ -208,26 +195,34 @@
                                     v-on:update:center="centerUpdate" v-on:update:zoom="zoomUpdate">
 
 
-                                    <l-marker v-for="marker in dataList" :key="marker.id" :visible="true"
-                                        :lat-lng="{lat:marker.latitude, lon:marker.longitude}">
-                                        <l-popup
+                                    <l-marker v-for="(marker, index)  in dataList" :key="marker.id" :visible="true"
+                                        :lat-lng="{lat:marker.latitude, lon:marker.longitude}"
+                                        v-on:click="showDetails(marker)">
+
+                                        <l-icon iconSize="[25, 41]" iconAnchor="[10, 44]" popupAnchor="[3, -40]"
+                                            icon-url="marker-icon.png" className="number-icon"
+                                            :options="{ html: `<span> ${index+1} </span>`, className: 'number-icon', iconSize: [25, 41], iconAnchor: [10, 44], popupAnchor: [3, -40]}">
+                                        </l-icon>
+
+                                        <!-- <l-popup
                                             :content=" `<span class='text-primary'>${marker.name}</span> <br/> (${marker.latitude} ${marker.longitude}) <br/> ${marker.town} - ${marker.city} ` "
-                                            v-on:click="showDetails(marker)" />
-                                        <!-- <l-tooltip :options="{ permanent: true, interactive: true }"
-                                    :content=" `<span class='text-primary'>${marker.name}</span> <br/> (${marker.latitude} ${marker.longitude}) <br/> ${marker.town} - ${marker.city} ` " /> -->
+                                            v-on:click="showDetails(marker)" /> -->
+
+                                        <l-tooltip :options="{ permanent: true, interactive: true }"
+                                            :content=" `<span class='text-primary'>${marker.name}</span> <br/> (${marker.latitude} ${marker.longitude}) <br/> ${marker.town} - ${marker.city} ` " />
                                     </l-marker>
 
                                     <l-tile-layer :url="url" :attribution="attribution" />
 
                                 </l-map>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
                 </div>
 
                 <!-- Filtros -->
-                <b-modal id="productiveUnitFilter" ref="productiveUnitFilter" size="lg" hide-footer
+                <b-modal id="productiveUnitFilter" ref="productiveUnitFilter" size="lg" hide-footer no-close-on-backdrop
                     header-class="modal-header-custom">
 
                     <div class="container-fluid px-4 pb-3 px-sm-5 pb-sm-5 ">
@@ -271,51 +266,31 @@
                                     </div>
                                     <div class="form-group row">
                                         <label for="varieties" class="col-md-2 text-md-right">Varieties</label>
-                                        <select class="custom-select col-md-4" id="varieties"
-                                            v-model="filterOptions.varieties" multiple>
-                                            <template slot="first">
-                                                <!-- this slot appears above the options from 'options' prop -->
-                                                <option :value="null" disabled>-- choose --</option>
-                                            </template>
-                                            <option v-for="item in options['varieties']" :value="item.id">{{ item.name}}
-
-                                            </option>
-                                        </select>
-
+                                        <vue-multiselect id="varieties" class="col-md-4"
+                                            v-model="filterOptions.varieties" placeholder="Search" label="name"
+                                            track-by="id" :options="options['varieties']" :multiple="true">
+                                        </vue-multiselect>
                                         <label for="processes" class="col-md-2 text-md-right">Processes</label>
-                                        <select class="custom-select col-md-4" id="processes"
-                                            v-model="filterOptions.processes" multiple>
-                                            <template slot="first">
-                                                <!-- this slot appears above the options from 'options' prop -->
-                                                <option :value="null" disabled>-- choose --</option>
-                                            </template>
-                                            <option v-for="item in options['processes']" :value="item.id">{{ item.name}}
-                                            </option>
-                                        </select>
+                                        <vue-multiselect id="processes" class="col-md-4"
+                                            v-model="filterOptions.processes" placeholder="Search" label="name"
+                                            track-by="id" :options="options['processes']" :multiple="true">
+                                        </vue-multiselect>
                                     </div>
 
                                     <div class="form-group row">
                                         <label for="regions" class="col-md-2 text-md-right">Regions</label>
-                                        <select class="custom-select col-md-4" id="regions"
-                                            v-model="filterOptions.regions" multiple>
-                                            <template slot="first">
-                                                <!-- this slot appears above the options from 'options' prop -->
-                                                <option :value="null" disabled>-- choose --</option>
-                                            </template>
-                                            <option v-for="item in options['regions']" :value="item">{{ item}}</option>
-                                        </select>
+                                        <vue-multiselect id="regions" class="col-md-4" v-model="filterOptions.regions"
+                                            placeholder="Search" :options="options['regions']" :multiple="true">
+                                        </vue-multiselect>
 
                                         <label for="certifications"
                                             class="col-md-2 text-md-right">Certifications</label>
-                                        <select class="custom-select col-md-4" id="certifications"
-                                            v-model="filterOptions.certifications" multiple>
-                                            <template slot="first">
-                                                <!-- this slot appears above the options from 'options' prop -->
-                                                <option :value="null" disabled>-- choose --</option>
-                                            </template>
-                                            <option v-for="item in options['certifications']" :value="item.id">
-                                                {{ item.name}}</option>
-                                        </select>
+
+                                        <vue-multiselect id="certifications" class="col-md-4"
+                                            v-model="filterOptions.certifications" placeholder="Search" label="name"
+                                            track-by="id" :options="options['certifications']" :multiple="true">
+                                        </vue-multiselect>
+
                                     </div>
                                     <div class="form-group row">
                                         <!-- Oculta search_extended y muestra search_basic -->
@@ -563,24 +538,12 @@
         });
 
 
+        // register globally
+        Vue.component('vue-multiselect', window.VueMultiselect.default)
 
-        Vue.component('ColoredBox', {
-            template: `<div class="box"> Colored Box </div>`
-        })
-
-
-        Vue.component('ProductiveUnit', {
-            template: `<div class="blogpost">
-<div class="blogpost-title"> {{item.id}} - {{item.name}} </div>
-<div class="blogpost-meta"> {{item.town}}, {{item.city}} </div>
-</div>`,
-            props: {
-                item: {
-                    type: Object,
-                    required: true
-                }
-            }
-        })
+        const markerOptions = {
+            html: `<span class=\'fa-layers fa-fw\'><i class=\'fas fa-lg fa-map-marker text-primary\'></i><span class=\'fa-layers-text\'' style=\'font-weight:900\' class=\'text-secondary\'>{{marker.id}}</span></span>`
+        };
 
         const vueApp = new Vue({
             el: '#vapp',
@@ -590,10 +553,10 @@
                 LMarker: window.Vue2Leaflet.LMarker,
                 LPopup: window.Vue2Leaflet.LPopup,
                 LTooltip: window.Vue2Leaflet.LTooltip,
+                LIcon: window.Vue2Leaflet.LIcon,
             },
             data() {
                 return {
-                    searchExtended: false,
                     currentPage: 1,
                     numberOfPages: 1,
                     total: 0,
@@ -647,39 +610,26 @@
                         "dryings": []
                     },
                     zoom: 8,
-                    center: L.latLng(15.823966, -90.186768),
+                    center: L.latLng(15.850404, -90.362389),
                     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
                     withPopup: L.latLng(15.866242, -90.203247),
                     withTooltip: L.latLng(15.866242, -90.203247),
                     currentZoom: 8,
-                    currentCenter: L.latLng(15.823966, -90.186768),
+                    currentCenter: L.latLng(15.850404, -90.362389),
                     showParagraph: false,
                     mapOptions: {
                         zoomSnap: 0.5
                     },
+
                     showMap: false,
-                    markers: [{
-                            id: 'm1',
-                            position: {
-                                lat: 15.823966,
-                                lng: -90.186768
-                            },
-                            tooltip: 'Finca Victoria',
-                            draggable: false,
-                            visible: true
-                        },
-                        {
-                            id: 'm2',
-                            position: {
-                                lat: 14.82799134735208,
-                                lng: -90.615234375
-                            },
-                            tooltip: 'Finca el Pilar',
-                            draggable: false,
-                            visible: true
-                        }
-                    ]
+                    searchExtended: false,
+                    viewMode: 'list',
+                    currentViewModeClass: "results_list", //results_list / results_grid / results_map  
+
+                    markers: [],
+
+                    main_class: "search_block_off"
                 }
             },
 
@@ -700,6 +650,29 @@
             },
 
             methods: {
+
+                setView(mode) {
+
+                    this.viewMode = mode;
+
+                    //results_list / results_grid / results_map  
+
+                    switch (mode) {
+                        case "list":
+                            this.currentViewModeClass = "results_list";
+                            break;
+                        case "grid":
+                            this.currentViewModeClass = "results_grid";
+                            break;
+                        case "map":
+                            //this.showMap = true;
+                            this.currentViewModeClass = "results_map";
+                            break;
+
+                    }
+
+
+                },
 
                 flyTo(marker) {
 
@@ -756,7 +729,29 @@
                 },
 
                 showFilterModal() {
+
+                    this.filterOptions = {
+                        "name": "",
+                        "city": 0,
+                        "town": 0,
+                        "processes": [],
+                        "altitudes": [],
+                        "minAltitude": 0,
+                        "maxAltitude": 0,
+                        "certifications": [],
+                        "regions": [],
+                        "awards": [],
+                        "varieties": [],
+                        "pageSize": 10,
+                        "sort": "n|asc",
+                        "page": 1,
+                        "approved": true
+                    };
+
+                    this.dataList = null;
+
                     this.searchExtended = false;
+                    this.main_class = "search_block_off";
                     this.$refs.productiveUnitFilter.show();
 
                 },
@@ -803,6 +798,7 @@
                             this.numberOfPages = response.data.lastPage;
                             this.loading = false;
                             this.$refs.productiveUnitFilter.hide();
+                            this.main_class = "search_block";
                         })
                         .catch(error => {
                             this.loading = false;
