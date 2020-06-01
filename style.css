@@ -206,13 +206,22 @@ ul {
     margin-right: 14px;
     color: #007bff;
 }
+.farm_facts {
+    color: #707070;
+}
 .actions i {
     font-size: 1em;
     margin-left: 6px;
     margin-right: 14px;
     color: #707070;
 }
-.actions ul {
+.farm_facts i {
+    font-size: 1.5em;
+    margin-right: 12px;
+    width: 1.5em;
+    text-align: center;
+}
+.actions ul, .farm_facts ul {
     margin: auto 0;
 }
 
@@ -235,6 +244,11 @@ ul {
 .p_header .nom { 
     padding: 0;
 
+}
+.p_header .certifications img {
+    display: inline;
+    width: 70px;
+    height: 70px;
 }
 .results_header, .results {
     padding: 12px;
@@ -316,6 +330,9 @@ ul {
     right: 0;
     bottom: 8px;
     cursor: pointer;
+}
+.farm_facts li {
+    line-height: 2em;
 }
 .actions .go i {
     color:#007bff;
@@ -451,7 +468,8 @@ ul {
 .modalw p, .modal_search p {
     font-size: 0.9em;
 }
-.modalw .btn, .modal_search .btn  {
+
+.modalw .btn, .modal_search .btn, .action_btn {
 /*    border: 1px solid #fff;*/
     position: relative;
     background: #ed1556;
@@ -462,10 +480,15 @@ ul {
     left: 50%;
     transform: translateX(-50%);
 }
+.action_btn {
+    font-size: 1.5em;
+    margin: 20px 0 0;
+}
+
 .modal_search .btn {
     margin: 0;
 }
-.modalw .btn:hover, .read_more .btn:hover {
+.modalw .btn:hover, .read_more .btn:hover, .action_btn:hover {
     background: #555;
 }
 .modal_search label {
@@ -957,9 +980,9 @@ blockquote {
     .results_grid .entry { width: 30%; }
     .results_grid .img { height: 150px; }
 
-    .main_image, .main_image img {
+    /* .main_image, .main_image img {
         max-height: 500px;
-    }
+    } */
 
 }
 /* AJUSTE PANTALLAS HORIZONTALES Y DISPOSITIVOS DE MAS DE 1280px de ancho */
