@@ -155,8 +155,7 @@
                             <!-- results_list / results_grid / results_map - class cambia de acuerdo a view mode-->
                             <div class="entry" v-for="(item, index) in dataList" :key="item.id" :data-id="item.id">
                                 <!-- este es el bloque de cada UP en la lista -->
-                                <div class="img"><img :src="item.coverPhoto | defaultCover"
-                                        style="width: 85px; height: 85px;" /></div>
+                                <div class="img"><img :src="item.coverPhoto | defaultCover" /></div>
                                 <!-- foto de la finca -->
                                 <div class="nom">
                                     <ul>
@@ -258,7 +257,8 @@
                                     </div>
                                     <div class="form-group row">
                                         <label for="altitude" class="col-sm-2 col-lg-3 text-md-right">Altitude</label>
-                                        <input name="altitude" v-model="filterOptions.altitude" oninput="alt_tag.value=parseInt(this.value)"
+                                        <input name="altitude" v-model="filterOptions.altitude"
+                                            oninput="alt_tag.value=parseInt(this.value)"
                                             class="col-9 col-sm-8 col-lg-7 range-slider__range " type="range"
                                             value="2500" min="2500" max="5800">
                                         <output id="alt_tag" name="alt_tag" for="altitude" unit="ft"
@@ -314,136 +314,125 @@
                 </b-modal>
 
                 <!-- Detalles -->
-                <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="lg"
-                    title="Detalle Unidad Productiva">
+                <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="lg" hide-footer
+                    no-close-on-backdrop header-class="modal-header-custom">
 
-                    <div class="media mb-5 p-2">
-                        <img width="64" height="64" :src="item.coverPhoto | defaultCover" class="mr-3 img-img-thumbnail"
-                            alt="..." />
-                        <div class="media-body">
-                            <span class="float-right text-black-50">
-                                {{
-                            item.publicationDate 
-                            }}
-                            </span>
-                            <h5 class="mt-0">{{ item.name }}</h5>
+                    <div class="row">
+                        <!-- columna izquierda - back to results -->
+                        <div class="col back"><a><i class="fas fa-chevron-circle-left"></i><span>go back</span></a>
+                        </div>
+                        <div class="col text-right right_col">
+                            <div class="num_results">{{ item.id}}</div>
+                        </div> <!-- columna derecha info código UP -->
+                    </div>
 
-                            <div>
-                                <span class="text-secondary"> {{ item.town}} - {{ item.city}}</span>
+                    <div class="row ">
+                        <!-- columna central - perfil UP -->
+                        <div class="col col-md-8 mx-auto">
+                            <div class="row p_header">
+                                <div class="col-12 col-sm-6 nom">
+                                    <ul>
+                                        <li>
+                                            <h3>{{ item.name }}</h3>
+                                        </li>
+                                        <li>{{ item.town}} - {{ item.city}}</li>
+                                        <li>varieties: <span class="badge " v-for="it in item.varieties"
+                                                :key="it.id">{{ it.name }}</span></li>
+                                    </ul>
+                                </div>
+                                <div class="col-12 col-sm-6 text-right certifications"><img
+                                        src="images/cert_rainforest.png"><img src="images/cert_organic.png"></div>
                             </div>
-                            <div class="mb-2">
-                                <span v-for="att in item.tags" :key="att" class="badge badge-secondary mr-2"
-                                    :title="att">{{ att }}</span>
+                            <div class="row mx-auto">
+                                <div class="col-12 main_image"><img :src="item.coverPhoto | defaultCover" /></div>
+                            </div>
+                            <div class="row mx-auto">
+                                <div class="col-12 summary_text">{{ item.description }}
+                                </div>
                             </div>
 
-                            <div class="text-muted mb-3">{{ item.description }}</div>
-
-                            <div class="mb-3">
-
-
-
-                                <div>
-                                    <span class="text-secondary">Location .</span>
-                                    {{ item.latitude }} , {{ item.longitude}}
+                            <div class="row p_header">
+                                <div class="col-12 col-sm-7 action_bar">
+                                    <div>
+                                        <!-- Link a sección de buy en lista de lotes de la UP -->
+                                        <a href="#">
+                                            <div class="num_results tx_blue">3</div>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <div class="title_results">Coffee lots available</div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <span class="text-secondary">Altitude .</span>
-                                    {{ item.minAltitudeSource  | number}} - {{ item.maxAltitudeSource  | number}} pies
-                                    s.n.m
+                                <div class="col-12 col-sm-5 text-right view_modes">
+                                    <a><span>list</span><i class="fas fa-list-alt"></i></a>
+                                    <!-- se oculta al mostrar listado -->
+                                    <a><span>grid</span><i class="fas fa-th"></i></a> <!-- se oculta al mostrar grid -->
+                                    <a><span>map</span><i class="fas fa-map-marked-alt"></i></a>
+                                    <!-- se oculta al mostrar mapa -->
                                 </div>
-                                <div>
-                                    <span class="text-secondary">Area .</span>
-                                    {{item.cultivatedAreaSource  | number}}/{{item.totalAreaSource  | number}} manzanas
-                                </div>
-                                <div>
-                                    <span class="text-secondary">AnualProduction .</span>
-                                    {{item.matureProduction  | number}} maduro / {{item.pergaminoProduction  | number}}
-                                    pergamino /
-                                    {{item.goldProduction  | number}} oro quintales anuales
-                                </div>
-                                <hr />
-                                <div>
-                                    <span class="text-secondary">Afiliate .</span>
-                                    {{ item.ownerName }}
-                                </div>
-                                <div>
-                                    <span class="text-secondary">Type of Productive Unit .</span>
-                                    {{ item.productiveUnitType}}
-                                </div>
+                            </div>
 
-                                <div>
-                                    <span class="text-secondary">Contact .</span>
-                                    {{ item.website}}
-                                    <br /> phones.
-                                    <span v-for="it in item.phones" :key="it">{{ it}}</span>
-                                    <br /> emails.
-                                    <span v-for="it in item.email" :key="it">{{ it}}</span>
+                            <div class="row p_header">
+                                <div class="col-12 col-sm-6">
+
+                                    <div class="farm_facts">
+                                        <ul>
+                                            <li><i class="fas fa-map-marker-alt"></i> {{ item.latitude }} ,
+                                                {{ item.longitude}}</li>
+                                            <li><i class="fas fa-mountain"></i>{{ item.maxAltitude  | number}} ft</li>
+                                            <li><i class="fas fa-draw-polygon"></i>{{item.totalAreaSource  | number}}
+                                            </li>
+                                            <li><i class="fas fa-seedling"></i>{{item.goldProductionQq  | number}} qq
+                                            </li>
+                                            <li><br /></li>
+                                            <li><i class="fas fa-award"></i><span class="badge"
+                                                    v-for="it in item.awards" :key="it">{{ it }}</span></li>
+                                        </ul>
+
+                                    </div>
+
                                 </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="farm_facts text-left text-sm-right pl-5 pl-sm-0">
+                                        <ul>
+                                            <li>Varieties: <span class="badge " v-for="it in item.varieties"
+                                                    :key="it.id">{{ it.name }}</span></li>
+                                            <li>Processes: <span class="badge " v-for="it in item.processes"
+                                                    :key="it.id">{{ it.name }}</span></li>
+                                            <li>Soil: <span class="badge" v-for="it in item.soilTypes"
+                                                    :key="it.id">{{ it.name }}</span></li>
+                                            <li>Shade: <span class="badge " v-for="it in item.shadowTypes"
+                                                    :key="it.id">{{ it.name }}</span></li>
+                                            <li>Drying: <span class="badge " v-for="it in item.dryingTypes"
+                                                    :key="it.id">{{ it.name }}</span></li>
+                                            <li>Ammenities: <span class="badge" v-for="it in item.amenities"
+                                                    :key="it">{{ it }}</span></li>
+                                        </ul>
 
-                                <div>
-                                    <span class="text-secondary">Soil Types .</span>
-                                    <span class="badge" v-for="it in item.soilTypes" :key="it.id">{{ it.name }}</span>
-                                </div>
-
-                                <div>
-                                    <span class="text-secondary">Varieties .</span>
-                                    <span class="badge " v-for="it in item.varieties" :key="it.id">{{ it.name }}</span>
-                                </div>
-
-                                <div>
-                                    <span class="text-secondary">Processes .</span>
-                                    <span class="badge " v-for="it in item.processes" :key="it.id">{{ it.name }}</span>
-                                </div>
-
-
-                                <div>
-                                    <span class="text-secondary">Shadow Types .</span>
-                                    <span class="badge " v-for="it in item.shadowTypes"
-                                        :key="it.id">{{ it.name }}</span>
-                                </div>
-
-                                <div>
-                                    <span class="text-secondary">Drying Types .</span>
-                                    <span class="badge " v-for="it in item.dryingTypes"
-                                        :key="it.id">{{ it.name }}</span>
-                                </div>
-
-                                <div>
-                                    <span class="text-secondary">Certifications .</span>
-                                    <span class="badge " v-for="it in item.certifications"
-                                        :key="it.id">{{ it.name }}</span>
-                                </div>
-
-                                <div>
-                                    <span class="text-secondary">Awards .</span>
-                                    <span class="badge" v-for="it in item.awards" :key="it.id">{{ it.name }}</span>
-                                </div>
-
-                                <div>
-                                    <span class="text-secondary">Amenities .</span>
-                                    <span class="badge" v-for="it in item.amenities" :key="it">{{ it }}</span>
-                                </div>
-
-                                <div>
-                                    <span class="text-secondary">Services .</span>
-                                    <span class="badge" v-for="it in item.services" :key="it">{{ it }}</span>
-                                </div>
-
-                                <div>
-                                    <span class="text-secondary">Gallery .</span>
-                                    <b-container fluid class="p-4">
-                                        <b-row>
-                                            <b-col v-for="it in item.gallery" :key="it">
-                                                <b-img thumbnail fluid :src="it" :alt="it" width="125" height="125">
-                                                </b-img>
-                                            </b-col>
-                                        </b-row>
-                                    </b-container>
+                                    </div>
                                 </div>
 
                             </div>
+                            <div class="row">
+                                <div class="col mb-5">
+                                    <button type="submit" class="btn btn-rounded action_btn"><i
+                                            class="fas fa-envelope"></i></button>
+                                    <div class="text-center py-2"><small>Contact the producer</small></div>
+                                </div>
+                                <!-- <div>
+                                <span class="text-secondary">Contact .</span>
+                                {{ item.website}}
+                                <br /> phones.
+                                <span v-for="it in item.phones" :key="it">{{ it}}</span>
+                                <br /> emails.
+                                <span v-for="it in item.email" :key="it">{{ it}}</span>
+                            </div> -->
+                            </div>
+
                         </div>
                     </div>
+
+
 
 
                 </b-modal>
@@ -507,7 +496,8 @@
         var endPoint = 'https://localhost:5001';
         // var endPoint = 'http://localhost:55706/umbraco';
 
-        var imagesEndPoint = 'https://coffeesearch.azurewebsites.net';
+        // var imagesEndPoint = 'https://coffeesearch.azurewebsites.net';
+        var imagesEndPoint = 'https://localhost:5001';
 
         // Vue.use(require('vue-moment'));
 
