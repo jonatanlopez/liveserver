@@ -298,6 +298,14 @@ ul {
     width: auto;
     height: auto;
 }
+.number-icon {
+    background-image: url(images/marker-icon.png);
+    text-align: center;
+    color: #fff;
+    font-size: 1.4em;
+    line-height: 1.7em;
+    font-weight: 700;
+}
 .results_grid .img {
     display: block;
     width: 100%;
