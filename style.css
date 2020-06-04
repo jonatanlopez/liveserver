@@ -299,7 +299,7 @@ ul {
     height: auto;
 }
 .number-icon {
-    background-image: url(images/marker-icon.png);
+    background-image: url(/images/marker-icon.png);
     text-align: center;
     color: #fff;
     font-size: 1.4em;

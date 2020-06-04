@@ -163,7 +163,8 @@
                                             <h5>{{index+1}}-{{ item.name }}</h5>
                                         </li>
                                         <li>{{ item.town}}, {{ item.city}}</li>
-                                        <li>varieties: Pacamara, caturra</li>
+                                        <li>varieties: <span class="badge " v-for="it in item.varieties"
+                                                :key="it.id">{{ it.name }}</span></li>
                                     </ul>
                                 </div>
                                 <div class="actions">
@@ -314,7 +315,7 @@
                 </b-modal>
 
                 <!-- Detalles -->
-                <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="lg" hide-footer
+                <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="xl" hide-footer
                     no-close-on-backdrop header-class="modal-header-custom">
 
                     <div class="row">
@@ -336,15 +337,32 @@
                                             <h3>{{ item.name }}</h3>
                                         </li>
                                         <li>{{ item.town}} - {{ item.city}}</li>
-                                        <li>varieties: <span class="badge " v-for="it in item.varieties"
-                                                :key="it.id">{{ it.name }}</span></li>
+                                        <li></li>
                                     </ul>
                                 </div>
-                                <div class="col-12 col-sm-6 text-right certifications"><img
-                                        src="images/cert_rainforest.png"><img src="images/cert_organic.png"></div>
+                                <div class="col-12 col-sm-6 text-right certifications">
+                                    <img v-for="it in item.certifications" :key="it.id"
+                                        :src="`images/cert_${it.name}.png`">
+                                </div>
                             </div>
                             <div class="row mx-auto">
-                                <div class="col-12 main_image"><img :src="item.coverPhoto | defaultCover" /></div>
+                                <div class="col-12">
+                                    <img v-if="showCover" :src="item.coverPhoto | defaultCover" />
+
+                                    <b-carousel v-if="showGallery" id="carousel1" style="text-shadow: 1px 1px 2px #333;"
+                                        controls indicators background="#ababab" :interval="4000" img-width="1024"
+                                        img-height="480" v-model="slide">
+                                        <!-- Slides with image only -->
+                                        <b-carousel-slide v-for="img in item.gallery" :key="img"
+                                            :img-src="img | defaultCover">
+                                        </b-carousel-slide>
+                                    </b-carousel>
+
+                                    <div v-if="showInMap">
+                                        Aqui va el mapa
+                                    </div>
+
+                                </div>
                             </div>
                             <div class="row mx-auto">
                                 <div class="col-12 summary_text">{{ item.description }}
@@ -356,7 +374,7 @@
                                     <div>
                                         <!-- Link a sección de buy en lista de lotes de la UP -->
                                         <a href="#">
-                                            <div class="num_results tx_blue">3</div>
+                                            <div class="num_results tx_blue">{{item.coffeeOfferingsCount}}</div>
                                         </a>
                                     </div>
                                     <div>
@@ -364,11 +382,16 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-5 text-right view_modes">
-                                    <a><span>list</span><i class="fas fa-list-alt"></i></a>
-                                    <!-- se oculta al mostrar listado -->
-                                    <a><span>grid</span><i class="fas fa-th"></i></a> <!-- se oculta al mostrar grid -->
-                                    <a><span>map</span><i class="fas fa-map-marked-alt"></i></a>
-                                    <!-- se oculta al mostrar mapa -->
+                                    <!-- MAPA Y GALERÍA PUEDEN OCUPAR EL CONTAINER CLASS="main_image" -->
+                                    <a v-on:click.prevent="setShowGallery"><span>gallery</span><i
+                                            class="fas fa-images"></i></a>
+                                    <!-- galería de fotos (lightbox) -->
+                                    <a v-on:click.prevent="setShowInMap"><span>map</span><i
+                                            class="fas fa-map-marked-alt"></i></a>
+                                    <!-- mostrar ubicación en mapa -->
+                                    <a :href="`https://waze.com/ul?ll=${item.latitude},${item.longitude}&navigate=yes`"
+                                        target="_blank"><span>directions</span><i class="fas fa-directions"></i></a>
+                                    <!-- link a waze con coordenadas -->
                                 </div>
                             </div>
 
@@ -377,15 +400,20 @@
 
                                     <div class="farm_facts">
                                         <ul>
-                                            <li><i class="fas fa-map-marker-alt"></i> {{ item.latitude }} ,
+                                            <li v-if="item.latitude && item.latitude > 0"><i
+                                                    class="fas fa-map-marker-alt"></i> {{ item.latitude }} ,
                                                 {{ item.longitude}}</li>
-                                            <li><i class="fas fa-mountain"></i>{{ item.maxAltitude  | number}} ft</li>
-                                            <li><i class="fas fa-draw-polygon"></i>{{item.totalAreaSource  | number}}
+                                            <li v-if="item.maxAltitude && item.maxAltitude > 0"><i
+                                                    class="fas fa-mountain"></i>{{ item.maxAltitude  | number}} ft</li>
+                                            <li v-if="item.totalArea && item.totalArea > 0"><i
+                                                    class="fas fa-draw-polygon"></i>{{item.totalArea  | number}}
                                             </li>
-                                            <li><i class="fas fa-seedling"></i>{{item.goldProductionQq  | number}} qq
+                                            <li v-if="item.goldProductionQq && item.goldProductionQq > 0"><i
+                                                    class="fas fa-seedling"></i>{{item.goldProductionQq  | number}} qq
                                             </li>
                                             <li><br /></li>
-                                            <li><i class="fas fa-award"></i><span class="badge"
+                                            <li v-if="item.awards && item.awards.length > 0"><i
+                                                    class="fas fa-award"></i><span class="badge"
                                                     v-for="it in item.awards" :key="it">{{ it }}</span></li>
                                         </ul>
 
@@ -395,18 +423,24 @@
                                 <div class="col-12 col-sm-6">
                                     <div class="farm_facts text-left text-sm-right pl-5 pl-sm-0">
                                         <ul>
-                                            <li>Varieties: <span class="badge " v-for="it in item.varieties"
+                                            <li v-if="item.varieties && item.varieties.length > 0">Varieties: <span
+                                                    class="badge " v-for="it in item.varieties"
                                                     :key="it.id">{{ it.name }}</span></li>
-                                            <li>Processes: <span class="badge " v-for="it in item.processes"
+                                            <li v-if="item.processes && item.processes.length > 0">Processes: <span
+                                                    class="badge " v-for="it in item.processes"
                                                     :key="it.id">{{ it.name }}</span></li>
-                                            <li>Soil: <span class="badge" v-for="it in item.soilTypes"
+                                            <li v-if="item.soilTypes && item.soilTypes.length > 0">Soil: <span
+                                                    class="badge" v-for="it in item.soilTypes"
                                                     :key="it.id">{{ it.name }}</span></li>
-                                            <li>Shade: <span class="badge " v-for="it in item.shadowTypes"
+                                            <li v-if="item.shadowTypes && item.shadowTypes.length > 0">Shade: <span
+                                                    class="badge " v-for="it in item.shadowTypes"
                                                     :key="it.id">{{ it.name }}</span></li>
-                                            <li>Drying: <span class="badge " v-for="it in item.dryingTypes"
+                                            <li v-if="item.dryingTypes && item.dryingTypes.length > 0">Drying: <span
+                                                    class="badge " v-for="it in item.dryingTypes"
                                                     :key="it.id">{{ it.name }}</span></li>
-                                            <li>Ammenities: <span class="badge" v-for="it in item.amenities"
-                                                    :key="it">{{ it }}</span></li>
+                                            <li v-if="item.amenities && item.amenities.length > 0">Ammenities: <span
+                                                    class="badge" v-for="it in item.amenities" :key="it">{{ it }}</span>
+                                            </li>
                                         </ul>
 
                                     </div>
@@ -617,7 +651,13 @@
 
                     markers: [],
 
-                    main_class: "search_block_off"
+                    main_class: "search_block_off",
+
+                    slide: 0,
+
+                    showCover: true,
+                    showInMap: false,
+                    showGallery: false
                 }
             },
 
@@ -740,6 +780,7 @@
 
                     this.searchExtended = false;
                     this.main_class = "search_block_off";
+                    this.$refs.productiveUnitDetails.hide();
                     this.$refs.productiveUnitFilter.show();
 
                 },
@@ -752,13 +793,14 @@
                         .then(response => {
                             this.item = response.data;
                             this.loading = false;
+                            this.$refs.productiveUnitDetails.show();
                         })
                         .catch(error => {
                             this.loading = false;
                         });
 
 
-                    this.$refs.productiveUnitDetails.show();
+
                 },
 
 
@@ -832,7 +874,41 @@
                 },
                 centerUpdate(center) {
                     this.currentCenter = center;
-                }
+                },
+
+
+                setShowInMap() {
+
+                    if (this.showInMap) {
+                        this.showInMap = false;
+                        this.showGallery = false;
+                        this.showCover = true;
+                    } else {
+
+                        this.showInMap = true;
+                        this.showGallery = false;
+                        this.showCover = false;
+                    }
+                },
+                setShowGallery() {
+                    if (this.item.gallery.length > 0) {
+
+                        if (this.showInMap) {
+                            this.showInMap = false;
+                            this.showGallery = false;
+                            this.showCover = true;
+                        } else {
+                            this.showInMap = false;
+                            this.showGallery = true;
+                            this.showCover = false;
+                        }
+                    }
+                },
+                setShowCover() {
+                    this.showInMap = false;
+                    this.showGallery = false;
+                    this.showCover = true;
+                },
             },
 
             mounted() {
