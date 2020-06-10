@@ -44,14 +44,6 @@
         .modal-header-custom {
             border-bottom: 0px solid #dee2e6;
         }
-
-        .number-icon {
-            background-image: url("marker-icon.png");
-            text-align: center;
-            color: #0cfd1f;
-            font-size: 2em;
-            font-weight: 700;
-        }
     </style>
 
 </head>
@@ -358,8 +350,29 @@
                                         </b-carousel-slide>
                                     </b-carousel>
 
-                                    <div v-if="showInMap">
-                                        Aqui va el mapa
+                                    <div v-if="showInMap" style="height: 500px;">
+                                        <l-map ref="myMapDetails" :zoom="zoom" :center="{ lat: item.latitude, lon: item.longitude }" :options="mapOptions">
+
+
+                                            <l-marker :visible="true"
+                                                :lat-lng="{ lat: item.latitude, lon: item.longitude }">
+
+                                                <l-icon iconSize="[25, 41]" iconAnchor="[10, 44]" popupAnchor="[3, -40]"
+                                                    icon-url="marker-icon.png" className="number-icon"
+                                                    :options="{ html: `<span> 1 </span>`, className: 'number-icon', iconSize: [25, 41], iconAnchor: [10, 44], popupAnchor: [3, -40]}">
+                                                </l-icon>
+
+                                                <!-- <l-popup
+                                                :content=" `<span class='text-primary'>${marker.name}</span> <br/> (${marker.latitude} ${marker.longitude}) <br/> ${marker.town} - ${marker.city} ` "
+                                                v-on:click="showDetails(marker)" /> -->
+
+                                                <l-tooltip :options="{ permanent: true, interactive: true }"
+                                                    :content=" `<span class='text-primary'>${item.name}</span> <br/> (${item.latitude} ${item.longitude}) <br/> ${item.town} - ${item.city} ` " />
+                                            </l-marker>
+
+                                            <l-tile-layer :url="url" :attribution="attribution" />
+
+                                        </l-map>
                                     </div>
 
                                 </div>
