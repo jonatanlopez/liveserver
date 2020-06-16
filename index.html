@@ -44,6 +44,10 @@
         .modal-header-custom {
             border-bottom: 0px solid #dee2e6;
         }
+
+        .myModal {
+            background-color: green;
+        }
     </style>
 
 </head>
@@ -145,7 +149,7 @@
                     <div class="results">
                         <div :class="currentViewModeClass" v-if="dataList && dataList.length>0">
                             <!-- results_list / results_grid / results_map - class cambia de acuerdo a view mode-->
-                            <div class="entry" v-for="(item, index) in dataList" :key="item.id" :data-id="item.id">
+                            <div class="entry"  v-on:click="showDetails(item)" v-for="(item, index) in dataList" :key="item.id" :data-id="item.id">
                                 <!-- este es el bloque de cada UP en la lista -->
                                 <div class="img"><img :src="item.coverPhoto | defaultCover" /></div>
                                 <!-- foto de la finca -->
@@ -165,8 +169,12 @@
                                         <li><i class="fas fa-draw-polygon"></i>{{item.totalArea | number}} Ha</li>
                                         <li><i class="fas fa-seedling"></i>{{item.goldProductionQq | number}} lb</li>
                                     </ul>
-                                    <div class="go"><i class="fas fa-chevron-circle-right"
-                                            v-on:click="showDetails(item)"></i></div>
+                                    <!-- <div class="go"><i class="fas fa-chevron-circle-right"
+                                            v-on:click="showDetails(item)"></i>
+                                    </div> -->
+                                    <div class="go"><i class="fas fa-plane"
+                                        v-on:click="flyTo(item)"></i>
+                                </div>
                                 </div>
                             </div>
 
@@ -214,10 +222,10 @@
                 </div>
 
                 <!-- Filtros -->
-                <b-modal id="productiveUnitFilter" ref="productiveUnitFilter" size="lg" hide-footer no-close-on-backdrop
-                    header-class="modal-header-custom">
+                <b-modal id="productiveUnitFilter" ref="productiveUnitFilter" size="lg" hide-footer 
+                    header-class="modal-header-custom" dialog-class="myModal">
 
-                    <div class="container-fluid px-4 pb-3 px-sm-5 pb-sm-5 ">
+                    <div class="container-fluid">
                         <div class="row">
                             <div class="col-md-12 ">
                                 <h5>What are you looking for?</h5>
@@ -308,12 +316,12 @@
 
                 <!-- Detalles -->
                 <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="xl" hide-footer
-                    no-close-on-backdrop header-class="modal-header-custom">
+                    header-class="modal-header-custom">
 
                     <div class="row">
                         <!-- columna izquierda - back to results -->
-                        <div class="col back"><a><i class="fas fa-chevron-circle-left"></i><span>go back</span></a>
-                        </div>
+                        <!-- <div class="col back"><a><i class="fas fa-chevron-circle-left"></i><span>go back</span></a>
+                        </div> -->
                         <div class="col text-right right_col">
                             <div class="num_results">{{ item.id}}</div>
                         </div> <!-- columna derecha info código UP -->
@@ -334,14 +342,14 @@
                                 </div>
                                 <div class="col-12 col-sm-6 text-right certifications">
                                     <img v-for="it in item.certifications" :key="it.id"
-                                        :src="`images/cert_${it.name}.png`">
+                                        :src="`images/cert_${it.id}.png`">
                                 </div>
                             </div>
                             <div class="row mx-auto">
                                 <div class="col-12">
-                                    <img v-if="showCover" :src="item.coverPhoto | defaultCover" />
+                                    <img class="img-fluid" v-if="showCover" :src="item.coverPhoto | defaultCover" />
 
-                                    <b-carousel v-if="showGallery" id="carousel1" style="text-shadow: 1px 1px 2px #333;"
+                                    <b-carousel v-if="showGallery" id="carousel1" style="text-shadow: 1px 1px 2px #333;"f
                                         controls indicators background="#ababab" :interval="4000" img-width="1024"
                                         img-height="480" v-model="slide">
                                         <!-- Slides with image only -->
@@ -539,12 +547,12 @@
         <div class="copy">©2019 Guatemalan National Coffee Association</div>
     </div>
     <script type="text/javascript">
-        // var endPoint = 'https://coffeesearch.azurewebsites.net';
-        var endPoint = 'https://localhost:5001';
+        var endPoint = 'https://coffeesearch.azurewebsites.net';
+        //var endPoint = 'https://localhost:5001';
         // var endPoint = 'http://localhost:55706/umbraco';
 
-        // var imagesEndPoint = 'https://coffeesearch.azurewebsites.net';
-        var imagesEndPoint = 'https://localhost:5001';
+        var imagesEndPoint = 'https://coffeesearch.azurewebsites.net';
+        //var imagesEndPoint = 'https://localhost:5001';
 
         // Vue.use(require('vue-moment'));
 
