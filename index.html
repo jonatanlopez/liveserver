@@ -149,14 +149,15 @@
                     <div class="results">
                         <div :class="currentViewModeClass" v-if="dataList && dataList.length>0">
                             <!-- results_list / results_grid / results_map - class cambia de acuerdo a view mode-->
-                            <div class="entry"  v-on:click="showDetails(item)" v-for="(item, index) in dataList" :key="item.id" :data-id="item.id">
+                            <div class="entry" v-for="(item, index) in dataList" :key="item.id" :data-id="item.id">
+                                <div class="num_dot">{{index+1}}</div>
                                 <!-- este es el bloque de cada UP en la lista -->
-                                <div class="img"><img :src="item.coverPhoto | defaultCover" /></div>
+                                <div class="img" v-on:click="showDetails(item)"><img :src="item.coverPhoto | defaultCover" /></div>
                                 <!-- foto de la finca -->
-                                <div class="nom">
+                                <div class="nom" v-on:click="showDetails(item)">
                                     <ul>
                                         <li>
-                                            <h5>{{index+1}}-{{ item.name }}</h5>
+                                            <h5>{{ item.name }}</h5>
                                         </li>
                                         <li>{{ item.town}}, {{ item.city}}</li>
                                         <li>varieties: <span class="badge " v-for="it in item.varieties"
@@ -164,14 +165,14 @@
                                     </ul>
                                 </div>
                                 <div class="actions">
-                                    <ul>
+                                    <ul v-on:click="showDetails(item)">
                                         <li><i class="fas fa-mountain"></i>{{item.maxAltitude | number}} ft</li>
                                         <li><i class="fas fa-draw-polygon"></i>{{item.totalArea | number}} Ha</li>
                                         <li><i class="fas fa-seedling"></i>{{item.goldProductionQq | number}} lb</li>
                                     </ul>
                                     <div class="go">
-                                        <a><span>detail</span><i class="detalle fas fa-chevron-circle-right" v-on:click="showDetails(item)"></i></a>
-                                        <a><span>locate</span><i class="flyto fas fa-map-marker-alt" v-on:click="flyTo(item)"></i></a>
+                                        <a class="detalle" v-on:click="showDetails(item)"><span>detail</span><i class="fas fa-chevron-circle-right"></i></a>
+                                        <a class="flyto" v-on:click="flyTo(item)"><span>locate</span><i class="fas fa-map-marker-alt"></i></a>
                                     </div>
                                     <!-- <div class="go"><i class="fas fa-search-location"
                                         v-on:click="flyTo(item)"></i>
@@ -188,9 +189,9 @@
 
                         <div class="map_results" v-if="viewMode == 'map'">
                             <div style="height: 100%; width: 100%">
-                                <div class="text-center small mt-3">
+                                <!-- <div class="text-center small mt-3">
                                     <p>Center is at {{ currentCenter }} and the zoom is: {{ currentZoom }}</p>
-                                </div>
+                                </div> -->
 
                                 <l-map ref="myMap" :zoom="zoom" :center="center" :options="mapOptions"
                                     v-on:update:center="centerUpdate" v-on:update:zoom="zoomUpdate">
