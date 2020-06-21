@@ -169,12 +169,13 @@
                                         <li><i class="fas fa-draw-polygon"></i>{{item.totalArea | number}} Ha</li>
                                         <li><i class="fas fa-seedling"></i>{{item.goldProductionQq | number}} lb</li>
                                     </ul>
-                                    <!-- <div class="go"><i class="fas fa-chevron-circle-right"
-                                            v-on:click="showDetails(item)"></i>
-                                    </div> -->
-                                    <div class="go"><i class="fas fa-plane"
+                                    <div class="go">
+                                        <a><span>detail</span><i class="detalle fas fa-chevron-circle-right" v-on:click="showDetails(item)"></i></a>
+                                        <a><span>locate</span><i class="flyto fas fa-map-marker-alt" v-on:click="flyTo(item)"></i></a>
+                                    </div>
+                                    <!-- <div class="go"><i class="fas fa-search-location"
                                         v-on:click="flyTo(item)"></i>
-                                </div>
+                                    </div> -->
                                 </div>
                             </div>
 
@@ -316,20 +317,24 @@
 
                 <!-- Detalles -->
                 <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="xl" hide-footer
-                    header-class="modal-header-custom">
-
-                    <div class="row">
+                    header-class="modal-header-custom" dialog-class="modal_unit">
+                    <div class="col back">
+                        <div class="num_results">{{ item.id}}</div>
+                    </div>
+                    <!-- <div class="row"> -->
                         <!-- columna izquierda - back to results -->
                         <!-- <div class="col back"><a><i class="fas fa-chevron-circle-left"></i><span>go back</span></a>
                         </div> -->
-                        <div class="col text-right right_col">
+                        
+                        <!-- columna derecha info código UP -->
+                        <!-- <div class="col text-right right_col">
                             <div class="num_results">{{ item.id}}</div>
-                        </div> <!-- columna derecha info código UP -->
-                    </div>
+                        </div> -->
+                    <!-- </div> -->
 
                     <div class="row ">
                         <!-- columna central - perfil UP -->
-                        <div class="col col-md-8 mx-auto">
+                        <div class="col col-md-10 mx-auto">
                             <div class="row p_header">
                                 <div class="col-12 col-sm-6 nom">
                                     <ul>
