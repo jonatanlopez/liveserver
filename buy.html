@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Guatemalan Coffees - Explore</title>
+    <title>Guatemalan Coffees - Buy</title>
 
 
     <link href="https://fonts.googleapis.com/css?family=Oxygen" rel="stylesheet">
@@ -85,10 +85,10 @@
                             <a class="nav-link" href="/">Learn</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link nav-link--active" href="/explore/">Explore</a>
+                            <a class="nav-link" href="/explore/">Explore</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/buy/">Buy</a>
+                            <a class="nav-link nav-link--active" href="/buy/">Buy</a>
                         </li>
                     </ul>
                 </div>
@@ -103,14 +103,14 @@
                 <!-- btn_explore.htm -->
                 <!-- <div class="search_modal modalw"></div> -->
                 <div>
-                    <a class="btn btn_float nav-link call_search_up"
-                        v-on:click.prevent="showFilterModal"><span>Explore</span><i class="fas fa-search"></i></a>
+                    <a class="btn btn_float nav-link call_search_coffee"
+                        v-on:click.prevent="showFilterModal"><span>Coffee lots</span><i class="fas fa-search"></i></a>
                 </div>
 
                 <!-- BLOQUE DE GRID DE RESULTADOS DE BÚSQUEDA -->
                 <div class="results_block">
                     <div class="row results_header">
-                        <div class="col-12 col-md-10 col-lg-9 summary_results">
+                        <div class="col-12 col-md-8 summary_results">
                             <div>
                                 <div class="num_results">{{total}}</div>
                             </div>
@@ -126,17 +126,22 @@
                             </div>
 
                         </div>
-                        <div class="col-12 col-md-2 col-lg-3 text-right view_modes">
-                            <a v-on:click.prevent="setView('list')" v-if="this.viewMode != 'list'"><span>list</span><i
+                        <div class="form-inline col-12 col-md-4 justify-content-end mb-0 view_modes">
+                            <!-- <a v-on:click.prevent="setView('list')" v-if="this.viewMode != 'list'"><span>list</span><i
                                     class="fas fa-list-alt"></i></a>
-                            <!-- se oculta al mostrar listado -->
+                            
                             <a v-on:click.prevent="setView('grid')" v-if="this.viewMode != 'grid'"><span>grid</span><i
                                     class=" fas fa-th"></i></a>
-                            <!-- se oculta al mostrar grid -->
+                            
                             <a v-on:click.prevent="setView('map')" v-if="this.viewMode != 'map'"><span>map</span><i
                                     class=" fas
-                                fa-map-marked-alt"></i></a>
-                            <!-- se oculta al mostrar mapa -->
+                                fa-map-marked-alt"></i></a> -->
+                                <label class="mr-sm-2 small" for="orderBy">Order by:</label>
+                                <select class="custom-select custom-select-sm mb-2 mr-sm-2 mb-sm-0" id="orderBy">
+                                  <option selected >Date published</option>
+                                  <option>Farm name</option>
+                                  <option>Score</option>
+                                </select>
                         </div>
 
                     </div>
@@ -146,8 +151,8 @@
                             <!-- results_list / results_grid / results_map - class cambia de acuerdo a view mode-->
                             <div class="entry" v-for="(item, index) in dataList" :key="item.id" :data-id="item.id">
                                 <div class="num_dot">{{index+1}}</div>
-                                <!-- este es el bloque de cada UP en la lista -->
-                                <div class="img" v-on:click="showDetails(item)"><img :src="item.coverPhoto | defaultCover" /></div>
+                                <!-- este es el bloque de cada lote de oferta en la lista -->
+                                <!-- <div class="img" v-on:click="showDetails(item)"><img :src="item.coverPhoto | defaultCover" /></div> -->
                                 <!-- foto de la finca -->
                                 <div class="nom" v-on:click="showDetails(item)">
                                     <ul>
@@ -159,19 +164,22 @@
                                                 :key="it.id">{{ it.name }}</span></li>
                                     </ul>
                                 </div>
+                                <div class="lot_description">
+                                    <div>La Bonita Caturra especial - Caturra / Honey / Organic / Grainpro</div>
+                                    <div>Spot / The Annex, Oakland, CA</div>
+                                </div>
+                                <div class="lot_size">
+                                    <div>11 Bags(60Kg)</div>
+                                    <small>92341</small>
+                                </div>
+                                <div class="lot_score">
+                                    <div class="num_points" lbl="points">90</div>
+                                </div>
                                 <div class="actions">
-                                    <ul v-on:click="showDetails(item)">
-                                        <li><i class="fas fa-mountain"></i>{{item.maxAltitude | number}} ft</li>
-                                        <li><i class="fas fa-draw-polygon"></i>{{item.totalArea | number}} Ha</li>
-                                        <li><i class="fas fa-seedling"></i>{{item.goldProductionQq | number}} lb</li>
-                                    </ul>
                                     <div class="go">
                                         <a class="detalle" v-on:click="showDetails(item)"><span>detail</span><i class="fas fa-chevron-circle-right"></i></a>
                                         <a class="flyto" v-on:click="flyTo(item)"><span>locate</span><i class="fas fa-map-marker-alt"></i></a>
                                     </div>
-                                    <!-- <div class="go"><i class="fas fa-search-location"
-                                        v-on:click="flyTo(item)"></i>
-                                    </div> -->
                                 </div>
                             </div>
 
@@ -225,7 +233,7 @@
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-12 ">
-                                <h5>What are you looking for?</h5>
+                                <h5>Let's find your coffee!</h5>
                             </div>
                         </div>
                         <div class="row p-3">
@@ -234,12 +242,12 @@
                             <div class="col-12" v-if="searchExtended==false">
                                 <form>
                                     <div class="form-group row">
-                                        <input type="text" id="name" name="name" class="form-control" placeholder="Search for name, location or description." autocomplete="on" v-model="filterOptions.name" />
+                                        <input type="text" id="name" name="name" class="form-control" placeholder="Search for farm name, variety or lot description." autocomplete="on" v-model="filterOptions.name" />
                                         <!-- Muestra search_extended y oculta search_basic -->
                                         <small class="form-text text-primary mx-2"><a href="#" class="expand_filters" v-on:click.prevent="showSearchExtended">Or be more specific.</a></small>
                                     </div>
                                     <div class="form-group col-12 text-center">
-                                        <button type="button" class="btn btn-primary" v-on:click.prevent="getFilteredProductiveUnits">Lets go!</button>
+                                        <button type="button" class="btn btn-primary" v-on:click.prevent="getFilteredProductiveUnits">Go</button>
                                     </div>                                    
                                 </form>
                             </div>
@@ -250,12 +258,20 @@
                                         <label for="farmName" class="col-lg-2 col-form-label pl-0">Farm name</label>
                                         <input type="text" class="col-lg-10 form-control" id="farmName">
                                     </div>
-                                    <div class="form-group row">
-                                        <label for="altitude" class="col-lg-2 col-form-label pl-0">Altitude</label>
-                                        <input name="altitude" v-model="filterOptions.altitude" oninput="alt_tag.value=parseInt(this.value)" 
-                                            class="range-slider__range col-9 col-lg-8" type="range" value="2500" min="2500" max="5800">
-                                        <output id="alt_tag" name="alt_tag" for="altitude" unit="ft"
-                                            class="range-slider__value col-3 col-lg-2">2500</output>
+                                    <div class="form-group row px-0">
+                                        <div class="form-inline col-lg-6 px-0">
+                                            <label for="scoreMin" class="col-4 col-form-label justify-content-start pl-0">Cupping score</label>
+                                            <input type="text" class="col-3 form-control" id="scoreMin" placeholder="min">
+                                            <label for="scoreMax" class="col-1 col-form-label">></label>
+                                            <input type="text" class="col-3 form-control" id="scoreMax" placeholder="max">
+                                        </div>
+                                        <div class="form-inline col-lg-6 px-0">
+                                            <label for="listing" class="col-12 col-lg-2 col-form-label justify-content-start pl-0">Listing</label>
+                                            <vue-multiselect id="listing" class="col-12 col-lg-10 px-0"
+                                                v-model="filterOptions.varieties" placeholder="Choose" label="listing"
+                                                track-by="id" :options="options['varieties']" :multiple="true">
+                                            </vue-multiselect>
+                                        </div>
                                     </div>
                                     <div class="form-group row">
                                         <label for="varieties" class="col-form-label col-lg-2 pl-0">Varieties</label>
@@ -269,13 +285,6 @@
                                         <vue-multiselect id="processes" class="col-lg-10 px-0"
                                             v-model="filterOptions.processes" placeholder="Choose processes" label="name"
                                             track-by="id" :options="options['processes']" :multiple="true">
-                                        </vue-multiselect>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="regions" class="col-form-label col-lg-2 pl-0">Regions</label>
-                                        <vue-multiselect id="regions" class="col-lg-10 px-0"
-                                            v-model="filterOptions.regions" placeholder="Choose regions" :options="options['regions']" :multiple="true">
                                         </vue-multiselect>
                                     </div>
                                     <div class="form-group row">
@@ -292,7 +301,7 @@
                                             </small>
                                     </div>
                                     <div class="form-group col-12 text-center">
-                                        <button type="button" class="btn btn-primary" v-on:click.prevent="getFilteredProductiveUnits">Let's go!</button>
+                                        <button type="button" class="btn btn-primary" v-on:click.prevent="getFilteredProductiveUnits">Go!</button>
                                     </div>
                                 </form>
                             </div>
