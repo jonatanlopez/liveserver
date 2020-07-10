@@ -229,84 +229,75 @@
 
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-12 ">
+                            <div class="col-12 ">
                                 <h5>What are you looking for?</h5>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row p-3">
 
                             <!-- Grupo de búsqueda básico -->
-                            <div class="col-md-12 pt-3" v-if="searchExtended==false">
+                            <div class="col-12" v-if="searchExtended==false">
                                 <form>
-                                    <div class="form-group">
-                                        <input type="text" id="name" name="name" class="form-control"
-                                            placeholder="Search for name, location or description." autocomplete="on"
-                                            v-model="filterOptions.name" />
+                                    <div class="form-group row">
+                                        <input type="text" id="name" name="name" class="form-control" placeholder="Search for name, location or description." autocomplete="on" v-model="filterOptions.name" />
                                         <!-- Muestra search_extended y oculta search_basic -->
-                                        <small class="form-text text-primary mx-2"><a href="#" class="expand_filters"
-                                                v-on:click.prevent="showSearchExtended">Or be
-                                                more specific.</a></small>
+                                        <small class="form-text text-primary mx-2"><a href="#" class="expand_filters" v-on:click.prevent="showSearchExtended">Or be more specific.</a></small>
                                     </div>
-                                    <button type="button" class="btn btn-primary"
-                                        v-on:click.prevent="getFilteredProductiveUnits">Lets go!</button>
+                                    <div class="form-group col-12 text-center">
+                                        <button type="button" class="btn btn-primary" v-on:click.prevent="getFilteredProductiveUnits">Lets go!</button>
+                                    </div>                                    
                                 </form>
                             </div>
 
-                            <div class="col-md-12 pt-3" v-if="searchExtended==true">
+                            <div class="col-12" v-if="searchExtended==true">
                                 <form>
                                     <div class="form-group row">
-                                        <label for="farmName" class="col-md-2 col-lg-3 text-md-right">Farm name</label>
-                                        <input type="text" class="form-control col-md-10 col-lg-9" id="farmName">
+                                        <label for="farmName" class="col-lg-2 col-form-label pl-0">Farm name</label>
+                                        <input type="text" class="col-lg-10 form-control" id="farmName">
                                     </div>
                                     <div class="form-group row">
-                                        <label for="altitude" class="col-sm-2 col-lg-3 text-md-right">Altitude</label>
-                                        <input name="altitude" v-model="filterOptions.altitude"
-                                            oninput="alt_tag.value=parseInt(this.value)"
-                                            class="col-9 col-sm-8 col-lg-7 range-slider__range " type="range"
-                                            value="2500" min="2500" max="5800">
+                                        <label for="altitude" class="col-lg-2 col-form-label pl-0">Altitude</label>
+                                        <input name="altitude" v-model="filterOptions.altitude" oninput="alt_tag.value=parseInt(this.value)" 
+                                            class="range-slider__range col-9 col-lg-8" type="range" value="2500" min="2500" max="5800">
                                         <output id="alt_tag" name="alt_tag" for="altitude" unit="ft"
-                                            class="col-3 col-sm-1 col-lg-2 range-slider__value">2500</output>
+                                            class="range-slider__value col-3 col-lg-2">2500</output>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="varieties" class="col-md-2 text-md-right">Varieties</label>
-                                        <vue-multiselect id="varieties" class="col-md-4"
-                                            v-model="filterOptions.varieties" placeholder="Search" label="name"
+                                        <label for="varieties" class="col-form-label col-lg-2 pl-0">Varieties</label>
+                                        <vue-multiselect id="varieties" class="col-lg-10 px-0"
+                                            v-model="filterOptions.varieties" placeholder="Choose varieties" label="name"
                                             track-by="id" :options="options['varieties']" :multiple="true">
                                         </vue-multiselect>
-                                        <label for="processes" class="col-md-2 text-md-right">Processes</label>
-                                        <vue-multiselect id="processes" class="col-md-4"
-                                            v-model="filterOptions.processes" placeholder="Search" label="name"
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="processes" class="col-form-label col-lg-2 pl-0">Processes</label>
+                                        <vue-multiselect id="processes" class="col-lg-10 px-0"
+                                            v-model="filterOptions.processes" placeholder="Choose processes" label="name"
                                             track-by="id" :options="options['processes']" :multiple="true">
                                         </vue-multiselect>
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="regions" class="col-md-2 text-md-right">Regions</label>
-                                        <vue-multiselect id="regions" class="col-md-4" v-model="filterOptions.regions"
-                                            placeholder="Search" :options="options['regions']" :multiple="true">
+                                        <label for="regions" class="col-form-label col-lg-2 pl-0">Regions</label>
+                                        <vue-multiselect id="regions" class="col-lg-10 px-0"
+                                            v-model="filterOptions.regions" placeholder="Choose regions" :options="options['regions']" :multiple="true">
                                         </vue-multiselect>
-
-                                        <label for="certifications"
-                                            class="col-md-2 text-md-right">Certifications</label>
-
-                                        <vue-multiselect id="certifications" class="col-md-4"
-                                            v-model="filterOptions.certifications" placeholder="Search" label="name"
-                                            track-by="id" :options="options['certifications']" :multiple="true">
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="certifications" class="col-form-label col-lg-2 pl-0">Certifications</label>
+                                        <vue-multiselect id="certifications" class="col-lg-10 px-0"
+                                            v-model="filterOptions.certifications" placeholder="Choose certifications" label="name" track-by="id" :options="options['certifications']" :multiple="true">
                                         </vue-multiselect>
 
                                     </div>
                                     <div class="form-group row">
                                         <!-- Oculta search_extended y muestra search_basic -->
-                                        <div class="col">
                                             <small class="form-text text-primary mx-2">
-                                                <a href="#" v-on:click.prevent="clearSearchExtended"
-                                                    class="collapse_filters">Clear filters</a>
+                                                <a href="#" v-on:click.prevent="clearSearchExtended" class="collapse_filters">Clear filters</a>
                                             </small>
-                                        </div>
-                                        <div class="col text-center">
-                                            <button type="button" class="btn btn-primary"
-                                                v-on:click.prevent="getFilteredProductiveUnits">Lets go!</button>
-                                        </div>
+                                    </div>
+                                    <div class="form-group col-12 text-center">
+                                        <button type="button" class="btn btn-primary" v-on:click.prevent="getFilteredProductiveUnits">Lets go!</button>
                                     </div>
                                 </form>
                             </div>
