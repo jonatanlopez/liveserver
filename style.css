@@ -264,6 +264,10 @@ ul {
     margin: 0 auto 10px;
     padding-bottom: 12px;
 }
+.actions li {
+    display: inline-block;
+    margin: 0 8px 0;
+}
 .farm_facts ul {
     margin: auto 0;
 }
@@ -304,7 +308,9 @@ ul {
     display: inline-block;
     width: 100%;
 }
-
+.results_list .num_dot, .results_grid .num_dot {
+    display: none;
+}
 .results_grid, .profile {
     display: flex;
     flex-wrap: wrap;
@@ -366,7 +372,7 @@ ul {
     width: auto;
     height: auto;
 }
-.results_list .nom, .results_list .lot_description, .results_list .lot_size, .results_map .nom {
+.results_list .nom, .results_list .lot_nom, .results_list .lot_description, .results_list .lot_size, .results_map .nom {
     margin: 0 12px;
     display: flex;
     flex: 1;
@@ -374,13 +380,25 @@ ul {
 .results_list .lot_description, .results_list .lot_size {
     flex-direction: column;
 }
+.results_list .lot_nom {
+    flex: 1.5;
+}
 .results_list .lot_description {
-    flex: 2;
+    color: #4288d4;
+    padding: 12px 0;
+    flex: 3;
 }
 .results_list .lot_score {
     /* flex: 1; */
     align-items: center;
     justify-content: center;
+    position: absolute;
+    
+    top: 8px;
+    right: 8px;
+}
+.results_list .lot_actions {
+    /* width: 24px; */
 }
 .results_grid .nom {
     padding: 12px;
@@ -392,7 +410,8 @@ ul {
     /* padding-top: 16px; */
 }
 .results_grid .actions ul { display: none; }
-.actions .go {
+/* .actions .go { */
+.go {
     padding: 4px 0;
     position: absolute;
     right: 0;
@@ -402,14 +421,17 @@ ul {
 .farm_facts li {
     line-height: 2em;
 }
-.actions .go span {
+/* .actions .go span { */
+.go span {
     margin-right: 4px;
     font-size: 0.9em;
 }
-.actions .go i {
+/* .actions .go i { */
+.go i {
     color:#007bff;
 }
-.actions .go i:hover {
+/* .actions .go i:hover { */
+.go i:hover {
     opacity: 0.7;
 }
 .map_results {
@@ -1047,6 +1069,22 @@ blockquote {
         width: 15%;
         min-width: 150px;
         padding-top: 16px;
+    }
+    .actions li {
+        display: block;
+        width: 100%;
+        margin: 0;
+    }
+    .results_list .lot_description {
+        padding: 0;
+        color: #555;
+    }
+    .results_list .lot_score {
+    
+        position: relative;
+        /* display: flex; */
+        top: initial;
+        right: initial;
     }
 }
 @media only screen and (min-width: 768px) {

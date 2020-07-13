@@ -98,7 +98,7 @@
     <main>
         <!-- *** INICIA BLOQUE DE MODAL DE BÚSQUEDA (modal_search_gral) *** -->
         <div id="vapp" :class="main_class" class="container-fluid">
-            <div class="m-4">
+            <div>
 
                 <!-- btn_explore.htm -->
                 <!-- <div class="search_modal modalw"></div> -->
@@ -154,7 +154,7 @@
                                 <!-- este es el bloque de cada lote de oferta en la lista -->
                                 <!-- <div class="img" v-on:click="showDetails(item)"><img :src="item.coverPhoto | defaultCover" /></div> -->
                                 <!-- foto de la finca -->
-                                <div class="nom" v-on:click="showDetails(item)">
+                                <div class="lot_nom" v-on:click="showDetails(item)">
                                     <ul>
                                         <li>
                                             <h5>{{ item.name }}</h5>
@@ -175,7 +175,7 @@
                                 <div class="lot_score">
                                     <div class="num_points" lbl="points">90</div>
                                 </div>
-                                <div class="actions">
+                                <div class="lot_actions">
                                     <div class="go">
                                         <a class="detalle" v-on:click="showDetails(item)"><span>detail</span><i class="fas fa-chevron-circle-right"></i></a>
                                         <a class="flyto" v-on:click="flyTo(item)"><span>locate</span><i class="fas fa-map-marker-alt"></i></a>
