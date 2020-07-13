@@ -169,11 +169,11 @@
                                     <div>Spot / The Annex, Oakland, CA</div>
                                 </div>
                                 <div class="lot_size">
-                                    <div>11 Bags(60Kg)</div>
-                                    <small>92341</small>
+                                    <div>11 Bags(60Kg)</div> <!-- TAMAÑO DEL LOTE -->
+                                    <small>{{ item.id }}</small>
                                 </div>
                                 <div class="lot_score">
-                                    <div class="num_points" lbl="points">90</div>
+                                    <div class="num_points" lbl="points">90</div><!-- SCORE SCAA -->
                                 </div>
                                 <div class="lot_actions">
                                     <div class="go">
@@ -314,107 +314,29 @@
                 <!-- Detalles -->
                 <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="xl" hide-footer
                     header-class="modal-header-custom" dialog-class="modal_unit">
-                    <div class="col back">
-                        <div class="num_results">{{ item.id}}</div>
+                    <div class="col">
+                        <div class="num_results">{{ item.id}}<div class="lotlbl" lbl="lot ID"></div></div> <!-- lbl indica texto a mostrar -->
+                        <div class="num_points f_right" lbl="points">90</div> <!-- SCORE SCAA -->
                     </div>
-                    <!-- <div class="row"> -->
-                        <!-- columna izquierda - back to results -->
-                        <!-- <div class="col back"><a><i class="fas fa-chevron-circle-left"></i><span>go back</span></a>
-                        </div> -->
-                        
-                        <!-- columna derecha info código UP -->
-                        <!-- <div class="col text-right right_col">
-                            <div class="num_results">{{ item.id}}</div>
-                        </div> -->
-                    <!-- </div> -->
-
                     <div class="row ">
-                        <!-- columna central - perfil UP -->
+                        <!-- columna central - info lote -->
                         <div class="col col-md-10 mx-auto">
                             <div class="row p_header">
                                 <div class="col-12 col-sm-6 nom">
                                     <ul>
+                                        <li class="tx_blue">Coffee lot</li>
                                         <li>
-                                            <h3>{{ item.name }}</h3>
+                                            <h3>La Bonita Caturra Especial</h3> <!-- NOMBRE DEL LOTE DE CAFÉ -->
                                         </li>
-                                        <li>{{ item.town}} - {{ item.city}}</li>
-                                        <li></li>
+                                        <li>11 Bags (60Kg)</li> <!-- TAMAÑO DEL LOTE -->
                                     </ul>
                                 </div>
+                                
                                 <div class="col-12 col-sm-6 text-right certifications">
                                     <img v-for="it in item.certifications" :key="it.id"
                                         :src="`images/cert_${it.id}.png`">
                                 </div>
-                            </div>
-                            <div class="row mx-auto">
-                                <div class="col-12">
-                                    <img class="img-fluid" v-if="showCover" :src="item.coverPhoto | defaultCover" />
-
-                                    <b-carousel v-if="showGallery" id="carousel1" style="text-shadow: 1px 1px 2px #333;"f
-                                        controls indicators background="#ababab" :interval="4000" img-width="1024"
-                                        img-height="480" v-model="slide">
-                                        <!-- Slides with image only -->
-                                        <b-carousel-slide v-for="img in item.gallery" :key="img"
-                                            :img-src="img | defaultCover">
-                                        </b-carousel-slide>
-                                    </b-carousel>
-
-                                    <div v-if="showInMap" style="height: 500px;">
-                                        <l-map ref="myMapDetails" :zoom="zoom" :center="{ lat: item.latitude, lon: item.longitude }" :options="mapOptions">
-
-
-                                            <l-marker :visible="true"
-                                                :lat-lng="{ lat: item.latitude, lon: item.longitude }">
-
-                                                <l-icon iconSize="[25, 41]" iconAnchor="[10, 44]" popupAnchor="[3, -40]"
-                                                    icon-url="marker-icon.png" className="number-icon"
-                                                    :options="{ html: `<span> 1 </span>`, className: 'number-icon', iconSize: [25, 41], iconAnchor: [10, 44], popupAnchor: [3, -40]}">
-                                                </l-icon>
-
-                                                <!-- <l-popup
-                                                :content=" `<span class='text-primary'>${marker.name}</span> <br/> (${marker.latitude} ${marker.longitude}) <br/> ${marker.town} - ${marker.city} ` "
-                                                v-on:click="showDetails(marker)" /> -->
-
-                                                <l-tooltip :options="{ permanent: true, interactive: true }"
-                                                    :content=" `<span class='text-primary'>${item.name}</span> <br/> (${item.latitude} ${item.longitude}) <br/> ${item.town} - ${item.city} ` " />
-                                            </l-marker>
-
-                                            <l-tile-layer :url="url" :attribution="attribution" />
-
-                                        </l-map>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="row mx-auto">
-                                <div class="col-12 summary_text">{{ item.description }}
-                                </div>
-                            </div>
-
-                            <div class="row p_header">
-                                <div class="col-12 col-sm-7 action_bar">
-                                    <div>
-                                        <!-- Link a sección de buy en lista de lotes de la UP -->
-                                        <a href="#">
-                                            <div class="num_results tx_blue">{{item.coffeeOfferingsCount}}</div>
-                                        </a>
-                                    </div>
-                                    <div>
-                                        <div class="title_results">Coffee lots available</div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-5 text-right view_modes">
-                                    <!-- MAPA Y GALERÍA PUEDEN OCUPAR EL CONTAINER CLASS="main_image" -->
-                                    <a v-on:click.prevent="setShowGallery"><span>gallery</span><i
-                                            class="fas fa-images"></i></a>
-                                    <!-- galería de fotos (lightbox) -->
-                                    <a v-on:click.prevent="setShowInMap"><span>map</span><i
-                                            class="fas fa-map-marked-alt"></i></a>
-                                    <!-- mostrar ubicación en mapa -->
-                                    <a :href="`https://waze.com/ul?ll=${item.latitude},${item.longitude}&navigate=yes`"
-                                        target="_blank"><span>directions</span><i class="fas fa-directions"></i></a>
-                                    <!-- link a waze con coordenadas -->
-                                </div>
+                                <div class="tag_area"><span class="tag bg1">green apple</span><span class="tag bg2">caramel</span><span class="tag bg2">almonds</span><span class="tag bg3">raspberry</span></div>
                             </div>
 
                             <div class="row p_header">
@@ -422,21 +344,9 @@
 
                                     <div class="farm_facts">
                                         <ul>
-                                            <li v-if="item.latitude && item.latitude > 0"><i
-                                                    class="fas fa-map-marker-alt"></i> {{ item.latitude }} ,
-                                                {{ item.longitude}}</li>
-                                            <li v-if="item.maxAltitude && item.maxAltitude > 0"><i
-                                                    class="fas fa-mountain"></i>{{ item.maxAltitude  | number}} ft</li>
-                                            <li v-if="item.totalArea && item.totalArea > 0"><i
-                                                    class="fas fa-draw-polygon"></i>{{item.totalArea  | number}}
-                                            </li>
-                                            <li v-if="item.goldProductionQq && item.goldProductionQq > 0"><i
-                                                    class="fas fa-seedling"></i>{{item.goldProductionQq  | number}} qq
-                                            </li>
-                                            <li><br /></li>
-                                            <li v-if="item.awards && item.awards.length > 0"><i
-                                                    class="fas fa-award"></i><span class="badge"
-                                                    v-for="it in item.awards" :key="it">{{ it }}</span></li>
+                                            <li>Varieties: <span class="badge">Caturra, Catuai, Geisha</span></li>
+                                            <li>Processes: <span class="badge">Honey, Semi-washed</span></li>
+                                            <li>Drying: <span class="badge">African beds</span></li>
                                         </ul>
 
                                     </div>
@@ -445,35 +355,33 @@
                                 <div class="col-12 col-sm-6">
                                     <div class="farm_facts text-left text-sm-right pl-5 pl-sm-0">
                                         <ul>
-                                            <li v-if="item.varieties && item.varieties.length > 0">Varieties: <span
-                                                    class="badge " v-for="it in item.varieties"
-                                                    :key="it.id">{{ it.name }}</span></li>
-                                            <li v-if="item.processes && item.processes.length > 0">Processes: <span
-                                                    class="badge " v-for="it in item.processes"
-                                                    :key="it.id">{{ it.name }}</span></li>
-                                            <li v-if="item.soilTypes && item.soilTypes.length > 0">Soil: <span
-                                                    class="badge" v-for="it in item.soilTypes"
-                                                    :key="it.id">{{ it.name }}</span></li>
-                                            <li v-if="item.shadowTypes && item.shadowTypes.length > 0">Shade: <span
-                                                    class="badge " v-for="it in item.shadowTypes"
-                                                    :key="it.id">{{ it.name }}</span></li>
-                                            <li v-if="item.dryingTypes && item.dryingTypes.length > 0">Drying: <span
-                                                    class="badge " v-for="it in item.dryingTypes"
-                                                    :key="it.id">{{ it.name }}</span></li>
-                                            <li v-if="item.amenities && item.amenities.length > 0">Ammenities: <span
-                                                    class="badge" v-for="it in item.amenities" :key="it">{{ it }}</span>
-                                            </li>
+                                            <li>Packaging: <span class="badge">Grainpro</span></li>
+                                            <li>Listing: <span class="badge">Spot</span></li>
+                                            <li>Warehouse: <span class="badge">The Annex, Oakland, CA, USA</span></li>
                                         </ul>
 
                                     </div>
                                 </div>
 
                             </div>
-                            <div class="row">
-                                <div class="col mb-5">
-                                    <button type="submit" class="btn btn-rounded action_btn"><i
-                                            class="fas fa-envelope"></i></button>
-                                    <div class="text-center py-2"><small>Contact the producer</small></div>
+                            <div class="row p_origin">
+                                <div class="tx_blue">Origin</div>
+                                <h5>{{ item.name }}</h5>
+                                <div>{{ item.town}}, {{ item.city}}</div>
+                                
+                                <div class="col-12 summary_text">{{ item.description }}</div>
+                                <div class="col-12 small tx_blue text-center">view farm profile</div>
+                            </div>
+                            <div class="row my-5">
+                                <div class="col-2 col-sm-1 text-center">
+                                    <h2 class="tx_blue"><i class="fas fa-envelope"></i></h2>
+                                </div>
+                                <div class="col">
+                                    <div class="row">labonita@gmail.com</div>
+                                    <div class="row">+502 7613 1234</div>
+                                </div>
+                                <div class="col-4 col-sm-3 text-right pr-4">
+                                    <button class="btn btn-primary btn-sm" type="submit">Request sample</button>
                                 </div>
                                 <!-- <div>
                                 <span class="text-secondary">Contact .</span>

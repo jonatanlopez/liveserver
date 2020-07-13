@@ -182,6 +182,7 @@ ul {
     border-radius: 10px;
     color: #707070;
 }
+
 .num_points {
     display: inline-block;
     /* flex: 0 0 100px; */
@@ -193,7 +194,7 @@ ul {
     border-radius: 10px;
     background-color: #acacac;
 }
-.num_points:after {
+.num_points:after, .lotlbl:after {
     content: attr(lbl);
     position: relative;
     margin: 0 auto;
@@ -204,6 +205,8 @@ ul {
 }
 .tx_blue {
     color: #007bff;
+}
+.tight {
     padding: 0 12px;
 }
 .title_results {
@@ -275,6 +278,9 @@ ul {
     top: -20px;
     padding: 12px; 
 }
+.f_right {
+    float: right;
+}
 .back * {
     display: inline;
     vertical-align: middle;
@@ -288,15 +294,41 @@ ul {
 .p_header { 
     margin: 20px 0; 
 }
+.p_origin {
+    display: block;
+    padding: 30px;
+    /* border: 2px solid #acacac; */
+    border-radius: 8px;
+    background-color: #eff4f6;
+}
 .p_header .nom { 
     padding: 0;
-
+    /* padding-left: 12px; */
 }
 .p_header .certifications img {
     display: inline;
     width: 70px;
     height: 70px;
 }
+.tag_area {
+    margin: 10px 0;
+    width: 100%;
+}
+.p_header .tag {
+    display: inline-block;
+    text-align: center;
+    font-size: 0.7em;
+    color: #555;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+.bg1 { background-color: #DCEFE3; }
+.bg2 { background-color: #EFECDC; }
+.bg3 { background-color: #EFDDDC; }
+.bg4 {}
+.bg5 {}
+.bg6 {}
 .results_header, .results {
     padding: 12px;
 }
