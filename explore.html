@@ -1,0 +1,811 @@
+@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.SectionPage>
+    @using ContentModels = Umbraco.Web.PublishedContentModels;
+
+    @*@inherits Umbraco.Web.Mvc.UmbracoTemplatePage*@
+    @{
+    Layout = "SectionMaster.cshtml";
+    }
+
+    @* the fun starts here *@
+
+    <!--<a class="nav-link call_search_up" s_type="https://guatemalancoffees.azurewebsites.net/umbraco/api/productiveunits/options">Explore <i class="fas fa-search"></i></a>-->
+
+    <div id="vapp">
+        <!-- *** INICIA BLOQUE DE MODAL DE BÚSQUEDA (modal_search_gral) *** -->
+        <div :class="main_class" class="container-fluid">
+            <div class="m-4">
+
+                <!-- btn_explore.htm -->
+                <!-- <div class="search_modal modalw"></div> -->
+                <div>
+                    <a class="btn btn_float nav-link call_search_up"
+                        v-on:click.prevent="showFilterModal"><span>Explore</span><i class="fas fa-search"></i></a>
+                </div>
+
+                <!-- BLOQUE DE GRID DE RESULTADOS DE BÚSQUEDA -->
+                <div class="results_block">
+                    <div class="row results_header">
+                        <div class="col-12 col-md-10 col-lg-9 summary_results">
+                            <div>
+                                <div class="num_results">{{total}}</div>
+                            </div>
+                            <div>
+                                <div class="title_results">Results for
+                                    <span v-for="key in Object.keys(filterOptions)" :key="key"
+                                        v-if="filterOptions[key].length>0">
+
+                                        {{key}} : {{ filterOptions[key]}} +
+                                    </span></div>
+                                <small class="form-text text-primary"><a href="#" class="collapse_filters"
+                                        v-on:click="()=>this.$refs.productiveUnitFilter.show()">Narrow
+                                        results</a></small>
+                            </div>
+
+                        </div>
+                        <div class="col-12 col-md-2 col-lg-3 text-right view_modes">
+                            <a v-on:click.prevent="setView('list')" v-if="this.viewMode != 'list'"><span>list</span><i
+                                    class="fas fa-list-alt"></i></a>
+                            <!-- se oculta al mostrar listado -->
+                            <a v-on:click.prevent="setView('grid')" v-if="this.viewMode != 'grid'"><span>grid</span><i
+                                    class=" fas fa-th"></i></a>
+                            <!-- se oculta al mostrar grid -->
+                            <a v-on:click.prevent="setView('map')" v-if="this.viewMode != 'map'"><span>map</span><i
+                                    class=" fas
+                                    fa-map-marked-alt"></i></a>
+                            <!-- se oculta al mostrar mapa -->
+                        </div>
+
+                    </div>
+
+                    <div class="results">
+                        <div :class="currentViewModeClass" v-if="dataList && dataList.length>0">
+                            <!-- results_list / results_grid / results_map - class cambia de acuerdo a view mode-->
+                            <div class="entry" v-for="(item, index) in dataList" :key="item.id" :data-id="item.id">
+                                <div class="num_dot">{{index+1}}</div>
+                                <!-- este es el bloque de cada UP en la lista -->
+                                <div class="img" v-on:click="showDetails(item)">
+                                    <img :src="item.coverPhoto | defaultCover" />
+                                </div>
+                                <!-- foto de la finca -->
+                                <div class="nom" v-on:click="showDetails(item)">
+                                    <ul>
+                                        <li>
+                                            <h5>{{ item.name }}</h5>
+                                        </li>
+                                        <li>{{ item.town}}, {{ item.city}}</li>
+                                        <li>varieties: <span class="badge " v-for="it in item.varieties"
+                                                :key="it.id">{{ it.name }}</span></li>
+                                    </ul>
+                                </div>
+                                <div class="actions">
+                                    <ul v-on:click="showDetails(item)">
+                                        <li><i class="fas fa-mountain"></i>{{item.maxAltitude | number}} ft</li>
+                                        <li><i class="fas fa-draw-polygon"></i>{{item.totalArea | number}} Ha</li>
+                                        <li><i class="fas fa-seedling"></i>{{item.goldProductionQq | number}} lb</li>
+                                    </ul>
+                                    <div class="go">
+                                        <a class="detalle" v-on:click="showDetails(item)">
+                                            <span>detail</span><i class="fas fa-chevron-circle-right"></i>
+                                        </a>
+                                        <a class="flyto" v-on:click="flyTo(item)">
+                                            <span>locate</span>
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                            <!-- <div v-if="dataList && dataList.length==0">
+                                No existen unidades productivas para este criterio
+                            </div> -->
+
+
+                            <div class="map_results" v-if="viewMode == 'map'">
+                                <div style="height: 100%; width: 100%">
+
+                                    <l-map ref="myMap" :zoom="zoom" :center="center" :options="mapOptions"
+                                        v-on:update:center="centerUpdate" v-on:update:zoom="zoomUpdate">
+
+
+                                        <l-marker v-for="(marker, index) in dataList" :key="marker.id" :visible="true"
+                                            :lat-lng="{lat:marker.latitude, lon:marker.longitude}"
+                                            v-on:click="showDetails(marker)">
+
+                                            <l-icon iconSize="[25, 41]" iconAnchor="[10, 44]" popupAnchor="[3, -40]"
+                                                icon-url="marker-icon.png" className="number-icon"
+                                                :options="{ html: `<span> ${index+1} </span>`, className: 'number-icon', iconSize: [25, 41], iconAnchor: [10, 44], popupAnchor: [3, -40]}">
+                                            </l-icon>
+
+                                            <!-- <l-popup
+                                                :content=" `<span class='text-primary'>${marker.name}</span> <br/> (${marker.latitude} ${marker.longitude}) <br/> ${marker.town} - ${marker.city} ` "
+                                                v-on:click="showDetails(marker)" /> -->
+
+                                            <l-tooltip :options="{ permanent: true, interactive: true }"
+                                                :content=" `<span class='text-primary'>${marker.name}</span> <br/> (${marker.latitude} ${marker.longitude}) <br/> ${marker.town} - ${marker.city} ` " />
+                                        </l-marker>
+
+                                        <l-tile-layer :url="url" :attribution="attribution" />
+
+                                    </l-map>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filtros -->
+                    <b-modal id="productiveUnitFilter" ref="productiveUnitFilter" size="lg" hide-footer
+                        header-class="modal-header-custom">
+
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12 ">
+                                    <h5>What are you looking for?</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <!-- Grupo de búsqueda básico -->
+                                <div class="col-md-12 pt-3" v-if="searchExtended==false">
+                                    <form>
+                                        <div class="form-group">
+                                            <input type="text" id="name" name="name" class="form-control"
+                                                placeholder="Search for name, location or description."
+                                                autocomplete="on" v-model="filterOptions.name" />
+                                            <!-- Muestra search_extended y oculta search_basic -->
+                                            <small class="form-text text-primary mx-2">
+                                                <a href="#" class="expand_filters" v-on:click.prevent="showSearchExtended">Or be more specific.</a></small>
+                                        </div>
+                                        <button type="button" class="btn btn-primary"
+                                            v-on:click.prevent="getFilteredProductiveUnits">Lets go!</button>
+                                    </form>
+                                </div>
+
+                                <div class="col-md-12 pt-3" v-if="searchExtended==true">
+                                    <form>
+                                        <div class="form-group row">
+                                            <label for="farmName" class="col-md-2 col-lg-3 text-md-right">Farm name</label>
+                                            <input type="text" class="form-control col-md-10 col-lg-9" id="farmName">
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="altitude" class="col-sm-2 col-lg-3 text-md-right">Altitude</label>
+                                            <input name="altitude" v-model="filterOptions.altitude"
+                                                oninput="alt_tag.value=parseInt(this.value)"
+                                                class="col-9 col-sm-8 col-lg-7 range-slider__range " type="range"
+                                                value="2500" min="2500" max="5800">
+                                            <output id="alt_tag" name="alt_tag" for="altitude" unit="ft"
+                                                class="col-3 col-sm-1 col-lg-2 range-slider__value">2500</output>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="varieties" class="col-md-2 text-md-right">Varieties</label>
+                                            <vue-multiselect id="varieties" class="col-md-4"
+                                                v-model="filterOptions.varieties" placeholder="Search" label="name"
+                                                track-by="id" :options="options['varieties']" :multiple="true">
+                                            </vue-multiselect>
+                                            <label for="processes" class="col-md-2 text-md-right">Processes</label>
+                                            <vue-multiselect id="processes" class="col-md-4"
+                                                v-model="filterOptions.processes" placeholder="Search" label="name"
+                                                track-by="id" :options="options['processes']" :multiple="true">
+                                            </vue-multiselect>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="regions" class="col-md-2 text-md-right">Regions</label>
+                                            <vue-multiselect id="regions" class="col-md-4" v-model="filterOptions.regions" 
+                                            placeholder="Search" :options="options['regions']" :multiple="true">
+                                            </vue-multiselect>
+
+                                            <label for="certifications"
+                                                class="col-md-2 text-md-right">Certifications</label>
+
+                                            <vue-multiselect id="certifications" class="col-md-4"
+                                                v-model="filterOptions.certifications" placeholder="Search" label="name"
+                                                track-by="id" :options="options['certifications']" :multiple="true">
+                                            </vue-multiselect>
+
+                                        </div>
+                                        <div class="form-group row">
+                                            <!-- Oculta search_extended y muestra search_basic -->
+                                            <div class="col">
+                                                <small class="form-text text-primary mx-2">
+                                                    <a href="#" v-on:click.prevent="clearSearchExtended"
+                                                        class="collapse_filters">Clear filters</a>
+                                                </small>
+                                            </div>
+                                            <div class="col text-center">
+                                                <button type="button" class="btn btn-primary"
+                                                    v-on:click.prevent="getFilteredProductiveUnits">Lets go!</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </b-modal>
+
+                    <!-- Detalles -->
+                    <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="xl" hide-footer
+                        header-class="modal-header-custom" dialog-class="modal_unit">
+                        <div class="col back">
+                                <div class="num_results">{{ item.id}}</div>
+                        </div>
+
+                        <div class="row ">
+                            <!-- columna central - perfil UP -->
+                            <div class="col col-md-10 mx-auto">
+                                <div class="row p_header">
+                                    <div class="col-12 col-sm-6 nom">
+                                        <ul>
+                                            <li>
+                                                <h3>{{ item.name }}</h3>
+                                            </li>
+                                            <li>{{ item.town}} - {{ item.city}}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-12 col-sm-6 text-right certifications">
+                                        <img v-for="it in item.certifications" :key="it.id"
+                                            :src="`images/cert_${it.id}.png`">
+                                    </div>
+                                </div>
+                                <div class="row mx-auto">
+                                    <div class="col-12">
+                                        <img class="img-fluid" v-if="showCover" :src="item.coverPhoto | defaultCover" />
+
+                                        <b-carousel v-if="showGallery" id="carousel1" style="text-shadow: 1px 1px 2px #333;" 
+                                            controls indicators background="#ababab" :interval="4000" img-width="1024"
+                                            img-height="480" v-model="slide">
+                                            <!-- Slides with image only -->
+                                            <b-carousel-slide v-for="img in item.gallery" :key="img"
+                                                :img-src="img | defaultCover">
+                                            </b-carousel-slide>
+                                        </b-carousel>
+
+                                        <div v-if="showInMap" style="height: 500px;">
+                                            <l-map ref="myMapDetails" :zoom="zoom"
+                                                :center="{ lat: item.latitude, lon: item.longitude }" :options="mapOptions">
+
+
+                                                <l-marker :visible="true"
+                                                    :lat-lng="{ lat: item.latitude, lon: item.longitude }">
+
+                                                    <l-icon iconSize="[25, 41]" iconAnchor="[10, 44]" popupAnchor="[3, -40]" 
+                                                    icon-url="marker-icon.png" className="number-icon"
+                                                        :options="{ html: `<span> 1 </span>`, className: 'number-icon', iconSize: [25, 41], iconAnchor: [10, 44], popupAnchor: [3, -40]}">
+                                                    </l-icon>
+
+                                                    <!-- <l-popup
+                                                    :content=" `<span class='text-primary'>${marker.name}</span> <br/> (${marker.latitude} ${marker.longitude}) <br/> ${marker.town} - ${marker.city} ` "
+                                                    v-on:click="showDetails(marker)" /> -->
+
+                                                    <l-tooltip :options="{ permanent: true, interactive: true }"
+                                                        :content=" `<span class='text-primary'>${item.name}</span> <br/> (${item.latitude} ${item.longitude}) <br/> ${item.town} - ${item.city} ` " />
+                                                </l-marker>
+
+                                                <l-tile-layer :url="url" :attribution="attribution" />
+
+                                            </l-map>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row mx-auto">
+                                    <div class="col-12 summary_text">{{ item.description }}
+                                    </div>
+                                </div>
+
+                                <div class="row p_header">
+                                    <div class="col-12 col-sm-7 action_bar">
+                                        <div>
+                                            <!-- Link a sección de buy en lista de lotes de la UP -->
+                                            <a href="#">
+                                                <div class="num_results tx_blue">{{item.coffeeOfferingsCount}}</div>
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <div class="title_results">Coffee lots available</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-5 text-right view_modes">
+                                        <!-- MAPA Y GALERÍA PUEDEN OCUPAR EL CONTAINER CLASS="main_image" -->
+                                        <a href="#" v-on:click.prevent="setShowGallery"
+                                            v-if="item.gallery && item.gallery.length > 0 ">
+                                            <span>gallery</span>
+                                            <i class="fas fa-images"></i>
+                                        </a>
+                                        <!-- galería de fotos (lightbox) -->
+                                        <a href="#" v-on:click.prevent="setShowInMap">
+                                            <span>map</span><i class="fas fa-map-marked-alt"></i>
+                                        </a>
+                                        <!-- mostrar ubicación en mapa -->
+                                        <a :href="`https://waze.com/ul?ll=${item.latitude},${item.longitude}&navigate=yes`"
+                                            target="_blank"><span>directions</span><i class="fas fa-directions"></i></a>
+                                        <!-- link a waze con coordenadas -->
+                                    </div>
+                                </div>
+
+                                <div class="row p_header">
+                                    <div class="col-12 col-sm-6">
+
+                                        <div class="farm_facts">
+                                            <ul>
+                                                <li v-if="item.latitude && item.latitude > 0">
+                                                    <i class="fas fa-map-marker-alt"></i> 
+                                                    {{ item.latitude }} ,
+                                                    {{ item.longitude}}
+                                                </li>
+                                                <li v-if="item.maxAltitude && item.maxAltitude > 0">
+                                                    <i class="fas fa-mountain"></i>{{ item.maxAltitude  | number}} ft
+                                                </li>
+                                                <li v-if="item.totalArea && item.totalArea > 0">
+                                                    <i class="fas fa-draw-polygon"></i>{{item.totalArea  | number}}
+                                                </li>
+                                                <li v-if="item.goldProductionQq && item.goldProductionQq > 0">
+                                                    <i class="fas fa-seedling"></i>{{item.goldProductionQq  | number}} qq
+                                                </li>
+                                                <li><br /></li>
+                                                <li v-if="item.awards && item.awards.length > 0"><i
+                                                        class="fas fa-award"></i><span class="badge"
+                                                        v-for="it in item.awards" :key="it">{{ it }}</span></li>
+                                            </ul>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <div class="farm_facts text-left text-sm-right pl-5 pl-sm-0">
+                                            <ul>
+                                                <li v-if="item.varieties && item.varieties.length > 0">Varieties: <span
+                                                        class="badge " v-for="it in item.varieties"
+                                                        :key="it.id">{{ it.name }}</span></li>
+                                                <li v-if="item.processes && item.processes.length > 0">Processes: <span
+                                                        class="badge " v-for="it in item.processes"
+                                                        :key="it.id">{{ it.name }}</span></li>
+                                                <li v-if="item.soilTypes && item.soilTypes.length > 0">Soil: <span
+                                                        class="badge" v-for="it in item.soilTypes"
+                                                        :key="it.id">{{ it.name }}</span></li>
+                                                <li v-if="item.shadowTypes && item.shadowTypes.length > 0">Shade: <span
+                                                        class="badge " v-for="it in item.shadowTypes"
+                                                        :key="it.id">{{ it.name }}</span></li>
+                                                <li v-if="item.dryingTypes && item.dryingTypes.length > 0">Drying: <span
+                                                        class="badge " v-for="it in item.dryingTypes"
+                                                        :key="it.id">{{ it.name }}</span></li>
+                                                <li v-if="item.amenities && item.amenities.length > 0">Ammenities: <span
+                                                        class="badge" v-for="it in item.amenities" :key="it">{{ it }}</span>
+                                                </li>
+                                            </ul>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col mb-5">
+                                        <button type="submit" class="btn btn-rounded action_btn"><i
+                                                class="fas fa-envelope"></i></button>
+                                        <div class="text-center py-2"><small>Contact the producer</small></div>
+                                    </div>
+                                    <!-- <div>
+                                    <span class="text-secondary">Contact .</span>
+                                    {{ item.website}}
+                                    <br /> phones.
+                                    <span v-for="it in item.phones" :key="it">{{ it}}</span>
+                                    <br /> emails.
+                                    <span v-for="it in item.email" :key="it">{{ it}}</span>
+                                </div> -->
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+
+                    </b-modal>
+
+                </div>
+            </div>
+            <!-- *** FINALIZA BLOQUE DE MODAL DE BÚSQUEDA *** -->
+
+            <div class="container-fluid content_block">
+            <!-- CONTENIDO DE WP -->                
+                @Html.Partial("Carousel")
+                <section class="section">
+                    <div class="container">
+                        @Html.GetGridHtml(Model.Content, "bodyText", "bootstrap3-fluid")
+                    </div>
+                </section>
+            </div>
+
+        </div>
+
+
+        <script type="text/javascript">
+            //var endPoint = 'https://coffeesearch.azurewebsites.net';
+            var endPoint = '/umbraco';
+
+            var imagesEndPoint = 'https://coffeesearch.azurewebsites.net';
+
+            // Vue.use(require('vue-moment'));
+
+
+            numeral.register("locale", "gt", {
+                delimiters: {
+                    thousands: ",",
+                    decimal: "."
+                },
+                abbreviations: {
+                    thousand: "k",
+                    million: "m",
+                    billion: "b",
+                    trillion: "t"
+                },
+                ordinal: function (number) {
+                    return number === 1 ? "er" : "ero";
+                },
+                currency: {
+                    symbol: "Q"
+                }
+            });
+
+            numeral.locale("gt");
+
+            Vue.filter("number", function (value) {
+                return numeral(value).format("0,0.00");
+            });
+
+            // register globally
+            Vue.component('vue-multiselect', window.VueMultiselect.default)
+
+            const vueApp = new Vue({
+                el: '#vapp',
+                components: {
+                    LMap: window.Vue2Leaflet.LMap,
+                    LTileLayer: window.Vue2Leaflet.LTileLayer,
+                    LMarker: window.Vue2Leaflet.LMarker,
+                    LPopup: window.Vue2Leaflet.LPopup,
+                    LTooltip: window.Vue2Leaflet.LTooltip,
+                    LIcon: window.Vue2Leaflet.LIcon,
+                },
+                data() {
+                    return {
+                        currentPage: 1,
+                        numberOfPages: 1,
+                        total: 0,
+                        loading: false,
+                        display: 'redbox',
+                        showFiltersFlag: false,
+                        serverRoot: endPoint,
+                        item: {},
+                        dataList: null,
+                        optionsSelected: {
+                            "certifications": [],
+                            "cities": [],
+                            "processes": [],
+                            "regions": [],
+                            "shades": [],
+                            "varieties": [],
+                            "soils": [],
+                            "dryings": []
+                        },
+
+                        filterOptions: {
+                            "name": "",
+                            "city": 0,
+                            "town": 0,
+                            "altitude": 0,
+                            "processes": [],
+                            "altitudes": [],
+                            "minAltitude": 0,
+                            "maxAltitude": 0,
+                            "certifications": [],
+                            "regions": [],
+                            "varieties": [],
+                            "pageSize": 10,
+                            "sort": "n|asc",
+                            "page": 1,
+                            "approved": true
+                        },
+
+                        options: {
+                            "altitudes": [],
+                            "awards": [],
+                            "certifications": [],
+                            "cities": [],
+                            "processes": [],
+                            "regions": [],
+                            "shades": [],
+                            "varieties": [],
+                            "soils": [],
+                            "dryings": []
+                        },
+                        zoom: 8,
+                        center: L.latLng(15.823966, -90.186768),
+                        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+                        withPopup: L.latLng(15.866242, -90.203247),
+                        withTooltip: L.latLng(15.866242, -90.203247),
+                        currentZoom: 8,
+                        currentCenter: L.latLng(15.823966, -90.186768),
+                        showParagraph: false,
+                        mapOptions: {
+                            zoomSnap: 0.5
+                        },
+
+                        showMap: false,
+                        searchExtended: false,
+                        viewMode: 'list',
+                        currentViewModeClass: "results_list", //results_list / results_grid / results_map  
+
+                        markers: [],
+
+                        main_class: "search_block_off",
+                        slide: 0,
+
+                        showCover: true,
+                        showInMap: false,
+                        showGallery: false
+                    }
+                },
+
+                filters: {
+                    pretty: function (value) {
+                        return JSON.stringify(JSON.parse(value), null, 2);
+                    },
+                    defaultCover(fileName) {
+                        if (fileName == null || fileName == "") {
+                            return `${imagesEndPoint}/uploads/coverPhoto.png`;
+                        } else {
+                            return `${imagesEndPoint}/uploads/${fileName}`;
+                        }
+                    },
+                    moment: function (date, format) {
+                        return moment(date).format(format);
+                    }
+                },
+
+                methods: {
+                    setView(mode) {
+
+                        this.viewMode = mode;
+
+                        //results_list / results_grid / results_map  
+
+                        switch (mode) {
+                            case "list":
+                                this.currentViewModeClass = "results_list";
+                                break;
+                            case "grid":
+                                this.currentViewModeClass = "results_grid";
+                                break;
+                            case "map":
+                                //this.showMap = true;
+                                this.currentViewModeClass = "results_map";
+                                break;
+
+                        }
+
+
+                    },
+
+                    flyTo(marker) {
+
+                        this.$nextTick(() => {
+
+                            let loc = {
+                                lat: marker.latitude,
+                                lon: marker.longitude
+                            };
+
+                            console.log("flying to...", loc);
+
+                            console.log(this.$refs.myMap.mapObject);
+
+
+                            this.$refs.myMap.mapObject.flyTo(loc, 13);
+
+                        })
+                    },
+
+                    alert(marker) {
+                        alert(marker.id + '-' + marker.name);
+                    },
+
+                    showSearchExtended() {
+                        this.searchExtended = true;
+                    },
+
+                    clearSearchExtended() {
+
+                        this.filterOptions = {
+                            "name": "",
+                            "altitude": 0,
+                            "city": 0,
+                            "town": 0,
+                            "processes": [],
+                            "altitudes": [],
+                            "minAltitude": 0,
+                            "maxAltitude": 0,
+                            "certifications": [],
+                            "regions": [],
+                            "varieties": [],
+                            "pageSize": 10,
+                            "sort": "n|asc",
+                            "page": 1,
+                            "approved": true
+                        };
+
+                        this.searchExtended = false;
+                    },
+
+                    toggleFilters() {
+                        this.showFiltersFlag = !this.showFiltersFlag;
+                    },
+
+                    showFilterModal() {
+
+                        this.filterOptions = {
+                            "name": "",
+                            "altitude": 0,
+                            "city": 0,
+                            "town": 0,
+                            "processes": [],
+                            "altitudes": [],
+                            "minAltitude": 0,
+                            "maxAltitude": 0,
+                            "certifications": [],
+                            "regions": [],
+                            "awards": [],
+                            "varieties": [],
+                            "pageSize": 10,
+                            "sort": "n|asc",
+                            "page": 1,
+                            "approved": true
+                        };
+
+                        this.dataList = null;
+
+                        this.searchExtended = false;
+                        this.main_class = "search_block_off";
+                        this.$refs.productiveUnitDetails.hide();
+                        this.$refs.productiveUnitFilter.show();
+
+
+                    },
+                    showGeneralSearch() {
+                        this.$refs.searchGeneral.show();
+                    },
+
+                    showDetails(item) {
+
+                        this.loading = true;
+                        axios
+                            .get(`${endPoint}/api/productiveunits/getone/${item.id}`)
+                            .then(response => {
+                                this.item = response.data;
+                                this.loading = false;
+                                this.$refs.productiveUnitDetails.show();
+                            })
+                            .catch(error => {
+                                this.loading = false;
+                            });
+
+
+
+                    },
+
+
+                    getAllProductiveUnits() {
+                        this.loading = true;
+                        axios
+                            .get(`${endPoint}/api/productiveunits/getall`)
+                            .then(response => {
+                                this.dataList = response.data;
+                                this.loading = false;
+                            })
+                            .catch(error => {
+                                this.loading = false;
+                            });
+                    },
+
+                    getFilteredProductiveUnits() {
+                        this.loading = true;
+                        axios
+                            .post(`${endPoint}/api/productiveunits/filter`, this.filterOptions)
+                            .then(response => {
+                                this.dataList = response.data.data;
+                                this.total = response.data.total;
+                                this.currentPage = response.data.currentPage;
+                                this.numberOfPages = response.data.lastPage;
+                                this.loading = false;
+                                this.$refs.productiveUnitFilter.hide();
+                                this.main_class = "search_block";
+                            })
+                            .catch(error => {
+                                this.loading = false;
+                            });
+                    },
+
+                    searchProductiveUnits() {
+                        this.loading = true;
+                        axios
+                            .get(`${endPoint}/api/productiveunits/search?q=${this.filterOptions.name}`)
+                            .then(response => {
+                                this.dataList = response.data;
+                                this.loading = false;
+                                this.$refs.productiveUnitFilter.hide();
+                            })
+                            .catch(error => {
+                                this.loading = false;
+                            });
+                    },
+
+
+                    getProductiveUnitsOptions() {
+                        this.loading = true;
+                        axios
+                            .get(`${endPoint}/api/productiveunits/options`)
+                            .then(response => {
+                                this.options = response.data;
+                                this.loading = false;
+                            })
+                            .catch(error => {
+                                this.loading = false;
+                            });
+                    },
+
+                    addProperty(propertyName) {
+                        console.log(this.optionsSelected[propertyName]);
+                    },
+
+                    zoomUpdate(zoom) {
+                        this.currentZoom = zoom;
+                    },
+                    centerUpdate(center) {
+                        this.currentCenter = center;
+                    },
+                    setShowInMap() {
+
+                        if (this.showInMap) {
+                            this.showInMap = false;
+                            this.showGallery = false;
+                            this.showCover = true;
+                        } else {
+
+                            this.showInMap = true;
+                            this.showGallery = false;
+                            this.showCover = false;
+                        }
+                    },
+                    setShowGallery() {
+                        if (this.item.gallery.length > 0) {
+
+                            if (this.showInMap) {
+                                this.showInMap = false;
+                                this.showGallery = false;
+                                this.showCover = true;
+                            } else {
+                                this.showInMap = false;
+                                this.showGallery = true;
+                                this.showCover = false;
+                            }
+                        }
+                    },
+                    setShowCover() {
+                        this.showInMap = false;
+                        this.showGallery = false;
+                        this.showCover = true;
+                    },
+                },
+
+                mounted() {
+                    this.getProductiveUnitsOptions();
+                    //this.showGeneralSearch();
+                    //document.getElementById("explore_btn").onclick = function () {this.showGeneralSearch();};
+                }
+
+            })
+        </script>

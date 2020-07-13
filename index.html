@@ -126,7 +126,8 @@
 
                                         {{key}} : {{ filterOptions[key]}} +
                                     </span></div>
-                                <small class="form-text text-primary"><a href="#" class="collapse_filters">Narrow
+                                <small class="form-text text-primary"><a href="#" class="collapse_filters"
+                                        v-on:click="()=>this.$refs.productiveUnitFilter.show()">Narrow
                                         results</a></small>
                             </div>
 
@@ -152,7 +153,8 @@
                             <div class="entry" v-for="(item, index) in dataList" :key="item.id" :data-id="item.id">
                                 <div class="num_dot">{{index+1}}</div>
                                 <!-- este es el bloque de cada UP en la lista -->
-                                <div class="img" v-on:click="showDetails(item)"><img :src="item.coverPhoto | defaultCover" /></div>
+                                <div class="img" v-on:click="showDetails(item)"><img
+                                        :src="item.coverPhoto | defaultCover" /></div>
                                 <!-- foto de la finca -->
                                 <div class="nom" v-on:click="showDetails(item)">
                                     <ul>
@@ -171,8 +173,10 @@
                                         <li><i class="fas fa-seedling"></i>{{item.goldProductionQq | number}} lb</li>
                                     </ul>
                                     <div class="go">
-                                        <a class="detalle" v-on:click="showDetails(item)"><span>detail</span><i class="fas fa-chevron-circle-right"></i></a>
-                                        <a class="flyto" v-on:click="flyTo(item)"><span>locate</span><i class="fas fa-map-marker-alt"></i></a>
+                                        <a class="detalle" v-on:click="showDetails(item)"><span>detail</span><i
+                                                class="fas fa-chevron-circle-right"></i></a>
+                                        <a class="flyto" v-on:click="flyTo(item)"><span>locate</span><i
+                                                class="fas fa-map-marker-alt"></i></a>
                                     </div>
                                     <!-- <div class="go"><i class="fas fa-search-location"
                                         v-on:click="flyTo(item)"></i>
@@ -224,8 +228,8 @@
                 </div>
 
                 <!-- Filtros -->
-                <b-modal id="productiveUnitFilter" ref="productiveUnitFilter" size="lg" hide-footer 
-                    header-class="modal-header-custom" dialog-class="myModal">
+                <b-modal id="productiveUnitFilter" ref="productiveUnitFilter" size="lg" hide-footer
+                    header-class="modal-header-custom" dialog-class="myModal" :busy="loading">
 
                     <div class="container-fluid">
                         <div class="row">
@@ -241,14 +245,15 @@
                                     <div class="form-group">
                                         <input type="text" id="name" name="name" class="form-control"
                                             placeholder="Search for name, location or description." autocomplete="on"
-                                            v-model="filterOptions.name" />
+                                            v-model="filterOptions.name" :disabled="loading" />
                                         <!-- Muestra search_extended y oculta search_basic -->
-                                        <small class="form-text text-primary mx-2"><a href="#" class="expand_filters"
+                                        <small class="form-text text-primary mx-2">
+                                            <button href="#" class="expand_filters btn btn-link" :disabled="loading"
                                                 v-on:click.prevent="showSearchExtended">Or be
-                                                more specific.</a></small>
+                                                more specific.</button></small>
                                     </div>
-                                    <button type="button" class="btn btn-primary"
-                                        v-on:click.prevent="getFilteredProductiveUnits">Lets go!</button>
+                                    <button type="button" class="btn btn-primary" :disabled="loading"
+                                        v-on:click.prevent="getFilteredProductiveUnits">Lets go!  <i class="fa fa-spinner fa-spin" v-show="loading"></i> </button>
                                 </form>
                             </div>
 
@@ -256,11 +261,11 @@
                                 <form>
                                     <div class="form-group row">
                                         <label for="farmName" class="col-md-2 col-lg-3 text-md-right">Farm name</label>
-                                        <input type="text" class="form-control col-md-10 col-lg-9" id="farmName">
+                                        <input type="text" class="form-control col-md-10 col-lg-9" :disabled="loading" id="farmName">
                                     </div>
                                     <div class="form-group row">
                                         <label for="altitude" class="col-sm-2 col-lg-3 text-md-right">Altitude</label>
-                                        <input name="altitude" v-model="filterOptions.altitude"
+                                        <input name="altitude" v-model="filterOptions.altitude" :disabled="loading"
                                             oninput="alt_tag.value=parseInt(this.value)"
                                             class="col-9 col-sm-8 col-lg-7 range-slider__range " type="range"
                                             value="2500" min="2500" max="5800">
@@ -269,12 +274,12 @@
                                     </div>
                                     <div class="form-group row">
                                         <label for="varieties" class="col-md-2 text-md-right">Varieties</label>
-                                        <vue-multiselect id="varieties" class="col-md-4"
+                                        <vue-multiselect id="varieties" class="col-md-4" :disabled="loading"
                                             v-model="filterOptions.varieties" placeholder="Search" label="name"
                                             track-by="id" :options="options['varieties']" :multiple="true">
                                         </vue-multiselect>
                                         <label for="processes" class="col-md-2 text-md-right">Processes</label>
-                                        <vue-multiselect id="processes" class="col-md-4"
+                                        <vue-multiselect id="processes" class="col-md-4" :disabled="loading"
                                             v-model="filterOptions.processes" placeholder="Search" label="name"
                                             track-by="id" :options="options['processes']" :multiple="true">
                                         </vue-multiselect>
@@ -282,14 +287,14 @@
 
                                     <div class="form-group row">
                                         <label for="regions" class="col-md-2 text-md-right">Regions</label>
-                                        <vue-multiselect id="regions" class="col-md-4" v-model="filterOptions.regions"
-                                            placeholder="Search" :options="options['regions']" :multiple="true">
+                                        <vue-multiselect id="regions" class="col-md-4" :disabled="loading"
+                                            v-model="filterOptions.regions"  placeholder="Search" :options="options['regions']" :multiple="true">
                                         </vue-multiselect>
 
                                         <label for="certifications"
                                             class="col-md-2 text-md-right">Certifications</label>
 
-                                        <vue-multiselect id="certifications" class="col-md-4"
+                                        <vue-multiselect id="certifications" class="col-md-4" :disabled="loading"
                                             v-model="filterOptions.certifications" placeholder="Search" label="name"
                                             track-by="id" :options="options['certifications']" :multiple="true">
                                         </vue-multiselect>
@@ -299,13 +304,13 @@
                                         <!-- Oculta search_extended y muestra search_basic -->
                                         <div class="col">
                                             <small class="form-text text-primary mx-2">
-                                                <a href="#" v-on:click.prevent="clearSearchExtended"
-                                                    class="collapse_filters">Clear filters</a>
+                                                <button href="#" v-on:click.prevent="clearSearchExtended" :disabled="loading"
+                                                    class="collapse_filters btn btn-link">Clear filters</button>
                                             </small>
                                         </div>
                                         <div class="col text-center">
-                                            <button type="button" class="btn btn-primary"
-                                                v-on:click.prevent="getFilteredProductiveUnits">Lets go!</button>
+                                            <button type="button" class="btn btn-primary" :disabled="loading"
+                                                v-on:click.prevent="getFilteredProductiveUnits">Lets go!  <i class="fa fa-spinner fa-spin" v-show="loading"></i> </button>
                                         </div>
                                     </div>
                                 </form>
@@ -319,16 +324,20 @@
                 <!-- Detalles -->
                 <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="xl" hide-footer
                     header-class="modal-header-custom" dialog-class="modal_unit">
+
+
+
+                    
                     <div class="col back">
                         <div class="num_results">{{ item.id}}</div>
                     </div>
                     <!-- <div class="row"> -->
-                        <!-- columna izquierda - back to results -->
-                        <!-- <div class="col back"><a><i class="fas fa-chevron-circle-left"></i><span>go back</span></a>
+                    <!-- columna izquierda - back to results -->
+                    <!-- <div class="col back"><a><i class="fas fa-chevron-circle-left"></i><span>go back</span></a>
                         </div> -->
-                        
-                        <!-- columna derecha info código UP -->
-                        <!-- <div class="col text-right right_col">
+
+                    <!-- columna derecha info código UP -->
+                    <!-- <div class="col text-right right_col">
                             <div class="num_results">{{ item.id}}</div>
                         </div> -->
                     <!-- </div> -->
@@ -355,8 +364,8 @@
                                 <div class="col-12">
                                     <img class="img-fluid" v-if="showCover" :src="item.coverPhoto | defaultCover" />
 
-                                    <b-carousel v-if="showGallery" id="carousel1" style="text-shadow: 1px 1px 2px #333;"f
-                                        controls indicators background="#ababab" :interval="4000" img-width="1024"
+                                    <b-carousel v-if="showGallery" id="carousel1" style="text-shadow: 1px 1px 2px #333;"
+                                        f controls indicators background="#ababab" :interval="4000" img-width="1024"
                                         img-height="480" v-model="slide">
                                         <!-- Slides with image only -->
                                         <b-carousel-slide v-for="img in item.gallery" :key="img"
@@ -365,7 +374,8 @@
                                     </b-carousel>
 
                                     <div v-if="showInMap" style="height: 500px;">
-                                        <l-map ref="myMapDetails" :zoom="zoom" :center="{ lat: item.latitude, lon: item.longitude }" :options="mapOptions">
+                                        <l-map ref="myMapDetails" :zoom="zoom"
+                                            :center="{ lat: item.latitude, lon: item.longitude }" :options="mapOptions">
 
 
                                             <l-marker :visible="true"
@@ -410,10 +420,10 @@
                                 </div>
                                 <div class="col-12 col-sm-5 text-right view_modes">
                                     <!-- MAPA Y GALERÍA PUEDEN OCUPAR EL CONTAINER CLASS="main_image" -->
-                                    <a v-on:click.prevent="setShowGallery"><span>gallery</span><i
+                                    <a href="#" v-on:click.prevent="setShowGallery" v-if="item.gallery && item.gallery.length > 0 "><span>gallery</span><i
                                             class="fas fa-images"></i></a>
                                     <!-- galería de fotos (lightbox) -->
-                                    <a v-on:click.prevent="setShowInMap"><span>map</span><i
+                                    <a href="#" v-on:click.prevent="setShowInMap"><span>map</span><i
                                             class="fas fa-map-marked-alt"></i></a>
                                     <!-- mostrar ubicación en mapa -->
                                     <a :href="`https://waze.com/ul?ll=${item.latitude},${item.longitude}&navigate=yes`"
@@ -612,6 +622,7 @@
                     numberOfPages: 1,
                     total: 0,
                     loading: false,
+                    detailsLoading: false,
                     display: 'redbox',
                     showFiltersFlag: false,
                     serverRoot: endPoint,
@@ -814,16 +825,20 @@
 
                 showDetails(item) {
                     //getone/
-                    this.loading = true;
+                    this.detailsLoading = true;
+                    
+                    this.setShowCover();
+
+
                     axios
                         .get(`${endPoint}/api/productiveunits/${item.id}/flat`)
                         .then(response => {
                             this.item = response.data;
-                            this.loading = false;
+                            this.detailsLoading = false;
                             this.$refs.productiveUnitDetails.show();
                         })
                         .catch(error => {
-                            this.loading = false;
+                            this.detailsLoading = false;
                         });
 
 
@@ -832,15 +847,15 @@
 
 
                 getAllProductiveUnits() {
-                    this.loading = true;
+                    // this.loading = true;
                     axios
                         .get(`${endPoint}/api/productiveunits/getall`)
                         .then(response => {
                             this.dataList = response.data;
-                            this.loading = false;
+                            // this.loading = false;
                         })
                         .catch(error => {
-                            this.loading = false;
+                            // this.loading = false;
                         });
                 },
 
@@ -863,32 +878,32 @@
                 },
 
                 searchProductiveUnits() {
-                    this.loading = true;
+                    // this.loading = true;
                     axios
                         .get(
                             `${endPoint}/api/productiveunits/search?q=${this.filterOptions.name}`
                         )
                         .then(response => {
                             this.dataList = response.data;
-                            this.loading = false;
+                            // this.loading = false;
                             this.$refs.productiveUnitFilter.hide();
                         })
                         .catch(error => {
-                            this.loading = false;
+                            // this.loading = false;
                         });
                 },
 
 
                 getProductiveUnitsOptions() {
-                    this.loading = true;
+                    // this.loading = true;
                     axios
                         .get(`${endPoint}/api/productiveunits/options`)
                         .then(response => {
                             this.options = response.data;
-                            this.loading = false;
+                            // this.loading = false;
                         })
                         .catch(error => {
-                            this.loading = false;
+                            // this.loading = false;
                         });
                 },
 
