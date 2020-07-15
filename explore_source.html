@@ -1,105 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
+@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.SectionPage>
+    @using ContentModels = Umbraco.Web.PublishedContentModels;
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Guatemalan Coffees - Explore</title>
+    @*@inherits Umbraco.Web.Mvc.UmbracoTemplatePage*@
+    @{
+    Layout = "SectionMaster.cshtml";
+    }
 
+    @* the fun starts here *@
 
-    <link href="https://fonts.googleapis.com/css?family=Oxygen" rel="stylesheet">
+    <!--<a class="nav-link call_search_up" s_type="https://guatemalancoffees.azurewebsites.net/umbraco/api/productiveunits/options">Explore <i class="fas fa-search"></i></a>-->
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" />
-
-
-    <!-- Load required Bootstrap and BootstrapVue CSS -->
-    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
-    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
-
-    <link rel="stylesheet" href="style.css">
-
-    <!-- Load polyfills to support older browsers -->
-    <script src="http://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver" crossorigin="anonymous">
-    </script>
-
-    <!-- Load Vue followed by BootstrapVue -->
-    <script src="https://unpkg.com/vue@latest/dist/vue.js"></script>
-    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
-
-    <link rel="stylesheet" href="//unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="//unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="//unpkg.com/vue2-leaflet"></script>
-
-    <script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
-    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
-
-    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
-
-    <style>
-        .modal-header-custom {
-            border-bottom: 0px solid #dee2e6;
-        }
-
-        .myModal {
-            background-color: green;
-        }
-    </style>
-
-</head>
-
-<body>
-    <header class="header">
-        <div class="headerbar">
-            <div class="logo">
-                    <div class="nav-link--home">
-                        <img class="logo-image" src="/media/1062/logogc.png" alt="Guatemalan Coffees">
-                        <!-- <img class="logo-image" src="/images/logogc.png" alt="Guatemalan Coffees"> -->
-                    </div>
-            </div>
-            
-            <!-- uncomment this line if you don't want it to appear in the top navigation -->
-            <!--<a class="nav-link " href="/">Home</a>-->
-
-            <div class="hello">
-            <!--<a class="nav-link call_search_up" s_type="https://guatemalancoffees.azurewebsites.net/umbraco/api/productiveunits/options">Explore <i class="fas fa-search"></i></a>-->
-            <!--<a id="explore_btn" class="nav-link call_search_up" s_type="https://guatemalancoffees.azurewebsites.net/umbraco/api/productiveunits/options" v-on:click="showGeneralsearch">Explore <i class="fas fa-search"></i></a>-->
-            <div class="btn lnk_m" lnk_m="/contact/">Say hello!</div> <!--link modal-->
-                <div class="redes">
-                    <div class="fb lnk_e" lnk_e="https://www.facebook.com/GuatemalanCoffeesAnacafe/" tar="new"></div> <!--link externo target new-->
-                    <div class="tw lnk_e" lnk_e="https://twitter.com/guatemalacoffee/" tar="new"></div>
-                    <div class="ig lnk_e" lnk_e="https://www.instagram.com/guatemalancoffees/" tar="new"></div>
-                </div>
-            </div>
-            <button class="navbar-toggler navbar-dark navbar-toggler-right menu_icon" type="button" data-toggle="collapse" data-target="#mainMenuOptions" aria-controls="mainMenuOptions" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <nav class="navbar navbar-expand-lg top-nav mainmenu">
-                <div class="collapse navbar-collapse" id="mainMenuOptions">
-                    <ul class="nav navbar-nav">
-                        <li class="nav-item">
-                            <!--<a class="nav-link nav-link--active" href="/">Learn</a>-->
-                            <a class="nav-link" href="/">Learn</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-link--active" href="/explore/">Explore</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/buy/">Buy</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
-    </header>
-    <main>
+    <div id="vapp">
         <!-- *** INICIA BLOQUE DE MODAL DE BÚSQUEDA (modal_search_gral) *** -->
-        <div id="vapp" :class="main_class" class="container-fluid">
-            <div>
+        <div :class="main_class" class="container-fluid">
+            <div class="m-4">
 
                 <!-- btn_explore.htm -->
                 <!-- <div class="search_modal modalw"></div> -->
@@ -149,8 +63,9 @@
                             <div class="entry" v-for="(item, index) in dataList" :key="item.id" :data-id="item.id">
                                 <div class="num_dot">{{index+1}}</div>
                                 <!-- este es el bloque de cada UP en la lista -->
-                                <div class="img" v-on:click="showDetails(item)"><img
-                                        :src="item.coverPhoto | defaultCover" /></div>
+                                <div class="img" v-on:click="showDetails(item)">
+                                    <img :src="item.coverPhoto | defaultCover" />
+                                </div>
                                 <!-- foto de la finca -->
                                 <div class="nom" v-on:click="showDetails(item)">
                                     <ul>
@@ -169,14 +84,14 @@
                                         <li><i class="fas fa-seedling"></i>{{item.goldProductionQq | number}} lb</li>
                                     </ul>
                                     <div class="go">
-                                        <a class="detalle" v-on:click="showDetails(item)"><span>detail</span><i
-                                                class="fas fa-chevron-circle-right"></i></a>
-                                        <a class="flyto" v-on:click="flyTo(item)"><span>locate</span><i
-                                                class="fas fa-map-marker-alt"></i></a>
+                                        <a class="detalle" v-on:click="showDetails(item)">
+                                            <span>detail</span><i class="fas fa-chevron-circle-right"></i>
+                                        </a>
+                                        <a class="flyto" v-on:click="flyTo(item)">
+                                            <span>locate</span>
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </a>
                                     </div>
-                                    <!-- <div class="go"><i class="fas fa-search-location"
-                                        v-on:click="flyTo(item)"></i>
-                                    </div> -->
                                 </div>
                             </div>
 
@@ -189,15 +104,12 @@
 
                         <div class="map_results" v-if="viewMode == 'map'">
                             <div style="height: 100%; width: 100%">
-                                <!-- <div class="text-center small mt-3">
-                                    <p>Center is at {{ currentCenter }} and the zoom is: {{ currentZoom }}</p>
-                                </div> -->
 
                                 <l-map ref="myMap" :zoom="zoom" :center="center" :options="mapOptions"
                                     v-on:update:center="centerUpdate" v-on:update:zoom="zoomUpdate">
 
 
-                                    <l-marker v-for="(marker, index)  in dataList" :key="marker.id" :visible="true"
+                                    <l-marker v-for="(marker, index) in dataList" :key="marker.id" :visible="true"
                                         :lat-lng="{lat:marker.latitude, lon:marker.longitude}"
                                         v-on:click="showDetails(marker)">
 
@@ -225,72 +137,70 @@
 
                 <!-- Filtros -->
                 <b-modal id="productiveUnitFilter" ref="productiveUnitFilter" size="lg" hide-footer
-                    header-class="modal-header-custom" dialog-class="myModal" :busy="loading">
+                    header-class="modal-header-custom">
 
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-12 ">
+                            <div class="col-md-12 ">
                                 <h5>What are you looking for?</h5>
                             </div>
                         </div>
-                        <div class="row p-3">
+                        <div class="row">
 
                             <!-- Grupo de búsqueda básico -->
-                            <div class="col-12" v-if="searchExtended==false">
+                            <div class="col-md-12 pt-3" v-if="searchExtended==false">
                                 <form>
                                     <div class="form-group">
                                         <input type="text" id="name" name="name" class="form-control"
-                                            placeholder="Search for name, location or description." autocomplete="on"
-                                            v-model="filterOptions.name" :disabled="loading" />
+                                            placeholder="Search for name, location or description."
+                                            autocomplete="on" v-model="filterOptions.name" />
                                         <!-- Muestra search_extended y oculta search_basic -->
                                         <small class="form-text text-primary mx-2">
-                                            <button href="#" class="expand_filters btn btn-link" :disabled="loading"
-                                                v-on:click.prevent="showSearchExtended">Or be
-                                                more specific.</button></small>
+                                            <a href="#" class="expand_filters" v-on:click.prevent="showSearchExtended">Or be more specific.</a></small>
                                     </div>
-                                    <button type="button" class="btn btn-primary" :disabled="loading"
-                                        v-on:click.prevent="getFilteredProductiveUnits">Lets go!  <i class="fa fa-spinner fa-spin" v-show="loading"></i> </button>
+                                    <button type="button" class="btn btn-primary"
+                                        v-on:click.prevent="getFilteredProductiveUnits">Lets go!</button>
                                 </form>
                             </div>
 
-                            <div class="col-12" v-if="searchExtended==true">
+                            <div class="col-md-12 pt-3" v-if="searchExtended==true">
                                 <form>
                                     <div class="form-group row">
-                                        <label for="farmName" class="col-lg-2 col-form-label pl-0">Farm name</label>
-                                        <input type="text" class="form-control col-lg-10" :disabled="loading" id="farmName">
+                                        <label for="farmName" class="col-md-2 col-lg-3 text-md-right">Farm name</label>
+                                        <input type="text" class="form-control col-md-10 col-lg-9" id="farmName">
                                     </div>
                                     <div class="form-group row">
-                                        <label for="altitude" class="col-lg-2 col-form-label pl-0">Altitude</label>
-                                        <input name="altitude" v-model="filterOptions.altitude" :disabled="loading"
+                                        <label for="altitude" class="col-sm-2 col-lg-3 text-md-right">Altitude</label>
+                                        <input name="altitude" v-model="filterOptions.altitude"
                                             oninput="alt_tag.value=parseInt(this.value)"
-                                            class="col-9 col-lg-8 range-slider__range " type="range"
+                                            class="col-9 col-sm-8 col-lg-7 range-slider__range " type="range"
                                             value="2500" min="2500" max="5800">
                                         <output id="alt_tag" name="alt_tag" for="altitude" unit="ft"
-                                            class="range-slider__value col-3 col-lg-2">2500</output>
+                                            class="col-3 col-sm-1 col-lg-2 range-slider__value">2500</output>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="varieties" class="col-form-label col-lg-2 pl-0">Varieties</label>
-                                        <vue-multiselect id="varieties" class="col-lg-10 px-0" :disabled="loading"
+                                        <label for="varieties" class="col-md-2 text-md-right">Varieties</label>
+                                        <vue-multiselect id="varieties" class="col-md-4"
                                             v-model="filterOptions.varieties" placeholder="Search" label="name"
                                             track-by="id" :options="options['varieties']" :multiple="true">
                                         </vue-multiselect>
-                                        <label for="processes" class="col-form-label col-lg-2 pl-0">Processes</label>
-                                        <vue-multiselect id="processes" class="col-lg-10 px-0" :disabled="loading"
+                                        <label for="processes" class="col-md-2 text-md-right">Processes</label>
+                                        <vue-multiselect id="processes" class="col-md-4"
                                             v-model="filterOptions.processes" placeholder="Search" label="name"
                                             track-by="id" :options="options['processes']" :multiple="true">
                                         </vue-multiselect>
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="regions" class="col-form-label col-lg-2 pl-0">Regions</label>
-                                        <vue-multiselect id="regions" class="col-lg-10 px-0" :disabled="loading"
-                                            v-model="filterOptions.regions"  placeholder="Search" :options="options['regions']" :multiple="true">
+                                        <label for="regions" class="col-md-2 text-md-right">Regions</label>
+                                        <vue-multiselect id="regions" class="col-md-4" v-model="filterOptions.regions"
+                                            placeholder="Search" :options="options['regions']" :multiple="true">
                                         </vue-multiselect>
 
                                         <label for="certifications"
-                                            class="col-form-label col-lg-2 pl-0">Certifications</label>
+                                            class="col-md-2 text-md-right">Certifications</label>
 
-                                        <vue-multiselect id="certifications" class="col-lg-10 px-0" :disabled="loading"
+                                        <vue-multiselect id="certifications" class="col-md-4"
                                             v-model="filterOptions.certifications" placeholder="Search" label="name"
                                             track-by="id" :options="options['certifications']" :multiple="true">
                                         </vue-multiselect>
@@ -298,14 +208,15 @@
                                     </div>
                                     <div class="form-group row">
                                         <!-- Oculta search_extended y muestra search_basic -->
+                                        <div class="col">
                                             <small class="form-text text-primary mx-2">
-                                                <button href="#" v-on:click.prevent="clearSearchExtended" :disabled="loading"
-                                                    class="collapse_filters btn btn-link">Clear filters</button>
+                                                <a href="#" v-on:click.prevent="clearSearchExtended"
+                                                    class="collapse_filters">Clear filters</a>
                                             </small>
                                         </div>
-                                        <div class="form-group col-12 text-center">
-                                            <button type="button" class="btn btn-primary" :disabled="loading"
-                                                v-on:click.prevent="getFilteredProductiveUnits">Lets go!  <i class="fa fa-spinner fa-spin" v-show="loading"></i> </button>
+                                        <div class="col text-center">
+                                            <button type="button" class="btn btn-primary"
+                                                v-on:click.prevent="getFilteredProductiveUnits">Lets go!</button>
                                         </div>
                                     </div>
                                 </form>
@@ -319,23 +230,9 @@
                 <!-- Detalles -->
                 <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="xl" hide-footer
                     header-class="modal-header-custom" dialog-class="modal_unit">
-
-
-
-                    
                     <div class="col back">
                         <div class="num_results">{{ item.id}}</div>
                     </div>
-                    <!-- <div class="row"> -->
-                    <!-- columna izquierda - back to results -->
-                    <!-- <div class="col back"><a><i class="fas fa-chevron-circle-left"></i><span>go back</span></a>
-                        </div> -->
-
-                    <!-- columna derecha info código UP -->
-                    <!-- <div class="col text-right right_col">
-                            <div class="num_results">{{ item.id}}</div>
-                        </div> -->
-                    <!-- </div> -->
 
                     <div class="row ">
                         <!-- columna central - perfil UP -->
@@ -347,7 +244,6 @@
                                             <h3>{{ item.name }}</h3>
                                         </li>
                                         <li>{{ item.town}} - {{ item.city}}</li>
-                                        <li></li>
                                     </ul>
                                 </div>
                                 <div class="col-12 col-sm-6 text-right certifications">
@@ -360,7 +256,7 @@
                                     <img class="img-fluid" v-if="showCover" :src="item.coverPhoto | defaultCover" />
 
                                     <b-carousel v-if="showGallery" id="carousel1" style="text-shadow: 1px 1px 2px #333;"
-                                        f controls indicators background="#ababab" :interval="4000" img-width="1024"
+                                        controls indicators background="#ababab" :interval="4000" img-width="1024"
                                         img-height="480" v-model="slide">
                                         <!-- Slides with image only -->
                                         <b-carousel-slide v-for="img in item.gallery" :key="img"
@@ -406,7 +302,7 @@
                                     <div>
                                         <!-- Link a sección de buy en lista de lotes de la UP -->
                                         <a href="#">
-                                            <div class="num_results tx_blue tight">{{item.coffeeOfferingsCount}}</div>
+                                            <div class="num_results tx_blue">{{item.coffeeOfferingsCount}}</div>
                                         </a>
                                     </div>
                                     <div>
@@ -415,11 +311,15 @@
                                 </div>
                                 <div class="col-12 col-sm-5 text-right view_modes">
                                     <!-- MAPA Y GALERÍA PUEDEN OCUPAR EL CONTAINER CLASS="main_image" -->
-                                    <a href="#" v-on:click.prevent="setShowGallery" v-if="item.gallery && item.gallery.length > 0 "><span>gallery</span><i
-                                            class="fas fa-images"></i></a>
+                                    <a href="#" v-on:click.prevent="setShowGallery"
+                                        v-if="item.gallery && item.gallery.length > 0 ">
+                                        <span>gallery</span>
+                                        <i class="fas fa-images"></i>
+                                    </a>
                                     <!-- galería de fotos (lightbox) -->
-                                    <a href="#" v-on:click.prevent="setShowInMap"><span>map</span><i
-                                            class="fas fa-map-marked-alt"></i></a>
+                                    <a href="#" v-on:click.prevent="setShowInMap">
+                                        <span>map</span><i class="fas fa-map-marked-alt"></i>
+                                    </a>
                                     <!-- mostrar ubicación en mapa -->
                                     <a :href="`https://waze.com/ul?ll=${item.latitude},${item.longitude}&navigate=yes`"
                                         target="_blank"><span>directions</span><i class="fas fa-directions"></i></a>
@@ -432,16 +332,19 @@
 
                                     <div class="farm_facts">
                                         <ul>
-                                            <li v-if="item.latitude && item.latitude > 0"><i
-                                                    class="fas fa-map-marker-alt"></i> {{ item.latitude }} ,
-                                                {{ item.longitude}}</li>
-                                            <li v-if="item.maxAltitude && item.maxAltitude > 0"><i
-                                                    class="fas fa-mountain"></i>{{ item.minAltitude  | number}} - {{ item.maxAltitude  | number}} ft</li>
-                                            <li v-if="item.totalArea && item.totalArea > 0"><i
-                                                    class="fas fa-draw-polygon"></i>{{item.totalArea  | number}}
+                                            <li v-if="item.latitude && item.latitude > 0">
+                                                <i class="fas fa-map-marker-alt"></i> 
+                                                {{ item.latitude }} ,
+                                                {{ item.longitude}}
                                             </li>
-                                            <li v-if="item.goldProductionQq && item.goldProductionQq > 0"><i
-                                                    class="fas fa-seedling"></i>{{item.goldProductionQq  | number}} qq
+                                            <li v-if="item.maxAltitude && item.maxAltitude > 0">
+                                                <i class="fas fa-mountain"></i>{{ item.maxAltitude  | number}} ft
+                                            </li>
+                                            <li v-if="item.totalArea && item.totalArea > 0">
+                                                <i class="fas fa-draw-polygon"></i>{{item.totalArea  | number}}
+                                            </li>
+                                            <li v-if="item.goldProductionQq && item.goldProductionQq > 0">
+                                                <i class="fas fa-seedling"></i>{{item.goldProductionQq  | number}} qq
                                             </li>
                                             <li><br /></li>
                                             <li v-if="item.awards && item.awards.length > 0"><i
@@ -508,64 +411,17 @@
         <!-- *** FINALIZA BLOQUE DE MODAL DE BÚSQUEDA *** -->
 
         <div class="container-fluid content_block">
-            CONTENIDO DEL ARTICULO
             <!-- CONTENIDO DE WP -->
         </div>
 
-    </main>
-    <div class="bottom">
-        <div class="bottombar">
-            <div class="c3">
-                <div class="menu">
-                    <ul>
-                        <li class="lnk_m" lnk_m="/about/anacafe/">About Anacafé</li>
-                        <li>Market information</li>
-                        <li>Press and media</li>
-                        <li>Upcoming events</li>
-                    </ul>
-                </div>
-                <div class="bid_logos lnk_m" lnk_m="/about/idb/"><img src="/media/1097/idblab_0.png"></div>
-                <!-- <div class="bid_logos lnk_m" lnk_m="/about/idb/"><img src="/images/idblab_0.png"></div> -->
-            </div>
-            <div class="c3"></div>
-            <div class="c3">
-                <div class="contact_info">
-                    <h3>Contact information</h3>
-                    <p>Guatemalan National Coffee Association</p>
-                    <p>Calle del Café, 0-50 zona 14</p>
-                    <p>Guatemala, Guatemala, 01014</p>
-                    <p>&nbsp;</p>
-                    <p>PBX: <strong><a href="tel:+50224213700">+502 2421-3700</a></strong></p>
-                    <p>&nbsp;</p>
-                    <div class="redes">
-                        <div class="follow_us">Follow us</div>
-                        <div class="fb lnk_e" lnk_e="https://www.facebook.com/GuatemalanCoffeesAnacafe/" tar="new">
-                        </div>
-                        <!--link externo target new-->
-                        <div class="tw lnk_e" lnk_e="https://twitter.com/guatemalacoffee/" tar="new"></div>
-                        <div class="ig lnk_e" lnk_e="https://www.instagram.com/guatemalancoffees/" tar="new"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
-    <div class="footer">
-        <div class="menu">
-            <ul>
-                <li>Privacy policy</li>
-                <li>Terms of use</li>
-                <li>Disclosure</li>
-            </ul>
-        </div>
-        <div class="copy">©2020 Guatemalan National Coffee Association</div>
-    </div>
+
+
     <script type="text/javascript">
-        var endPoint = 'https://coffeesearch.azurewebsites.net';
-        //var endPoint = 'https://localhost:5001';
-        // var endPoint = 'http://localhost:55706/umbraco';
+        //var endPoint = 'https://coffeesearch.azurewebsites.net';
+        var endPoint = '/umbraco';
 
         var imagesEndPoint = 'https://coffeesearch.azurewebsites.net';
-        //var imagesEndPoint = 'https://localhost:5001';
 
         // Vue.use(require('vue-moment'));
 
@@ -595,13 +451,8 @@
             return numeral(value).format("0,0.00");
         });
 
-
         // register globally
         Vue.component('vue-multiselect', window.VueMultiselect.default)
-
-        const markerOptions = {
-            html: `<span class=\'fa-layers fa-fw\'><i class=\'fas fa-lg fa-map-marker text-primary\'></i><span class=\'fa-layers-text\'' style=\'font-weight:900\' class=\'text-secondary\'>{{marker.id}}</span></span>`
-        };
 
         const vueApp = new Vue({
             el: '#vapp',
@@ -619,14 +470,12 @@
                     numberOfPages: 1,
                     total: 0,
                     loading: false,
-                    detailsLoading: false,
                     display: 'redbox',
                     showFiltersFlag: false,
                     serverRoot: endPoint,
                     item: {},
                     dataList: null,
                     optionsSelected: {
-                        "awards": [],
                         "certifications": [],
                         "cities": [],
                         "processes": [],
@@ -639,15 +488,15 @@
 
                     filterOptions: {
                         "name": "",
-                        "altitude": 0,
                         "city": 0,
                         "town": 0,
+                        "altitude": 0,
                         "processes": [],
+                        "altitudes": [],
                         "minAltitude": 0,
                         "maxAltitude": 0,
                         "certifications": [],
                         "regions": [],
-                        "awards": [],
                         "varieties": [],
                         "pageSize": 10,
                         "sort": "n|asc",
@@ -656,6 +505,7 @@
                     },
 
                     options: {
+                        "altitudes": [],
                         "awards": [],
                         "certifications": [],
                         "cities": [],
@@ -667,13 +517,13 @@
                         "dryings": []
                     },
                     zoom: 8,
-                    center: L.latLng(15.850404, -90.362389),
+                    center: L.latLng(15.823966, -90.186768),
                     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
                     withPopup: L.latLng(15.866242, -90.203247),
                     withTooltip: L.latLng(15.866242, -90.203247),
                     currentZoom: 8,
-                    currentCenter: L.latLng(15.850404, -90.362389),
+                    currentCenter: L.latLng(15.823966, -90.186768),
                     showParagraph: false,
                     mapOptions: {
                         zoomSnap: 0.5
@@ -687,7 +537,6 @@
                     markers: [],
 
                     main_class: "search_block_off",
-
                     slide: 0,
 
                     showCover: true,
@@ -713,7 +562,6 @@
             },
 
             methods: {
-
                 setView(mode) {
 
                     this.viewMode = mode;
@@ -772,11 +620,11 @@
                         "city": 0,
                         "town": 0,
                         "processes": [],
+                        "altitudes": [],
                         "minAltitude": 0,
                         "maxAltitude": 0,
                         "certifications": [],
                         "regions": [],
-                        "awards": [],
                         "varieties": [],
                         "pageSize": 10,
                         "sort": "n|asc",
@@ -799,6 +647,7 @@
                         "city": 0,
                         "town": 0,
                         "processes": [],
+                        "altitudes": [],
                         "minAltitude": 0,
                         "maxAltitude": 0,
                         "certifications": [],
@@ -818,24 +667,24 @@
                     this.$refs.productiveUnitDetails.hide();
                     this.$refs.productiveUnitFilter.show();
 
+
+                },
+                showGeneralSearch() {
+                    this.$refs.searchGeneral.show();
                 },
 
                 showDetails(item) {
-                    //getone/
-                    this.detailsLoading = true;
-                    
-                    this.setShowCover();
 
-
+                    this.loading = true;
                     axios
-                        .get(`${endPoint}/api/productiveunits/${item.id}/flat`)
+                        .get(`${endPoint}/api/productiveunits/getone/${item.id}`)
                         .then(response => {
                             this.item = response.data;
-                            this.detailsLoading = false;
+                            this.loading = false;
                             this.$refs.productiveUnitDetails.show();
                         })
                         .catch(error => {
-                            this.detailsLoading = false;
+                            this.loading = false;
                         });
 
 
@@ -844,15 +693,15 @@
 
 
                 getAllProductiveUnits() {
-                    // this.loading = true;
+                    this.loading = true;
                     axios
                         .get(`${endPoint}/api/productiveunits/getall`)
                         .then(response => {
                             this.dataList = response.data;
-                            // this.loading = false;
+                            this.loading = false;
                         })
                         .catch(error => {
-                            // this.loading = false;
+                            this.loading = false;
                         });
                 },
 
@@ -875,32 +724,30 @@
                 },
 
                 searchProductiveUnits() {
-                    // this.loading = true;
+                    this.loading = true;
                     axios
-                        .get(
-                            `${endPoint}/api/productiveunits/search?q=${this.filterOptions.name}`
-                        )
+                        .get(`${endPoint}/api/productiveunits/search?q=${this.filterOptions.name}`)
                         .then(response => {
                             this.dataList = response.data;
-                            // this.loading = false;
+                            this.loading = false;
                             this.$refs.productiveUnitFilter.hide();
                         })
                         .catch(error => {
-                            // this.loading = false;
+                            this.loading = false;
                         });
                 },
 
 
                 getProductiveUnitsOptions() {
-                    // this.loading = true;
+                    this.loading = true;
                     axios
                         .get(`${endPoint}/api/productiveunits/options`)
                         .then(response => {
                             this.options = response.data;
-                            // this.loading = false;
+                            this.loading = false;
                         })
                         .catch(error => {
-                            // this.loading = false;
+                            this.loading = false;
                         });
                 },
 
@@ -914,8 +761,6 @@
                 centerUpdate(center) {
                     this.currentCenter = center;
                 },
-
-
                 setShowInMap() {
 
                     if (this.showInMap) {
@@ -952,12 +797,9 @@
 
             mounted() {
                 this.getProductiveUnitsOptions();
+                //this.showGeneralSearch();
+                //document.getElementById("explore_btn").onclick = function () {this.showGeneralSearch();};
             }
 
         })
     </script>
-
-</body>
-
-
-</html>

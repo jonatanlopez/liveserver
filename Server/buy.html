@@ -1,109 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
+@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.SectionPage>
+    @using ContentModels = Umbraco.Web.PublishedContentModels;
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Guatemalan Coffees - Buy</title>
+    @*@inherits Umbraco.Web.Mvc.UmbracoTemplatePage*@
+    @{
+    Layout = "SectionMaster.cshtml";
+    }
 
+    @* the fun starts here *@
 
-    <link href="https://fonts.googleapis.com/css?family=Oxygen" rel="stylesheet">
+    <!--<a class="nav-link call_search_up" s_type="https://guatemalancoffees.azurewebsites.net/umbraco/api/productiveunits/options">Explore <i class="fas fa-search"></i></a>-->
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" />
-
-
-    <!-- Load required Bootstrap and BootstrapVue CSS -->
-    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
-    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
-
-    <link rel="stylesheet" href="style.css">
-
-    <!-- Load polyfills to support older browsers -->
-    <script src="http://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver" crossorigin="anonymous">
-    </script>
-
-    <!-- Load Vue followed by BootstrapVue -->
-    <script src="https://unpkg.com/vue@latest/dist/vue.js"></script>
-    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
-
-    <link rel="stylesheet" href="//unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="//unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="//unpkg.com/vue2-leaflet"></script>
-
-    <script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
-    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
-
-    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
-
-    <style>
-        .modal-header-custom {
-            border-bottom: 0px solid #dee2e6;
-        }
-
-        .myModal {
-            background-color: green;
-        }
-    </style>
-
-</head>
-
-<body>
-    <header class="header">
-        <div class="headerbar">
-            <div class="logo">
-                    <div class="nav-link--home">
-                        <!-- <img class="logo-image" src="/images/logoGC.png" alt="Guatemalan Coffees"> -->
-                        <img class="logo-image" src="/media/1062/logogc.png" alt="Guatemalan Coffees">
-                    </div>
-            </div>
-
-            <!-- uncomment this line if you don't want it to appear in the top navigation -->
-            <!--<a class="nav-link " href="/">Home</a>-->
-
-            <div class="hello">
-                <!--<a class="nav-link call_search_up" s_type="https://guatemalancoffees.azurewebsites.net/umbraco/api/productiveunits/options">Explore <i class="fas fa-search"></i></a>-->
-                <!--<a id="explore_btn" class="nav-link call_search_up" s_type="https://guatemalancoffees.azurewebsites.net/umbraco/api/productiveunits/options" v-on:click="showGeneralsearch">Explore <i class="fas fa-search"></i></a>-->
-                <div class="btn lnk_m" lnk_m="/contact/">Say hello!</div>
-                <!--link modal-->
-                <div class="redes">
-                    <div class="fb lnk_e" lnk_e="https://www.facebook.com/GuatemalanCoffeesAnacafe/" tar="new"></div>
-                    <!--link externo target new-->
-                    <div class="tw lnk_e" lnk_e="https://twitter.com/guatemalacoffee/" tar="new"></div>
-                    <div class="ig lnk_e" lnk_e="https://www.instagram.com/guatemalancoffees/" tar="new"></div>
-                </div>
-            </div>
-            <button class="navbar-toggler navbar-dark navbar-toggler-right menu_icon" type="button"
-                data-toggle="collapse" data-target="#mainMenuOptions" aria-controls="mainMenuOptions"
-                aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <nav class="navbar navbar-expand-lg top-nav mainmenu">
-                <div class="collapse navbar-collapse" id="mainMenuOptions">
-                    <ul class="nav navbar-nav">
-                        <li class="nav-item">
-                            <!--<a class="nav-link nav-link--active" href="/">Learn</a>-->
-                            <a class="nav-link" href="/">Learn</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/explore/">Explore</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-link--active" href="/buy/">Buy</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
-    </header>
-    <main>
+    <div id="vapp">
         <!-- *** INICIA BLOQUE DE MODAL DE BÚSQUEDA (modal_search_gral) *** -->
-        <div id="vapp">
-            <div :class="main_class" class="container-fluid">
+                    <div :class="main_class" class="container-fluid">
 
                 <!-- btn_explore.htm -->
                 <!-- <div class="search_modal modalw"></div> -->
@@ -173,7 +82,7 @@
                                 <div class="lot_description">
                                     <div>{{item.productiveUnitName}} - <span v-for="it in item.varieties"
                                             :key="it">{{ it }} / </span> </div>
-                                    <div>{{item.location}} </div>
+                                    <div>{{item.location}} </div>   
                                     <!-- {{ item.town}}, {{ item.city}} -->
                                 </div>
                                 <div class="lot_size">
@@ -438,68 +347,24 @@
                 </b-modal>
 
             </div>
+            <!-- *** FINALIZA BLOQUE DE MODAL DE BÚSQUEDA *** -->
+
             <div class="container-fluid content_block">
-                CONTENIDO DEL ARTICULO
-                <!-- CONTENIDO DE WP -->
-            </div>
-        </div>
-        <!-- *** FINALIZA BLOQUE DE MODAL DE BÚSQUEDA *** -->
-    </main>
-    <div class="bottom">
-        <div class="bottombar">
-            <div class="c3">
-                <div class="menu">
-                    <ul>
-                        <li class="lnk_m" lnk_m="/about/anacafe/">About Anacafé</li>
-                        <li>Market information</li>
-                        <li>Press and media</li>
-                        <li>Upcoming events</li>
-                    </ul>
-                </div>
-                <div class="bid_logos lnk_m" lnk_m="/about/idb/"><img src="/media/1097/idblab_0.png"></div>
-            </div>
-            <div class="c3"></div>
-            <div class="c3">
-                <div class="contact_info">
-                    <h3>Contact information</h3>
-                    <p>Guatemalan National Coffee Association</p>
-                    <p>Calle del Café, 0-50 zona 14</p>
-                    <p>Guatemala, Guatemala, 01014</p>
-                    <p>&nbsp;</p>
-                    <p>PBX: <strong><a href="tel:+50224213700">+502 2421-3700</a></strong></p>
-                    <p>&nbsp;</p>
-                    <div class="redes">
-                        <div class="follow_us">Follow us</div>
-                        <div class="fb lnk_e" lnk_e="https://www.facebook.com/GuatemalanCoffeesAnacafe/" tar="new">
-                        </div>
-                        <!--link externo target new-->
-                        <div class="tw lnk_e" lnk_e="https://twitter.com/guatemalacoffee/" tar="new"></div>
-                        <div class="ig lnk_e" lnk_e="https://www.instagram.com/guatemalancoffees/" tar="new"></div>
+            <!-- CONTENIDO DE WP -->                
+                @Html.Partial("Carousel")
+                <section class="section">
+                    <div class="container">
+                        @Html.GetGridHtml(Model.Content, "bodyText", "bootstrap3-fluid")
                     </div>
-                </div>
+                </section>
             </div>
+
         </div>
-    </div>
-    <div class="footer">
-        <div class="menu">
-            <ul>
-                <li>Privacy policy</li>
-                <li>Terms of use</li>
-                <li>Disclosure</li>
-            </ul>
-        </div>
-        <div class="copy">©2020 Guatemalan National Coffee Association</div>
-    </div>
+
+
     <script type="text/javascript">
-        // var endPoint = 'https://coffeesearch.azurewebsites.net';
-        var endPoint = 'https://localhost:5001';
-        // var endPoint = 'http://localhost:55706/umbraco';
-
-        // var imagesEndPoint = 'https://coffeesearch.azurewebsites.net';
-        var imagesEndPoint = 'https://localhost:5001';
-
-        // Vue.use(require('vue-moment'));
-
+            var endPoint = '/umbraco';
+            var imagesEndPoint = 'https://coffeesearch.azurewebsites.net';
 
         numeral.register("locale", "gt", {
             delimiters: {
@@ -755,7 +620,7 @@
 
 
                     axios
-                        .get(`${endPoint}/api/coffeeofferings/${item.id}`)
+                        .get(`${endPoint}/api/coffeeofferings/getone/${item.id}`)
                         .then(response => {
                             this.item = response.data;
                             this.detailsLoading = false;
@@ -882,10 +747,6 @@
                 // this.getFilteredCoffeeOfferings();
             }
 
+
         })
     </script>
-
-</body>
-
-
-</html>

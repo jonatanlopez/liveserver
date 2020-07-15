@@ -5,8 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Ofertas de cafe</title>
+    <title>Vue Live Server</title>
 
+
+    <link href="https://fonts.googleapis.com/css?family=Oxygen" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" />
 
 
     <!-- Load required Bootstrap and BootstrapVue CSS -->
@@ -14,8 +18,6 @@
     <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
 
     <link rel="stylesheet" href="style.css">
-
-    <!-- <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script> -->
 
     <!-- Load polyfills to support older browsers -->
     <script src="http://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver" crossorigin="anonymous">
@@ -27,598 +29,853 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/es.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/vue-moment@4.0.0/dist/vue-moment.js"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
 
+    <link rel="stylesheet" href="//unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="//unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="//unpkg.com/vue2-leaflet"></script>
+
+    <script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
+    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+
+    <style>
+        .modal-header-custom {
+            border-bottom: 0px solid #dee2e6;
+        }
+
+        .myModal {
+            background-color: green;
+        }
+    </style>
 
 </head>
 
 <body>
+    <header class="header">
+        <div class="headerbar">
+            <div class="logo">
+                <div class="nav-link--home">
+                    <img class="logo-image" src="/media/1062/logogc.png" alt="Guatemalan Coffees">
+                </div>
+            </div>
 
-    <div class="container-fluid">
 
+            <!-- uncomment this line if you don't want it to appear in the top navigation -->
+            <!--<a class="nav-link " href="/main/">Main</a>-->
 
+            <div class="hello">
+                <div class="btn lnk_m" lnk_m="/contact/">Say hello!</div>
+                <!--link modal-->
+                <div class="redes">
+                    <div class="fb lnk_e" lnk_e="https://www.facebook.com/GuatemalanCoffeesAnacafe/" tar="new"></div>
+                    <!--link externo target new-->
+                    <div class="tw lnk_e" lnk_e="https://twitter.com/guatemalacoffee/" tar="new"></div>
+                    <div class="ig lnk_e" lnk_e="https://www.instagram.com/guatemalancoffees/" tar="new"></div>
+                </div>
+            </div>
+            <button class="navbar-toggler navbar-dark navbar-toggler-right menu_icon" type="button"
+                data-toggle="collapse" data-target="#mainMenuOptions" aria-controls="mainMenuOptions"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <nav class="navbar navbar-expand-lg top-nav mainmenu">
+                <div class="collapse navbar-collapse" id="mainMenuOptions">
+                    <ul class="nav navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/main/history/">History</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/main/coffee-types/">Coffee Types</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/main/regions-and-profiles/">Regions and profiles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/main/impact/">Impact</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <!-- *** INICIA BLOQUE DE MODAL DE BÚSQUEDA (modal_search_gral) *** -->
+        <div id="vapp" :class="main_class" class="container-fluid">
+            <div class="m-4">
 
+                <!-- btn_explore.htm -->
+                <!-- <div class="search_modal modalw"></div> -->
+                <div>
+                    <a class="btn btn_float nav-link call_search_up"
+                        v-on:click.prevent="showFilterModal"><span>Explore</span><i class="fas fa-search"></i></a>
+                </div>
 
-        <div id="vapp">
+                <!-- BLOQUE DE GRID DE RESULTADOS DE BÚSQUEDA -->
+                <div class="results_block">
+                    <div class="row results_header">
+                        <div class="col-12 col-md-10 col-lg-9 summary_results">
+                            <div>
+                                <div class="num_results">{{total}}</div>
+                            </div>
+                            <div>
+                                <div class="title_results">Results for
+                                    <span v-for="key in Object.keys(filterOptions)" :key="key"
+                                        v-if="filterOptions[key].length>0">
 
+                                        {{key}} : {{ filterOptions[key]}} +
+                                    </span></div>
+                                <small class="form-text text-primary"><a href="#" class="collapse_filters"
+                                        v-on:click="()=>this.$refs.productiveUnitFilter.show()">Narrow
+                                        results</a></small>
+                            </div>
 
-            <b-modal id="coffeeOfferingDetails" ref="coffeeOfferingDetails" size="xl" title="Detalle Unidad Productiva">
-
-                <div class="media mb-5 p-2">
-                    <img width="64" height="64" :src="item.coverPhoto | defaultCover" class="mr-3 img-img-thumbnail"
-                        alt="..." />
-                    <div class="media-body">
-                        <span class="float-right text-black-50">
-                            {{
-                                item.publicationDate | moment("DD-MMM-YYYY")
-                                }}
-                        </span>
-                        <h5 class="mt-0">{{ item.name }}</h5>
-                        <div class="mb-2">
-                            <span v-for="att in item.tags" :key="att" class="badge badge-secondary mr-2"
-                                :title="att">{{ att }}</span>
+                        </div>
+                        <div class="col-12 col-md-2 col-lg-3 text-right view_modes">
+                            <a v-on:click.prevent="setView('list')" v-if="this.viewMode != 'list'"><span>list</span><i
+                                    class="fas fa-list-alt"></i></a>
+                            <!-- se oculta al mostrar listado -->
+                            <a v-on:click.prevent="setView('grid')" v-if="this.viewMode != 'grid'"><span>grid</span><i
+                                    class=" fas fa-th"></i></a>
+                            <!-- se oculta al mostrar grid -->
                         </div>
 
-                        <div class="text-muted mb-3">{{ item.description }}</div>
+                    </div>
 
-                        <div class="mb-3">
-
-                            <div>
-                                <span class="text-secondary">{{ item.city}} - {{ item.town}}</span>
+                    <div class="results">
+                        <div :class="currentViewModeClass" v-if="dataList && dataList.length>0">
+                            <!-- results_list / results_grid / results_map - class cambia de acuerdo a view mode-->
+                            <div class="entry" v-for="(item, index) in dataList" :key="item.id" :data-id="item.id">
+                                <div class="num_dot">{{item.id}}</div>
+                                <!-- este es el bloque de cada UP en la lista -->
+                                <div class="img" v-on:click="showDetails(item)"><img
+                                        :src="item.coverPhoto | defaultCover" /></div>
+                                <!-- foto de la finca -->
+                                <div class="nom" v-on:click="showDetails(item)">
+                                    <ul>
+                                        <li>
+                                            <h5>{{ item.name }}</h5>
+                                        </li>
+                                        <li>harvest: {{ item.dateOfHarvest | moment('L') }}</li>
+                                        <li>exp: {{ item.expirationDate | moment('L') }}</li>
+                                        <li>altitude: {{item.altitude | number}} ft</li>
+                                        <li>process: <span class="badge ">{{item.process}}</span></li>
+                                        <li>varieties: <span class="badge " v-for="it in item.varieties"
+                                                :key="it.id">{{ it }}</span></li>
+                                    </ul>
+                                </div>
+                                <div class="actions">
+                                    <ul v-on:click="showDetails(item)">
+                                        <li><i class="fas fa-mountain"></i>{{item.altitude | number}} ft</li>
+                                        <li><i class="fas fa-draw-polygon"></i>{{item.quantity | number}}
+                                            {{ item.packing }}</li>
+                                        <li><i class="fas fa-seedling"></i>of {{item.sizePerUnit }}
+                                            {{ item.unitOfMeasurement }}</li>
+                                    </ul>
+                                    <div class="go">
+                                        <a class="detalle" v-on:click="showDetails(item)"><span>detail</span><i
+                                                class="fas fa-chevron-circle-right"></i></a>
+                                        <!-- <a class="flyto" v-on:click="flyTo(item)"><span>locate</span><i
+                                                class="fas fa-map-marker-alt"></i></a> -->
+                                    </div>
+                                    <!-- <div class="go"><i class="fas fa-search-location"
+                                        v-on:click="flyTo(item)"></i>
+                                    </div> -->
+                                </div>
                             </div>
 
-                            <div>
-                                <span class="text-secondary">Ubicacion .</span>
-                                lon: {{ item.location ? item.location.longitude : 0 }} - lat:
-                                {{ item.location ? item.location.latitude : 0 }}
+                        </div>
+
+                        <!-- <div v-if="dataList && dataList.length==0">
+                            No existen unidades productivas para este criterio
+                        </div> -->
+                    </div>
+                </div>
+
+                <!-- Filtros -->
+                <b-modal id="productiveUnitFilter" ref="productiveUnitFilter" size="lg" hide-footer
+                    header-class="modal-header-custom" dialog-class="myModal" :busy="loading">
+
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                <h5>What are you looking for?</h5>
                             </div>
-                            <div>
-                                <span class="text-secondary">Altitude .</span>
-                                {{ item.altitude}}
+                        </div>
+                        <div class="row">
+
+                            <!-- Grupo de búsqueda básico -->
+                            <div class="col-md-12 pt-3" v-if="searchExtended==false">
+                                <form>
+                                    <div class="form-group">
+                                        <input type="text" id="name" name="name" class="form-control"
+                                            placeholder="Search for name, location or description." autocomplete="on"
+                                            v-model="filterOptions.name" :disabled="loading" />
+                                        <!-- Muestra search_extended y oculta search_basic -->
+                                        <small class="form-text text-primary mx-2">
+                                            <button href="#" class="expand_filters btn btn-link" :disabled="loading"
+                                                v-on:click.prevent="showSearchExtended">Or be
+                                                more specific.</button></small>
+                                    </div>
+                                    <button type="button" class="btn btn-primary" :disabled="loading"
+                                        v-on:click.prevent="getFilteredCoffeeOfferings">Lets go! <i
+                                            class="fa fa-spinner fa-spin" v-show="loading"></i> </button>
+                                </form>
                             </div>
-                            <div>
-                                <span class="text-secondary">Area .</span>
-                                {{item.cultivatedArea}} / {{ item.totalArea }}
-                            </div>
-                            <div>
-                                <span class="text-secondary">Afiliado .</span>
-                                {{ item.ownerName }}
+
+                            <div class="col-md-12 pt-3" v-if="searchExtended==true">
+                                <form>
+                                    <div class="form-group row">
+                                        <label for="farmName" class="col-md-2 col-lg-3 text-md-right">Farm name</label>
+                                        <input type="text" class="form-control col-md-10 col-lg-9" :disabled="loading"
+                                            id="farmName">
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="altitude" class="col-sm-2 col-lg-3 text-md-right">Altitude</label>
+                                        <input name="altitude" v-model="filterOptions.altitude" :disabled="loading"
+                                            oninput="alt_tag.value=parseInt(this.value)"
+                                            class="col-9 col-sm-8 col-lg-7 range-slider__range " type="range"
+                                            value="2500" min="2500" max="5800">
+                                        <output id="alt_tag" name="alt_tag" for="altitude" unit="ft"
+                                            class="col-3 col-sm-1 col-lg-2 range-slider__value">2500</output>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="varieties" class="col-md-2 text-md-right">Varieties</label>
+                                        <vue-multiselect id="varieties" class="col-md-4" :disabled="loading"
+                                            v-model="filterOptions.varieties" placeholder="Search" label="name"
+                                            track-by="id" :options="options['varieties']" :multiple="true">
+                                        </vue-multiselect>
+                                        <label for="processes" class="col-md-2 text-md-right">Processes</label>
+                                        <vue-multiselect id="processes" class="col-md-4" :disabled="loading"
+                                            v-model="filterOptions.processes" placeholder="Search" label="name"
+                                            track-by="id" :options="options['processes']" :multiple="true">
+                                        </vue-multiselect>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="regions" class="col-md-2 text-md-right">Regions</label>
+                                        <vue-multiselect id="regions" class="col-md-4" :disabled="loading"
+                                            v-model="filterOptions.regions" placeholder="Search"
+                                            :options="options['regions']" :multiple="true">
+                                        </vue-multiselect>
+
+                                        <label for="certifications"
+                                            class="col-md-2 text-md-right">Certifications</label>
+
+                                        <vue-multiselect id="certifications" class="col-md-4" :disabled="loading"
+                                            v-model="filterOptions.certifications" placeholder="Search" label="name"
+                                            track-by="id" :options="options['certifications']" :multiple="true">
+                                        </vue-multiselect>
+
+                                    </div>
+                                    <div class="form-group row">
+                                        <!-- Oculta search_extended y muestra search_basic -->
+                                        <div class="col">
+                                            <small class="form-text text-primary mx-2">
+                                                <button href="#" v-on:click.prevent="clearSearchExtended"
+                                                    :disabled="loading" class="collapse_filters btn btn-link">Clear
+                                                    filters</button>
+                                            </small>
+                                        </div>
+                                        <div class="col text-center">
+                                            <button type="button" class="btn btn-primary" :disabled="loading"
+                                                v-on:click.prevent="getFilteredCoffeeOfferings">Lets go! <i
+                                                    class="fa fa-spinner fa-spin" v-show="loading"></i> </button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
 
 
-                            <div>
-                                <span class="text-secondary">Tipo Unidad Productiva .</span>
-                                {{ item.productiveUnitType}}
+                        </div>
+                    </div>
+                </b-modal>
+
+                <!-- Detalles -->
+                <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="xl" hide-footer
+                    header-class="modal-header-custom" dialog-class="modal_unit">
+
+
+
+
+                    <div class="col back">
+                        <div class="num_results">{{ item.id}}</div>
+                    </div>
+                    <!-- <div class="row"> -->
+                    <!-- columna izquierda - back to results -->
+                    <!-- <div class="col back"><a><i class="fas fa-chevron-circle-left"></i><span>go back</span></a>
+                        </div> -->
+
+                    <!-- columna derecha info código UP -->
+                    <!-- <div class="col text-right right_col">
+                            <div class="num_results">{{ item.id}}</div>
+                        </div> -->
+                    <!-- </div> -->
+
+                    <div class="row ">
+                        <!-- columna central - perfil UP -->
+                        <div class="col col-md-10 mx-auto">
+                            <div class="row p_header">
+                                <div class="col-12 col-sm-6 nom">
+                                    <ul>
+                                        <li>
+                                            <h3>{{ item.name }}</h3>
+                                        </li>
+                                        <li>harvest: {{ item.dateOfHarvest | moment('L') }}</li>
+                                        <li>exp: {{ item.expirationDate | moment('L') }}</li>
+
+
+
+                                    </ul>
+                                </div>
+                                <!-- <div class="col-12 col-sm-6 text-right certifications">
+                                    <img v-for="it in item.certifications" :key="it.id"
+                                        :src="`images/cert_${it.id}.png`">
+                                </div> -->
+                            </div>
+                            <div class="row mx-auto">
+                                <div class="col-12">
+                                    <img class="img-fluid" v-if="showCover" :src="item.coverPhoto | defaultCover" />
+                                </div>
+                            </div>
+                            <div class="row mx-auto">
+                                <h5>{{item.productiveUnitName}}</h5>
+                                <div class="col-12 summary_text">{{ item.description }}
+                                </div>
+                                <div>
+                                    {{ item.quantity }} {{ item.packing }} de {{ item.sizePerUnit }}
+                                    {{ item.unitOfMeasurement }} c/u
+                                </div>
                             </div>
 
-                            <div>
+                            <div class="row p_header">
+                                <div class="col-12 col-sm-7 action_bar">
+                                    <div>
+                                        <!-- Link a sección de buy en lista de lotes de la UP -->
+                                        <a href="#">
+                                            <div class="num_results tx_blue">{{item.scaScore}}</div>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <div class="title_results">SCA Score</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-5 text-right view_modes">
+                                    <!-- MAPA Y GALERÍA PUEDEN OCUPAR EL CONTAINER CLASS="main_image" -->
+
+                                    <!-- <a href="#" v-on:click.prevent="setShowGallery"
+                                        v-if="item.gallery && item.gallery.length > 0 "><span>gallery</span><i
+                                            class="fas fa-images"></i></a> -->
+                                    <!-- galería de fotos (lightbox) -->
+
+                                    <!-- <a href="#" v-on:click.prevent="setShowInMap"><span>map</span><i
+                                            class="fas fa-map-marked-alt"></i></a> -->
+                                    <!-- mostrar ubicación en mapa -->
+
+                                    <!-- <a :href="`https://waze.com/ul?ll=${item.latitude},${item.longitude}&navigate=yes`"
+                                        target="_blank"><span>directions</span><i class="fas fa-directions"></i></a> -->
+                                    <!-- link a waze con coordenadas -->
+                                </div>
+                            </div>
+
+                            <div class="row p_header">
+                                <div class="col-12 col-sm-6">
+
+                                    <div class="farm_facts">
+                                        <ul>
+                                            <!-- <li v-if="item.latitude && item.latitude > 0"><i
+                                                    class="fas fa-map-marker-alt"></i> {{ item.latitude }} ,
+                                                {{ item.longitude}}</li> -->
+                                            <li v-if="item.altitude"><i
+                                                    class="fas fa-mountain"></i>{{ item.altitude  | number}} ft</li>
+                                            <!-- <li v-if="item.totalArea && item.totalArea > 0"><i
+                                                    class="fas fa-draw-polygon"></i>{{item.totalArea  | number}}
+                                            </li>
+                                            <li v-if="item.goldProductionQq && item.goldProductionQq > 0"><i
+                                                    class="fas fa-seedling"></i>{{item.goldProductionQq  | number}} qq
+                                            </li>
+                                            <li><br /></li>
+                                            <li v-if="item.awards && item.awards.length > 0"><i
+                                                    class="fas fa-award"></i><span class="badge"
+                                                    v-for="it in item.awards" :key="it">{{ it }}</span></li> -->
+
+                                        </ul>
+
+                                    </div>
+
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="farm_facts text-left text-sm-right pl-5 pl-sm-0">
+                                        <ul>
+                                            <li v-if="item.varieties && item.varieties.length > 0">Varieties: <span
+                                                    class="badge " v-for="it in item.varieties"
+                                                    :key="it.id">{{ it }}</span></li>
+                                            <li v-if="item.process ">Process: <span
+                                                    class="badge">{{ item.process }}</span></li>
+                                        </ul>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col mb-5">
+                                    <button type="submit" class="btn btn-rounded action_btn"><i
+                                            class="fas fa-shopping-cart"></i></button>
+                                    <div class="text-center py-2"><small>Buy</small></div>
+                                </div>
+                                <!-- <div>
                                 <span class="text-secondary">Contact .</span>
                                 {{ item.website}}
-                                <br />
-                                <span class="badge badge-info" v-for="it in item.phones" :key="it">{{ it}}</span>
-                                <br />
-                                <span class="badge badge-info" v-for="it in item.email" :key="it">{{ it}}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Soil Types .</span>
-                                <span class="badge badge-info" v-for="it in item.soilTypes"
-                                    :key="it.id">{{ it.name }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Varieties .</span>
-                                <span class="badge badge-info" v-for="it in item.varieties"
-                                    :key="it.id">{{ it.name }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Processes .</span>
-                                <span class="badge badge-info" v-for="it in item.processes"
-                                    :key="it.id">{{ it.name }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">AnualProduction .</span>
-                                {{ item.anualProduction}} toneladas metricas anuales
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Shadow Types .</span>
-                                <span class="badge badge-info" v-for="it in item.shadowTypes"
-                                    :key="it.id">{{ it.name }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Drying Types .</span>
-                                <span class="badge badge-info" v-for="it in item.dryingTypes"
-                                    :key="it.id">{{ it.name }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Certifications .</span>
-                                <span class="badge badge-info" v-for="it in item.certifications"
-                                    :key="it.id">{{ it.name }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Awards .</span>
-                                <span class="badge badge-info" v-for="it in item.awards"
-                                    :key="it.id">{{ it.name }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Amenities .</span>
-                                <span class="badge" v-for="it in item.amenities" :key="it">{{ it }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Services .</span>
-                                <span class="badge" v-for="it in item.services" :key="it">{{ it }}</span>
-                            </div>
-
-                            <div>
-                                <span class="text-secondary">Gallery .</span>
-
-                                <b-container fluid class="p-4">
-                                    <b-row>
-                                        <b-col v-for="it in item.gallery" :key="it">
-                                            <b-img thumbnail fluid :src="it" :alt="it" width="125" height="125"></b-img>
-                                        </b-col>
-                                    </b-row>
-                                </b-container>
-
-
-
-
+                                <br /> phones.
+                                <span v-for="it in item.phones" :key="it">{{ it}}</span>
+                                <br /> emails.
+                                <span v-for="it in item.email" :key="it">{{ it}}</span>
+                            </div> -->
                             </div>
 
                         </div>
                     </div>
-                </div>
-
-
-            </b-modal>
-
-
-            <b-modal id="coffeeOfferingFilter" ref="coffeeOfferingFilter" title="Busqueda de Ofertas de Cafe"
-                v-on:ok="getFilteredCoffeeOfferings">
-
-                <h5>Por favor seleccione las opciones que necesita para filtrar</h5>
-
-
-                <div class="form-group">
-                    <label for="name">Nombre</label>
-                    <input type="text" id="name" name="name" class="form-control" placeholder="Nombre" autocomplete="on"
-                        v-model="filterOptions.name" />
-                </div>
-
-                <div class="form-group">
-                    <label for="altitudes">Altitudes</label>
-                    <select id="altitudes" v-model="filterOptions.altitudes" multiple class="form-control">
-                        <option v-for="item in options['altitudes']" :value="item.id">{{ item.name}}
-                            [{{item.minimum}}-{{item.maximum}}] </option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="processes">Procesos</label>
-                    <select id="processes" v-model="filterOptions.processes" multiple class="form-control">
-                        <option v-for="item in options['processes']" :value="item.id">{{ item.name}}</option>
-                    </select>
-                </div>
-
-                <!-- <div class="form-group">
-                    <label for="certifications">Certificaciones</label>
-                    <select id="certifications" v-model="filterOptions.certifications" multiple class="form-control">
-                        <option v-for="item in options['certifications']" :value="item.id">{{ item.name}}</option>
-                    </select>
-                </div> -->
-
-                <!-- <div class="form-group">
-                    <label for="regions">Regiones</label>
-                    <select id="regions" v-model="filterOptions.regions" multiple class="form-control">
-                        <option v-for="item in options['regions']" :value="item">{{ item}}</option>
-                    </select>
-                </div> -->
-
-
-                <div class="form-group">
-                    <label for="varieties">Variedades</label>
-                    <select id="varieties" v-model="filterOptions.varieties" multiple class="form-control">
-                        <option v-for="item in options['varieties']" :value="item.id">{{ item.name}}</option>
-                    </select>
-                </div>
-
-                <!-- <div class="form-group">
-                    <label for="awards">Premios</label>
-                    <select id="awards" v-model="filterOptions.awards" multiple class="form-control">
-                        <option v-for="item in options['awards']" :value="item.id">{{ item.name}}</option>
-                    </select>
-                </div> -->
-
-                <!-- <button type="button" class="btn btn-outline-primary" v-on:click="getFilteredCoffeeOfferings">Get
-                    Filtered Productive Units</button> -->
-
-
-            </b-modal>
-
-            <h1>
-                <span class="badge badge-secondary">{{this.total}}</span> Resultados
-            </h1>
-
-
-            <div class="d-flex justify-content-between">
-                <div class="d-flex">
-                    <div>
-                        <b-button variant="link" v-on:click="showFilterModal">
-                            Filtrar resultados
-                            <i class="fa fa-fw fa-filter"></i>
-                        </b-button>
-                    </div>
-                </div>
-
-                <div class="d-flex">
-                    <div class="mr-3">Mostrar:</div>
-                    <div>
-                        <b-form-radio-group v-model="filterOptions.pageSize" name="radio-inline" size="sm"
-                            v-on:change="getFilteredCoffeeOfferings">
-                            <b-form-radio name="some-radios" value="1">1</b-form-radio>
-                            <b-form-radio name="some-radios" value="10">10</b-form-radio>
-                            <b-form-radio name="some-radios" value="25">25</b-form-radio>
-                            <b-form-radio name="some-radios" value="50">50</b-form-radio>
-                        </b-form-radio-group>
-                    </div>
-                </div>
-
-                <div class="d-flex">
-                    <div class="mr-3">Ordenar por</div>
-                    <div>
-                        <b-form-select v-model="filterOptions.sort" size="sm" v-on:change="getFilteredCoffeeOfferings">
-                            <option value="p|asc">Fecha de publicacion</option>
-                            <option value="v|asc">Fecha de vencimiento</option>
-                        </b-form-select>
-                    </div>
-                </div>
-            </div>
 
 
 
-            <div class="row">
 
-                <div class="col-sm-12">
-
-
-                    <div v-if="dataList && dataList.length>0">
-
-                        <div>
-                            <span class="badge" style="font-size: xx-large;">{{total}}</span> results for
-                            <span v-for="key in Object.keys(filterOptions)" :key="key"
-                                v-if="filterOptions[key].length>0">
-
-                                {{key}} : {{ filterOptions[key]}} +
-                            </span>
-                        </div>
-
-
-                        <div class="media border mb-5 p-2" v-for="item in dataList" :key="item.id">
-                            <div>
-                                <img :src="'https://localhost:5001/uploads/' + item.coverPhoto"
-                                    class="img-thumbnail mr-3" alt="..." style="width: 120px;height: 120px;" />
-                                <div class="text-secondary mt-3">{{ item.productiveUnitName }}</div>
-                            </div>
-
-                            <div class="media-body">
-                                <span class="float-right text-black-50" style="font-size: 0.9em; font-weight: 400;">
-                                    {{
-          item.publicationDate | moment("lll")
-          }}
-                                </span>
-                                <h5 class="mt-0">
-                                    <span class="badge badge-info">{{ item.id }}</span>
-                                    {{ item.name }}
-                                </h5>
-
-                                <div class="text-muted mb-3">{{ item.description }}</div>
-
-                                <div class="mb-3">
-                                    <div class="float-right">
-                                        <div class="text-black-50" style="font-size: 1.1em; font-weight: 600;">
-                                            {{ item.quantity }} {{ item.packing }} de {{ item.sizePerUnit }}
-                                            {{ item.unitOfMeasurement }} c/u
-                                        </div>
-
-                                        <!-- <button class="btn btn-dark btn-sm" v-on:click="clickAddToCart(item)">Add To Cart</button> -->
-                                    </div>
-
-                                    <div class="mb-2">
-                                        <span class="badge badge-dark"
-                                            style="font-size: 1.2em;">{{item.scaScore}}</span>
-                                        <i class="fa fa-fw fa-map"></i>
-                                        {{ item.location }} .
-                                        <i class="fa fa-fw fa-cog"></i>
-                                        {{ item.process }} .
-                                        <i class="fa fa-fw fa-chevron-up"></i>
-                                        {{ item.altitude }}
-                                    </div>
-
-                                    <div class="mb-2">
-                                        <span v-for="variety in item.varieties" :key="variety"
-                                            class="badge badge-info mr-2" :title="variety">{{ variety }}</span>
-                                    </div>
-
-                                    <div class="mb-2">
-                                        <span class="text-secondary">Fecha de cosecha .</span>
-                                        {{ item.dateOfHarvest | moment("lll") }}
-                                        <br />
-                                        <span class="text-secondary">Fecha de vencimiento .</span>
-                                        {{ item.expirationDate | moment("lll") }}
-                                    </div>
-
-                                    <!-- <div>
-            <span class="text-secondary">Ubicacion .</span>
-            {{ item.location }}
-          </div>
-          <div>
-            <span class="text-secondary">Proceso .</span>
-            {{ item.process }}
-          </div>
-          <div>
-            <span class="text-secondary">Variedades .</span>
-            <span
-              v-for="variety in item.varieties"
-              :key="variety"
-              class="badge badge-info mr-2"
-              :title="variety"
-            >{{ variety }}</span>
-          </div>
-
-          <div>
-            <span class="text-secondary">Altitud .</span>
-            {{ item.altitude }}
-          </div>
-
-          <div>
-            <span class="text-secondary">Fecha de cosecha .</span>
-            {{ item.dateOfHarvest | moment("lll") }}
-          </div>-->
-                                </div>
-
-                                <div class="mt-2">
-                                    <span v-for="att in item.tags" :key="att" class="badge badge-secondary mr-2"
-                                        :title="att">{{ att }}</span>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div>
-                            <b-pagination :total-rows="total" :per-page="filterOptions.pageSize"
-                                v-model="filterOptions.page" v-on:change="getFilteredCoffeeOfferings" align="center" />
-                        </div>
-
-                    </div>
-
-                    <div v-if="dataList && dataList.length==0">
-
-                        <div>
-                            <span class="badge" style="font-size: xx-large;">{{total}}</span> results for
-                            <span v-for="key in Object.keys(filterOptions)" :key="key"
-                                v-if="filterOptions[key].length>0">
-
-                                {{key}} : {{ filterOptions[key]}} +
-                            </span>
-                        </div>
-
-                        <div class="alert alert-warning text-center mt-3">No existen datos para este criterio</div>
-                    </div>
-
-                </div>
+                </b-modal>
 
             </div>
+        </div>
+        <!-- *** FINALIZA BLOQUE DE MODAL DE BÚSQUEDA *** -->
 
-            <div class="row mt-5">
-                <div class="col-md-12">
-                    <div>Opciones seleccionadas</div>
-
-                    <code>
-                            {{filterOptions}}
-                        </code>
-                </div>
-            </div>
-
+        <div class="container-fluid content_block">
+            <!-- CONTENIDO DE WP -->
         </div>
 
+    </main>
+    <div class="bottom">
+        <div class="bottombar">
+            <div class="c3">
+                <div class="menu">
+                    <ul>
+                        <li class="lnk_m" lnk_m="/about/anacafe/">About Anacafé</li>
+                        <li>Market information</li>
+                        <li>Press and media</li>
+                        <li>Upcoming events</li>
+                    </ul>
+                </div>
+                <div class="bid_logos lnk_m" lnk_m="/about/idb/"><img src="/media/1097/idblab_0.png"></div>
+            </div>
+            <div class="c3"></div>
+            <div class="c3">
+                <div class="contact_info">
+                    <h3>Contact information</h3>
+                    <p>Guatemalan National Coffee Association</p>
+                    <p>Calle del Café, 0-50 zona 14</p>
+                    <p>Guatemala, Guatemala, 01014</p>
+                    <p>&nbsp;</p>
+                    <p>PBX: <strong><a href="tel:+50224213700">+502 2421-3700</a></strong></p>
+                    <p>&nbsp;</p>
+                    <div class="redes">
+                        <div class="follow_us">Follow us</div>
+                        <div class="fb lnk_e" lnk_e="https://www.facebook.com/GuatemalanCoffeesAnacafe/" tar="new">
+                        </div>
+                        <!--link externo target new-->
+                        <div class="tw lnk_e" lnk_e="https://twitter.com/guatemalacoffee/" tar="new"></div>
+                        <div class="ig lnk_e" lnk_e="https://www.instagram.com/guatemalancoffees/" tar="new"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</body>
+    <div class="footer">
+        <div class="menu">
+            <ul>
+                <li>Privacy policy</li>
+                <li>Terms of use</li>
+                <li>Disclosure</li>
+            </ul>
+        </div>
+        <div class="copy">©2019 Guatemalan National Coffee Association</div>
+    </div>
+    <script type="text/javascript">
+        // var endPoint = 'https://coffeesearch.azurewebsites.net';
+        var endPoint = 'https://localhost:5001';
+        // var endPoint = 'http://localhost:55706/umbraco';
 
-<script type="text/javascript">
-    //var endPoint = 'https://coffeesearch.azurewebsites.net';
-    var endPoint = 'https://localhost:5001';
+        // var imagesEndPoint = 'https://coffeesearch.azurewebsites.net';
+        var imagesEndPoint = 'https://localhost:5001';
 
-    // Vue.use(require('vue-moment'));
-
-    Vue.component('ColoredBox', {
-        template: `<div class="box"> Colored Box </div>`
-    })
+        // Vue.use(require('vue-moment'));
 
 
-    Vue.component('ProductiveUnit', {
-        template: `<div class="blogpost">
-    <div class="blogpost-title"> {{item.id}} - {{item.name}} </div>
-    <div class="blogpost-meta"> {{item.town}}, {{item.city}} </div>
-</div>`,
-        props: {
-            item: {
-                type: Object,
-                required: true
-            }
-        }
-    })
-
-    Vue.filter('moment', function (value, format) {
-        if (value) {
-            return moment(String(value)).format(format);
-        }
-    });
-
-    const vueApp = new Vue({
-        el: '#vapp',
-        data: {
-            currentPage: 1,
-            numberOfPages: 1,
-            total: 0,
-            loading: false,
-            display: 'redbox',
-            serverRoot: endPoint,
-            item: {},
-            dataList: [],
-            // optionsSelected:
-            // {
-            //     "altitudes": [],
-            //     "awards": [],
-            //     "certifications": [],
-            //     "processes": [],
-            //     "regions": [],
-            //     "shades": [],
-            //     "varieties": [],
-            //     "soils": [],
-            //     "dryings": []
-            // },
-
-            filterOptions: {
-                "name": "",
-                "processes": [],
-                "altitudes": [],
-                "certifications": [],
-                "regions": [],
-                "awards": [],
-                "varieties": [],
-                "pageSize": 10,
-                "sort": "p|asc",
-                "page": 1
+        numeral.register("locale", "gt", {
+            delimiters: {
+                thousands: ",",
+                decimal: "."
             },
-
-            options: {
-                "altitudes": [],
-                "awards": [],
-                "certifications": [],
-                "processes": [],
-                "regions": [],
-                "shades": [],
-                "varieties": [],
-                "soils": [],
-                "dryings": []
-            }
-        },
-
-        filters: {
-            pretty: function (value) {
-                return JSON.stringify(JSON.parse(value), null, 2);
+            abbreviations: {
+                thousand: "k",
+                million: "m",
+                billion: "b",
+                trillion: "t"
             },
-            defaultCover(fileName) {
-                if (fileName == null || fileName == "") {
-                    return `${endPoint}/uploads/coverPhoto.png`;
-                } else {
-                    return `${endPoint}/uploads/${fileName}`;
+            ordinal: function (number) {
+                return number === 1 ? "er" : "ero";
+            },
+            currency: {
+                symbol: "Q"
+            }
+        });
+
+        numeral.locale("gt");
+
+        Vue.filter("number", function (value) {
+            return numeral(value).format("0,0.00");
+        });
+
+
+        // register globally
+        Vue.component('vue-multiselect', window.VueMultiselect.default)
+
+        const markerOptions = {
+            html: `<span class=\'fa-layers fa-fw\'><i class=\'fas fa-lg fa-map-marker text-primary\'></i><span class=\'fa-layers-text\'' style=\'font-weight:900\' class=\'text-secondary\'>{{marker.id}}</span></span>`
+        };
+
+        const vueApp = new Vue({
+            el: '#vapp',
+            components: {
+                LMap: window.Vue2Leaflet.LMap,
+                LTileLayer: window.Vue2Leaflet.LTileLayer,
+                LMarker: window.Vue2Leaflet.LMarker,
+                LPopup: window.Vue2Leaflet.LPopup,
+                LTooltip: window.Vue2Leaflet.LTooltip,
+                LIcon: window.Vue2Leaflet.LIcon,
+            },
+            data() {
+                return {
+                    currentPage: 1,
+                    numberOfPages: 1,
+                    total: 0,
+                    loading: false,
+                    detailsLoading: false,
+                    display: 'redbox',
+                    showFiltersFlag: false,
+                    serverRoot: endPoint,
+                    item: {},
+                    dataList: null,
+                    optionsSelected: {
+                        "awards": [],
+                        "certifications": [],
+                        "cities": [],
+                        "processes": [],
+                        "regions": [],
+                        "shades": [],
+                        "varieties": [],
+                        "soils": [],
+                        "dryings": []
+                    },
+
+                    filterOptions: {
+                        "name": "",
+                        "process": "",
+                        "minAltitude": 0,
+                        "maxAltitude": 6000,
+                        "varieties": [],
+                        "pageSize": 25,
+                        "sort": "v|desc",
+                        "page": 1
+                    },
+
+                    options: {
+                        "awards": [],
+                        "certifications": [],
+                        "cities": [],
+                        "processes": [],
+                        "regions": [],
+                        "shades": [],
+                        "varieties": [],
+                        "soils": [],
+                        "dryings": []
+                    },
+                    zoom: 8,
+                    center: L.latLng(15.850404, -90.362389),
+                    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+                    withPopup: L.latLng(15.866242, -90.203247),
+                    withTooltip: L.latLng(15.866242, -90.203247),
+                    currentZoom: 8,
+                    currentCenter: L.latLng(15.850404, -90.362389),
+                    showParagraph: false,
+                    mapOptions: {
+                        zoomSnap: 0.5
+                    },
+
+                    showMap: false,
+                    searchExtended: false,
+                    viewMode: 'list',
+                    currentViewModeClass: "results_list", //results_list / results_grid / results_map  
+
+                    markers: [],
+
+                    main_class: "search_block_off",
+
+                    slide: 0,
+
+                    showCover: true,
+                    showInMap: false,
+                    showGallery: false
                 }
+            },
+
+            filters: {
+                pretty: function (value) {
+                    return JSON.stringify(JSON.parse(value), null, 2);
+                },
+                defaultCover(fileName) {
+                    if (fileName == null || fileName == "") {
+                        return `${imagesEndPoint}/uploads/coverPhoto.png`;
+                    } else {
+                        return `${imagesEndPoint}/uploads/${fileName}`;
+                    }
+                },
+                moment: function (date, format) {
+                    return moment(date).format(format);
+                }
+            },
+
+            methods: {
+
+                setView(mode) {
+
+                    this.viewMode = mode;
+
+                    //results_list / results_grid / results_map  
+
+                    switch (mode) {
+                        case "list":
+                            this.currentViewModeClass = "results_list";
+                            break;
+                        case "grid":
+                            this.currentViewModeClass = "results_grid";
+                            break;
+                        case "map":
+                            //this.showMap = true;
+                            this.currentViewModeClass = "results_map";
+                            break;
+
+                    }
+
+
+                },
+
+                flyTo(marker) {
+
+                    this.$nextTick(() => {
+
+                        let loc = {
+                            lat: marker.latitude,
+                            lon: marker.longitude
+                        };
+
+                        console.log("flying to...", loc);
+
+                        console.log(this.$refs.myMap.mapObject);
+
+
+                        this.$refs.myMap.mapObject.flyTo(loc, 13);
+
+                    })
+                },
+
+                alert(marker) {
+                    alert(marker.id + '-' + marker.name);
+                },
+
+                showSearchExtended() {
+                    this.searchExtended = true;
+                },
+
+                clearSearchExtended() {
+
+                    this.filterOptions = {
+                        "name": "",
+                        "process": "",
+                        "minAltitude": 0,
+                        "maxAltitude": 6000,
+                        "varieties": [],
+                        "pageSize": 25,
+                        "sort": "v|desc",
+                        "page": 1
+                    };
+
+                    this.searchExtended = false;
+                },
+
+                toggleFilters() {
+                    this.showFiltersFlag = !this.showFiltersFlag;
+                },
+
+                showFilterModal() {
+
+                    this.filterOptions = {
+                        "name": "",
+                        "process": "",
+                        "minAltitude": 0,
+                        "maxAltitude": 6000,
+                        "varieties": [],
+                        "pageSize": 25,
+                        "sort": "v|desc",
+                        "page": 1
+                    };
+
+                    this.dataList = null;
+
+                    this.searchExtended = false;
+                    this.main_class = "search_block_off";
+                    this.$refs.productiveUnitDetails.hide();
+                    this.$refs.productiveUnitFilter.show();
+
+                },
+
+                showDetails(item) {
+                    //getone/
+                    this.detailsLoading = true;
+
+                    this.setShowCover();
+
+
+                    axios
+                        .get(`${endPoint}/api/coffeeofferings/${item.id}`)
+                        .then(response => {
+                            this.item = response.data;
+                            this.detailsLoading = false;
+                            this.$refs.productiveUnitDetails.show();
+                        })
+                        .catch(error => {
+                            this.detailsLoading = false;
+                        });
+
+
+
+                },
+
+
+                getAllProductiveUnits() {
+                    // this.loading = true;
+                    axios
+                        .get(`${endPoint}/api/coffeeofferings/getall`)
+                        .then(response => {
+                            this.dataList = response.data;
+                            // this.loading = false;
+                        })
+                        .catch(error => {
+                            // this.loading = false;
+                        });
+                },
+
+                getFilteredCoffeeOfferings() {
+                    this.loading = true;
+                    axios
+                        .post(`${endPoint}/api/coffeeofferings/filter`, this.filterOptions)
+                        .then(response => {
+                            this.dataList = response.data.data;
+                            this.total = response.data.total;
+                            this.currentPage = response.data.currentPage;
+                            this.numberOfPages = response.data.lastPage;
+                            this.loading = false;
+                            this.$refs.productiveUnitFilter.hide();
+                            this.main_class = "search_block";
+                        })
+                        .catch(error => {
+                            this.loading = false;
+                        });
+                },
+
+                searchProductiveUnits() {
+                    // this.loading = true;
+                    axios
+                        .get(
+                            `${endPoint}/api/coffeeofferings/search?q=${this.filterOptions.name}`
+                        )
+                        .then(response => {
+                            this.dataList = response.data;
+                            // this.loading = false;
+                            this.$refs.productiveUnitFilter.hide();
+                        })
+                        .catch(error => {
+                            // this.loading = false;
+                        });
+                },
+
+
+                getCoffeeOfferingsOptions() {
+                    // this.loading = true;
+                    axios
+                        .get(`${endPoint}/api/coffeeofferings/options`)
+                        .then(response => {
+                            this.options = response.data;
+                            // this.loading = false;
+                        })
+                        .catch(error => {
+                            // this.loading = false;
+                        });
+                },
+
+                addProperty(propertyName) {
+                    console.log(this.optionsSelected[propertyName]);
+                },
+
+                zoomUpdate(zoom) {
+                    this.currentZoom = zoom;
+                },
+                centerUpdate(center) {
+                    this.currentCenter = center;
+                },
+
+
+                setShowInMap() {
+
+                    if (this.showInMap) {
+                        this.showInMap = false;
+                        this.showGallery = false;
+                        this.showCover = true;
+                    } else {
+
+                        this.showInMap = true;
+                        this.showGallery = false;
+                        this.showCover = false;
+                    }
+                },
+                setShowGallery() {
+                    if (this.item.gallery.length > 0) {
+
+                        if (this.showInMap) {
+                            this.showInMap = false;
+                            this.showGallery = false;
+                            this.showCover = true;
+                        } else {
+                            this.showInMap = false;
+                            this.showGallery = true;
+                            this.showCover = false;
+                        }
+                    }
+                },
+                setShowCover() {
+                    this.showInMap = false;
+                    this.showGallery = false;
+                    this.showCover = true;
+                },
+            },
+
+            mounted() {
+                this.getCoffeeOfferingsOptions();
+                this.getFilteredCoffeeOfferings();
             }
-        },
 
-        methods: {
+        })
+    </script>
 
-            showFilterModal() {
-
-                this.$refs.coffeeOfferingFilter.show();
-
-            },
-
-            showDetails(item) {
-
-                this.loading = true;
-                axios
-                    .get(`${endPoint}/api/coffeeofferings/getone/${item.id}`)
-                    .then(response => {
-                        this.item = response.data;
-                        this.loading = false;
-                    })
-                    .catch(error => {
-                        this.loading = false;
-                    });
-
-
-                this.$refs.coffeeOfferingDetails.show();
-            },
-
-
-            getAllCoffeeOfferings() {
-                this.loading = true;
-                axios
-                    .get(`${endPoint}/api/coffeeofferings/getall`)
-                    .then(response => {
-                        this.loading = false;
-                        this.dataList = response.data;
-                        this.total = response.data.length;
-
-                    })
-                    .catch(error => {
-                        this.loading = false;
-                    });
-            },
-
-            getFilteredCoffeeOfferings() {
-                this.loading = true;
-                axios
-                    .post(`${endPoint}/api/coffeeofferings/filter`, this.filterOptions)
-                    .then(response => {
-                        this.loading = false;
-                        this.dataList = response.data.data;
-                        this.total = response.data.total;
-                        this.currentPage = response.data.currentPage;
-                        this.numberOfPages = response.data.lastPage;
-                        this.$refs.coffeeOfferingFilter.hide();
-                    })
-                    .catch(error => {
-                        this.loading = false;
-                    });
-            },
-
-
-            getCoffeeOfferingsOptions() {
-                this.loading = true;
-                axios
-                    .get(`${endPoint}/api/coffeeofferings/options`)
-                    .then(response => {
-                        this.options = response.data;
-                        this.loading = false;
-                    })
-                    .catch(error => {
-                        this.loading = false;
-                    });
-            },
-
-            addProperty(propertyName) {
-                console.log(this.optionsSelected[propertyName]);
-            },
-
-            filterResults() {
-                console.log("filtering results");
-                alert("Que pasa cuando filtro???");
-            }
-        },
-
-        mounted() {
-            this.getCoffeeOfferingsOptions();
-        }
-
-
-
-    })
-</script>
+</body>
 
 
 </html>
