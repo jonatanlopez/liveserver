@@ -250,7 +250,7 @@ ul {
     top: 4px;
     padding: 0 6px;
 }
-.actions i {
+.actions i, .lot_actions i {
     font-size: 1em;
     width: 20px;
     /* margin-left: 6px; */
@@ -519,6 +519,7 @@ ul {
     padding: 30px 0;
     width: 100%;
 }
+
 .article_spaced {
 	padding-top: 60px;
 } 
@@ -841,6 +842,7 @@ ul {
 .fb, .tw, .ig {
     display: inline-block;
     background: url('/media/1035/redes_icn.png') no-repeat;
+    /* background: url('/images/redes_icn.png') no-repeat; */
     background-size: 90px 60px;
     width: 30px;
     height: 30px;
@@ -859,6 +861,7 @@ ul {
 }
 .contact_info .fb, .contact_info .tw, .contact_info .ig {
     background: url('/media/1036/redes_icn_sm.png') no-repeat;
+    /* background: url('/images/redes_icn_sm.png') no-repeat; */
     background-size: 75px 50px;
     width: 25px;
     height: 25px;
