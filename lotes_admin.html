@@ -1,0 +1,398 @@
+<div class="results_block">
+    <div class="row results_header">
+        <div class="col-12 col-md-8 summary_results">
+            <div>
+                <div class="num_results">{{total}}</div>
+            </div>
+            <div>
+                <div class="title_results">
+                    <h3>Mis Ofertas de Café</h3>
+                </div>
+                <small class="form-text text-primary">
+                    <a href="#" class="collapse_filters" @click="filterResults">
+                        Filtrar resultados
+                    </a>
+                </small>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <!-- <div class="d-flex">
+          <div>
+            <b-button variant="link" @click="filterResults">
+              Filtrar resultados
+              <i class="fa fa-fw fa-filter"></i>
+            </b-button>
+          </div>
+        </div> -->
+
+            <div class="d-flex">
+                <div class="mr-3">Mostrar:</div>
+                <div>
+                    <b-form-radio-group v-model="showSelectedOption" name="radio-inline" size="sm"
+                        @change="getOfferings">
+                        <b-form-radio name="some-radios" value="v">Vigentes</b-form-radio>
+                        <b-form-radio name="some-radios" value="t">Todas</b-form-radio>
+                    </b-form-radio-group>
+                </div>
+            </div>
+
+            <div class="d-flex">
+                <div class="mr-3">Ordenar por</div>
+                <div>
+                    <b-form-select v-model="orderSelectedOption" size="sm" @change="getOfferings">
+                        <option value="p|asc">Fecha de publicacion</option>
+                        <option value="v|asc">Fecha de vencimiento</option>
+                    </b-form-select>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="form-inline col-12 col-md-4 justify-content-end mb-0 view_modes">
+        ESto no
+      </div> -->
+    </div>
+
+    <div class="results">
+        <div class="results_list" v-if="dataList && dataList.length>0">
+            <!-- results_list / results_grid / results_map - class cambia de acuerdo a view mode-->
+            <div class="entry" v-for="(item, index) in dataList" :key="item.id" :data-id="item.id">
+                <div class="num_dot">{{index+1}}</div>
+                <!-- este es el bloque de cada lote de oferta en la lista -->
+                <!-- <div class="img" v-on:click="showDetails(item)"><img :src="item.coverPhoto | defaultCover" /></div> -->
+                <!-- foto de la finca -->
+                <div class="lot_nom" v-on:click="showDetails(item)">
+                    <ul>
+                        <li>
+                            <h5>{{ item.name }}</h5>
+                        </li>
+                        <!-- <li>{{ item.town}}, {{ item.city}}</li> -->
+                        <!-- <li>varieties: <span class="badge " v-for="it in item.varieties" :key="it">{{ it }}</span></li> -->
+                    </ul>
+                </div>
+                <div class="lot_description">
+                    <div>
+                        {{item.productiveUnitName}} -
+                        <span v-for="it in item.varieties" :key="it">
+                            {{ it }}
+                            /
+                        </span>
+                    </div>
+                    <div>{{item.location}}</div>
+                    <!-- {{ item.town}}, {{ item.city}} -->
+                </div>
+                <div class="lot_size">
+                    <div>
+                        {{ item.quantity }} {{ item.packing }} ({{ item.sizePerUnit }}
+                        {{ item.unitOfMeasurement }})
+                    </div>
+                    <!-- TAMAÑO DEL LOTE -->
+                    <small>{{ item.id }}</small>
+                </div>
+                <div class="lot_score">
+                    <div class="num_points" lbl="points">{{item.scaScore}}</div>
+                    <!-- SCORE SCAA -->
+                </div>
+                <div class="lot_actions">
+                    <div class="go">
+                        <a class="detalle" v-on:click="showDetails(item)">
+                            <span>detail</span>
+                            <i class="fa fa-chevron-circle-right"></i>
+                        </a>
+                        <!-- <a class="flyto" v-on:click="flyTo(item)"><span>locate</span><i class="fas fa-map-marker-alt"></i></a> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="media border mb-5 p-2" v-for="item in dataList" :key="item.id">
+    <div>
+        <img :src="'uploads/' + item.coverPhoto" class="img-thumbnail mr-3" alt="..."
+            style="width: 120px;height: 120px;" />
+        <div class="text-secondary mt-3">{{ item.productiveUnitName }}</div>
+    </div>
+
+    <div class="media-body">
+        <span class="float-right text-black-50" style="font-size: 0.9em; font-weight: 400;">
+            {{
+        item.publicationDate | moment("D-MMM-YYYY")
+        }}
+        </span>
+        <h5 class="mt-0">
+            <span class="badge badge-info">{{ item.id }}</span>
+            {{ item.name }}
+        </h5>
+
+        <div class="text-muted mb-3">{{ item.description }}</div>
+
+        <div class="mb-3">
+            <div class="float-right">
+                <div class="text-black-50" style="font-size: 1.1em; font-weight: 600;">
+                    {{ item.quantity }} {{ item.packing }} de {{ item.sizePerUnit }}
+                    {{ item.unitOfMeasurement }} c/u
+                </div>
+
+                <!-- <button class="btn btn-dark btn-sm" @click="clickAddToCart(item)">Add To Cart</button> -->
+            </div>
+
+            <div class="mb-2">
+                <span class="badge badge-dark" style="font-size: 1.2em;">{{item.scaScore}}</span>
+                <i class="fa fa-fw fa-map"></i>
+                {{ item.location }} .
+                <i class="fa fa-fw fa-cog"></i>
+                {{ item.process }} .
+                <i class="fa fa-fw fa-chevron-up"></i>
+                {{ item.altitude }}
+            </div>
+
+            <div class="mb-2">
+                <span v-for="variety in item.varieties" :key="variety" class="badge badge-info mr-2"
+                    :title="variety">{{ variety }}</span>
+            </div>
+
+            <div class="mb-2">
+                <span class="text-secondary">Fecha de cosecha .</span>
+                {{ item.dateOfHarvest | moment("D-MMM-YYYY") }}
+                <br />
+                <span class="text-secondary">Fecha de vencimiento .</span>
+                {{ item.expirationDate | moment("D-MMM-YYYY") }}
+            </div>
+
+            <!-- <div>
+          <span class="text-secondary">Ubicacion .</span>
+          {{ item.location }}
+        </div>
+        <div>
+          <span class="text-secondary">Proceso .</span>
+          {{ item.process }}
+        </div>
+        <div>
+          <span class="text-secondary">Variedades .</span>
+          <span
+            v-for="variety in item.varieties"
+            :key="variety"
+            class="badge badge-info mr-2"
+            :title="variety"
+          >{{ variety }}</span>
+        </div>
+
+        <div>
+          <span class="text-secondary">Altitud .</span>
+          {{ item.altitude }}
+        </div>
+
+        <div>
+          <span class="text-secondary">Fecha de cosecha .</span>
+          {{ item.dateOfHarvest | moment("lll") }}
+        </div>-->
+        </div>
+
+        <div class="mt-2">
+            <span v-for="att in item.tags" :key="att" class="badge badge-secondary mr-2" :title="att">{{ att }}</span>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<!-- Request Sample -->
+<b-modal id="requestSample" ref="requestSample" size="xl" hide-footer header-class="modal-header-custom"
+    dialog-class="modal_unit">
+
+    <form>
+        <div class="form-group row">
+            <label for="name" class="col-lg-2 col-form-label pl-0">Name</label>
+            <input type="text" class="col-lg-10 form-control" v-model="formData.name" :disabled="loading" id="name">
+        </div>
+
+        <div class="form-group row">
+            <label for="company" class="col-lg-2 col-form-label pl-0">company</label>
+            <input type="text" class="col-lg-10 form-control" v-model="formData.company" :disabled="loading"
+                id="company">
+        </div>
+
+        <div class="form-group row">
+            <label for="phone" class="col-lg-2 col-form-label pl-0">phone</label>
+            <input type="text" class="col-lg-10 form-control" v-model="formData.phone" :disabled="loading" id="phone">
+
+        </div>
+
+        <div class="form-group row">
+            <label for="email" class="col-lg-2 col-form-label pl-0">email</label>
+            <input type="text" class="col-lg-10 form-control" v-model="formData.email" :disabled="loading" id="email">
+        </div>
+
+        <div class="form-group row">
+            <label for="address" class="col-lg-2 col-form-label pl-0">address</label>
+            <input type="text" class="col-lg-10 form-control" v-model="formData.address" :disabled="loading"
+                id="address">
+        </div>
+
+        <div class="form-group row">
+            <label for="country" class="col-lg-2 col-form-label pl-0">country</label>
+            <input type="text" class="col-lg-10 form-control" v-model="formData.country" :disabled="loading"
+                id="country">
+        </div>
+
+        <div class="form-group row">
+            <label for="message" class="col-lg-2 col-form-label pl-0">message</label>
+            <textarea rows="5" class="col-lg-10 form-control" v-model="formData.message" :disabled="loading"
+                id="message">
+                  </div>                    
+
+                  <div class="form-group col-12 text-center">
+                      <button type="button" class="btn btn-primary"
+                          v-on:click.prevent="requestSample">Request</button>
+                  </div>
+
+              </form>
+
+          </b-modal>
+
+         <!-- Contact -->
+
+         <b-modal id="contact" ref="contact" size="xl" hide-footer 
+         header-class="modal-header-custom" dialog-class="modal_unit">
+
+         <form>
+             <div class="form-group row">
+                 <label for="firstName" class="col-lg-2 col-form-label pl-0">firstName</label>
+                 <input type="text" class="col-lg-10 form-control" v-model="formData.firstName" :disabled="loading"
+                     id="firstName">
+             </div>
+
+             <div class="form-group row">
+              <label for="lastName" class="col-lg-2 col-form-label pl-0">lastName</label>
+              <input type="text" class="col-lg-10 form-control" v-model="formData.lastName" :disabled="loading"
+                  id="lastName">
+              </div>
+
+
+             <div class="form-group row">
+                 <label for="email" class="col-lg-2 col-form-label pl-0">email</label>
+                 <input type="text" class="col-lg-10 form-control" v-model="formData.email" :disabled="loading"
+                     id="email">
+             </div>
+
+
+             <div class="form-group row">
+                 <label for="message" class="col-lg-2 col-form-label pl-0">message</label>
+                 <textarea rows="5" class="col-lg-10 form-control" v-model="formData.message" :disabled="loading"
+                     id="message">
+                 </textarea>
+        </div>
+
+        <div class="form-group col-12 text-center">
+            <button type="button" class="btn btn-primary" v-on:click.prevent="requestSample">Submit</button>
+        </div>
+
+    </form>
+
+</b-modal>
+
+
+<div class="farm_facts">
+    <ul>
+      <li>
+        <b-button-group>
+          <i class="fa fa-fw fa-map-marker"></i>
+          <validate>
+            <b-form-input
+              id="locationLat"
+              name="locationLat"
+              v-model="formData.latitude"
+              placeholder="locationLat"
+              min="-90"
+              max="90"
+            ></b-form-input>
+            <field-messages name="locationLat" show="$dirty || $touched || $submitted">
+              <div
+                slot="required"
+                class="form-text small text-danger"
+              >La latitud es requerida</div>
+            </field-messages>
+          </validate>
+          <validate>
+            <b-form-input
+              id="locationLon"
+              name="locationLon"
+              v-model="formData.longitude"
+              placeholder="locationLon"
+              min="-180"
+              max="180"
+            ></b-form-input>
+            <field-messages name="locationLon" show="$dirty || $touched || $submitted">
+              <div
+                slot="required"
+                class="form-text small text-danger"
+              >La longitud es requerida</div>
+            </field-messages>
+          </validate>
+        </b-button-group>
+      </li>
+      <li>
+        <b-button-group>
+          <i class="fa fa-fw fa-arrow-up"></i>
+
+          <b-form-input
+            id="maxAltitude"
+            name="maxAltitude"
+            v-model="formData.maxAltitude"
+            placeholder="maxAltitude"
+            readonly
+          ></b-form-input>ft
+        </b-button-group>
+      </li>
+      <li>
+        <b-button-group>
+          <i class="fa fa-fw fa-tree"></i>
+          <b-form-input
+            id="totalArea"
+            name="totalArea"
+            v-model="formData.totalArea"
+            placeholder="totalArea"
+            readonly
+          ></b-form-input>
+        </b-button-group>
+      </li>
+      <li>
+        <b-button-group>
+          <i class="fa fa-fw fa-spoon"></i>
+
+          <b-form-input
+            id="goldProductionQq"
+            name="goldProductionQq"
+            v-model="formData.goldProductionQq"
+            placeholder="goldProductionQq"
+            readonly
+          ></b-form-input>qq
+        </b-button-group>
+      </li>
+      <li>
+        <br />
+      </li>
+      <li>
+        <b-button-group>
+          <i class="fa fa-fw fa-trophy"></i>
+          <validate>
+            <input-tag id="awards" name="awards" v-model="formData.awards"></input-tag>
+
+            <field-messages name="awards" show="$dirty || $touched || $submitted">
+              <div
+                slot="required"
+                class="form-text small text-danger"
+              >Los premios son requeridos</div>
+            </field-messages>
+          </validate>
+        </b-button-group>
+      </li>
+    </ul>
+  </div>
+

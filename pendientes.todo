@@ -1,0 +1,21 @@
+
+
+Guatemalan Coffees:
+    Tasks:
+        ☐ Crear Modal de Contacto
+        ☐ Crear Modal de Solicitar Muestra
+        ☐ Revisar opcion de Narrow Results en la Unidad productiva
+        ☐ Revisar el Enter para que haga la busqueda en los modales de filtrado
+        ☐ Revisar las certificaciones no funciona al tener campos , da error 500
+        ☐ Crear un control para mostrar los filtros seleccionados
+
+
+Coffee Search Admin:
+    Tasks:
+        ☐ Implementar una validacion para cuando no estoy authorizado a usar la app
+        ✔ Crear pantalla de Editar de Unidad Productiva como el modelo de GC @done (24/7/2020 13:50:05)
+        ☐ Crear pantalla de Crear Lote como el modelo de GC
+        ☐ Crear un control para seleccionar una ubicacion en el mapa
+        ☐ Actualizar la libreria FontAwesome a la version 5
+
+

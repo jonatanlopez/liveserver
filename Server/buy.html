@@ -12,37 +12,37 @@
 
     <div id="vapp">
         <!-- *** INICIA BLOQUE DE MODAL DE BÚSQUEDA (modal_search_gral) *** -->
-                    <div :class="main_class" class="container-fluid">
+        <div :class="main_class" class="container-fluid">
 
-                <!-- btn_explore.htm -->
-                <!-- <div class="search_modal modalw"></div> -->
-                <div>
-                    <a class="btn btn_float nav-link call_search_coffee"
-                        v-on:click.prevent="showFilterModal"><span>Coffee lots</span><i class="fas fa-search"></i></a>
-                </div>
+            <!-- btn_explore.htm -->
+            <!-- <div class="search_modal modalw"></div> -->
+            <div>
+                <a class="btn btn_float nav-link call_search_coffee" v-on:click.prevent="showFilterModal"><span>Coffee
+                        lots</span><i class="fas fa-search"></i></a>
+            </div>
 
-                <!-- BLOQUE DE GRID DE RESULTADOS DE BÚSQUEDA -->
-                <div class="results_block">
-                    <div class="row results_header">
-                        <div class="col-12 col-md-8 summary_results">
-                            <div>
-                                <div class="num_results">{{total}}</div>
-                            </div>
-                            <div>
-                                <div class="title_results">Results for
-                                    <span v-for="key in Object.keys(filterOptions)" :key="key"
-                                        v-if="filterOptions[key].length>0">
-
-                                        {{key}} : {{ filterOptions[key]}} +
-                                    </span></div>
-                                <small class="form-text text-primary"><a href="#" class="collapse_filters"
-                                        v-on:click="()=>this.$refs.productiveUnitFilter.show()">Narrow
-                                        results</a></small>
-                            </div>
-
+            <!-- BLOQUE DE GRID DE RESULTADOS DE BÚSQUEDA -->
+            <div class="results_block">
+                <div class="row results_header">
+                    <div class="col-12 col-md-8 summary_results">
+                        <div>
+                            <div class="num_results">{{total}}</div>
                         </div>
-                        <div class="form-inline col-12 col-md-4 justify-content-end mb-0 view_modes">
-                            <!-- <a v-on:click.prevent="setView('list')" v-if="this.viewMode != 'list'"><span>list</span><i
+                        <div>
+                            <div class="title_results">Results for
+                                <span v-for="key in Object.keys(filterOptions)" :key="key"
+                                    v-if="filterOptions[key].length>0">
+
+                                    {{key}} : {{ filterOptions[key]}} +
+                                </span></div>
+                            <small class="form-text text-primary"><a href="#" class="collapse_filters"
+                                    v-on:click="()=>this.$refs.productiveUnitFilter.show()">Narrow
+                                    results</a></small>
+                        </div>
+
+                    </div>
+                    <div class="form-inline col-12 col-md-4 justify-content-end mb-0 view_modes">
+                        <!-- <a v-on:click.prevent="setView('list')" v-if="this.viewMode != 'list'"><span>list</span><i
                                     class="fas fa-list-alt"></i></a>
                             
                             <a v-on:click.prevent="setView('grid')" v-if="this.viewMode != 'grid'"><span>grid</span><i
@@ -51,65 +51,69 @@
                             <a v-on:click.prevent="setView('map')" v-if="this.viewMode != 'map'"><span>map</span><i
                                     class=" fas
                                 fa-map-marked-alt"></i></a> -->
-                            <label class="mr-sm-2 small" for="orderBy">Order by:</label>
-                            <select class="custom-select custom-select-sm mb-2 mr-sm-2 mb-sm-0" id="orderBy"
-                                v-model="filterOptions.sort" v-on:change="getFilteredCoffeeOfferings">
-                                <option value="p|desc">Date published</option>
-                                <option value="n|asc">Farm name</option>
-                                <option value="s|asc">Score</option>
-                            </select>
+                        <label class="mr-sm-2 small" for="orderBy">Order by:</label>
+                        <select class="custom-select custom-select-sm mb-2 mr-sm-2 mb-sm-0" id="orderBy"
+                            v-model="filterOptions.sort" v-on:change="getFilteredCoffeeOfferings">
+                            <option value="p|desc">Date published</option>
+                            <option value="n|asc">Farm name</option>
+                            <option value="s|asc">Score</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="results">
+                    <div :class="currentViewModeClass" v-if="dataList && dataList.length>0">
+                        <!-- results_list / results_grid / results_map - class cambia de acuerdo a view mode-->
+                        <div class="entry" v-for="(item, index) in dataList" :key="item.id" :data-id="item.id">
+                            <div class="num_dot">{{index+1}}</div>
+                            <!-- este es el bloque de cada lote de oferta en la lista -->
+                            <!-- <div class="img" v-on:click="showDetails(item)"><img :src="item.coverPhoto | defaultCover" /></div> -->
+                            <!-- foto de la finca -->
+                            <div class="lot_nom" v-on:click="showDetails(item)">
+                                <ul>
+                                    <li>
+                                        <h5>{{item.productiveUnitName}} </h5>
+                                    </li>
+                                    <li v-if="item.town">{{ item.town}}, {{ item.city}}</li>
+                                    <!-- <li>varieties: <span class="badge " v-for="it in item.varieties" :key="it">{{ it }}</span></li> -->
+                                    <li>
+                                        <span
+                                            class="small text-dark">{{item.publicationDate | moment("D-MMM-YYYY") }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="lot_description">
+                                <div>{{ item.name }} - <span v-for="it in item.varieties" :key="it">{{ it }}
+                                        / </span> </div>
+                                <div>{{item.location}} / {{item.warehouse}}</div>
+                                <!-- {{ item.town}}, {{ item.city}} -->
+                            </div>
+                            <div class="lot_size">
+                                <div> {{ item.quantity }} {{ item.packing }} ({{ item.sizePerUnit }}
+                                    {{ item.unitOfMeasurement }})</div> <!-- TAMAÑO DEL LOTE -->
+                                <small class="text-primary">{{ item.id }}</small>
+                            </div>
+                            <div class="lot_score">
+                                <div class="num_points" lbl="points">{{item.scaScore}}</div><!-- SCORE SCAA -->
+                            </div>
+                            <div class="lot_actions">
+                                <div class="go">
+                                    <a class="detalle" v-on:click="showDetails(item)"><span>detail</span><i
+                                            class="fas fa-chevron-circle-right"></i></a>
+                                    <!-- <a class="flyto" v-on:click="flyTo(item)"><span>locate</span><i class="fas fa-map-marker-alt"></i></a> -->
+                                </div>
+                            </div>
                         </div>
 
                     </div>
 
-                    <div class="results">
-                        <div :class="currentViewModeClass" v-if="dataList && dataList.length>0">
-                            <!-- results_list / results_grid / results_map - class cambia de acuerdo a view mode-->
-                            <div class="entry" v-for="(item, index) in dataList" :key="item.id" :data-id="item.id">
-                                <div class="num_dot">{{index+1}}</div>
-                                <!-- este es el bloque de cada lote de oferta en la lista -->
-                                <!-- <div class="img" v-on:click="showDetails(item)"><img :src="item.coverPhoto | defaultCover" /></div> -->
-                                <!-- foto de la finca -->
-                                <div class="lot_nom" v-on:click="showDetails(item)">
-                                    <ul>
-                                        <li>
-                                            <h5>{{ item.name }}</h5>
-                                        </li>
-                                        <!-- <li>{{ item.town}}, {{ item.city}}</li> -->
-                                        <!-- <li>varieties: <span class="badge " v-for="it in item.varieties" :key="it">{{ it }}</span></li> -->
-                                    </ul>
-                                </div>
-                                <div class="lot_description">
-                                    <div>{{item.productiveUnitName}} - <span v-for="it in item.varieties"
-                                            :key="it">{{ it }} / </span> </div>
-                                    <div>{{item.location}} </div>   
-                                    <!-- {{ item.town}}, {{ item.city}} -->
-                                </div>
-                                <div class="lot_size">
-                                    <div> {{ item.quantity }} {{ item.packing }} ({{ item.sizePerUnit }}
-                                        {{ item.unitOfMeasurement }})</div> <!-- TAMAÑO DEL LOTE -->
-                                    <small>{{ item.id }}</small>
-                                </div>
-                                <div class="lot_score">
-                                    <div class="num_points" lbl="points">{{item.scaScore}}</div><!-- SCORE SCAA -->
-                                </div>
-                                <div class="lot_actions">
-                                    <div class="go">
-                                        <a class="detalle" v-on:click="showDetails(item)"><span>detail</span><i
-                                                class="fas fa-chevron-circle-right"></i></a>
-                                        <!-- <a class="flyto" v-on:click="flyTo(item)"><span>locate</span><i class="fas fa-map-marker-alt"></i></a> -->
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <!-- <div v-if="dataList && dataList.length==0">
+                    <!-- <div v-if="dataList && dataList.length==0">
                             No existen unidades productivas para este criterio
                         </div> -->
 
 
-                        <!-- <div class="map_results" v-if="viewMode == 'map'">
+                    <!-- <div class="map_results" v-if="viewMode == 'map'">
                             <div style="height: 100%; width: 100%">
 
 
@@ -136,199 +140,197 @@
                             </div>
 
                         </div> -->
+                </div>
+            </div>
+
+            <!-- Filtros -->
+            <b-modal id="productiveUnitFilter" ref="productiveUnitFilter" size="lg" hide-footer
+                header-class="modal-header-custom" dialog-class="myModal">
+
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12 ">
+                            <h5>Let's find your coffee!</h5>
+                        </div>
+                    </div>
+                    <div class="row p-3">
+
+                        <!-- Grupo de búsqueda básico -->
+                        <div class="col-12" v-if="searchExtended==false">
+                            <form>
+                                <div class="form-group row">
+                                    <input type="text" id="name" name="name" class="form-control"
+                                        placeholder="Search for farm name, variety or lot description."
+                                        autocomplete="on" v-model="filterOptions.name" />
+                                    <!-- Muestra search_extended y oculta search_basic -->
+                                    <small class="form-text text-primary mx-2"><a href="#" class="expand_filters"
+                                            v-on:click.prevent="showSearchExtended">Or be more specific.</a></small>
+                                </div>
+                                <div class="form-group col-12 text-center">
+                                    <button type="button" class="btn btn-primary"
+                                        v-on:click.prevent="getFilteredCoffeeOfferings">Go</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="col-12" v-if="searchExtended==true">
+                            <form>
+                                <div class="form-group row">
+                                    <label for="farmName" class="col-lg-2 col-form-label pl-0">Farm name</label>
+                                    <input type="text" class="col-lg-10 form-control" v-model="filterOptions.name"
+                                        :disabled="loading" id="farmName">
+                                </div>
+                                <div class="form-group row px-0">
+                                    <div class="form-inline col-lg-6 px-0">
+                                        <label for="scoreMin"
+                                            class="col-4 col-form-label justify-content-start pl-0">Cupping
+                                            score</label>
+                                        <input type="text" class="col-3 form-control" id="scoreMin"
+                                            v-model="filterOptions.scaMin" :disabled="loading" placeholder="min"
+                                            min="0">
+                                        <label for="scoreMax" class="col-1 col-form-label">></label>
+                                        <input type="text" class="col-3 form-control" id="scoreMax"
+                                            v-model="filterOptions.scaMax" :disabled="loading" placeholder="max"
+                                            max="100">
+                                    </div>
+                                    <div class="form-inline col-lg-6 px-0">
+                                        <label for="listing"
+                                            class="col-12 col-lg-2 col-form-label justify-content-start pl-0">Listing</label>
+                                        <vue-multiselect id="listing" class="col-12 col-lg-10 px-0" :disabled="loading"
+                                            v-model="filterOptions.locations" placeholder="Choose"
+                                            :options="options['locations']" :multiple="true">
+                                        </vue-multiselect>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="varieties" class="col-form-label col-lg-2 pl-0">Varieties</label>
+                                    <vue-multiselect id="varieties" class="col-lg-10 px-0"
+                                        v-model="filterOptions.varieties" placeholder="Choose varieties" label="name"
+                                        track-by="id" :options="options['varieties']" :multiple="true"
+                                        :disabled="loading">
+                                    </vue-multiselect>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="processes" class="col-form-label col-lg-2 pl-0">Processes</label>
+                                    <vue-multiselect id="processes" class="col-lg-10 px-0"
+                                        v-model="filterOptions.processes" placeholder="Choose processes" label="name"
+                                        track-by="id" :options="options['processes']" :multiple="true"
+                                        :disabled="loading">
+                                    </vue-multiselect>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="certifications"
+                                        class="col-form-label col-lg-2 pl-0">Certifications</label>
+                                    <vue-multiselect id="certifications" class="col-lg-10 px-0"
+                                        v-model="filterOptions.certifications" placeholder="Choose certifications"
+                                        label="name" track-by="id" :options="options['certifications']" :multiple="true"
+                                        :disabled="loading">
+                                    </vue-multiselect>
+
+                                </div>
+                                <div class="form-group row">
+                                    <!-- Oculta search_extended y muestra search_basic -->
+                                    <small class="form-text text-primary mx-2">
+                                        <a href="#" v-on:click.prevent="clearSearchExtended"
+                                            class="collapse_filters">Clear filters</a>
+                                    </small>
+                                </div>
+                                <div class="form-group col-12 text-center">
+                                    <button type="button" class="btn btn-primary"
+                                        v-on:click.prevent="getFilteredCoffeeOfferings">Go!</button>
+                                </div>
+                            </form>
+                        </div>
+
+
                     </div>
                 </div>
+            </b-modal>
 
-                <!-- Filtros -->
-                <b-modal id="productiveUnitFilter" ref="productiveUnitFilter" size="lg" hide-footer
-                    header-class="modal-header-custom" dialog-class="myModal">
-
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-12 ">
-                                <h5>Let's find your coffee!</h5>
-                            </div>
-                        </div>
-                        <div class="row p-3">
-
-                            <!-- Grupo de búsqueda básico -->
-                            <div class="col-12" v-if="searchExtended==false">
-                                <form>
-                                    <div class="form-group row">
-                                        <input type="text" id="name" name="name" class="form-control"
-                                            placeholder="Search for farm name, variety or lot description."
-                                            autocomplete="on" v-model="filterOptions.name" />
-                                        <!-- Muestra search_extended y oculta search_basic -->
-                                        <small class="form-text text-primary mx-2"><a href="#" class="expand_filters"
-                                                v-on:click.prevent="showSearchExtended">Or be more specific.</a></small>
-                                    </div>
-                                    <div class="form-group col-12 text-center">
-                                        <button type="button" class="btn btn-primary"
-                                            v-on:click.prevent="getFilteredCoffeeOfferings">Go</button>
-                                    </div>
-                                </form>
+            <!-- Detalles -->
+            <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="xl" hide-footer
+                header-class="modal-header-custom" dialog-class="modal_unit">
+                <div class="col">
+                    <div class="num_results">{{ item.id}}<div class="lotlbl" lbl="lot ID"></div>
+                    </div> <!-- lbl indica texto a mostrar -->
+                    <div class="num_points f_right" lbl="points">{{item.scaScore}}</div> <!-- SCORE SCAA -->
+                </div>
+                <div class="row ">
+                    <!-- columna central - info lote -->
+                    <div class="col col-md-10 mx-auto">
+                        <div class="row p_header">
+                            <div class="col-12 col-sm-6 nom">
+                                <ul>
+                                    <li class="tx_blue">Coffee lot</li>
+                                    <li>
+                                        <h3>{{item.name}}</h3> <!-- NOMBRE DEL LOTE DE CAFÉ -->
+                                    </li>
+                                    <li>{{ item.quantity }} {{ item.packing }} ({{ item.sizePerUnit }}
+                                        {{ item.unitOfMeasurement }})</li> <!-- TAMAÑO DEL LOTE -->
+                                </ul>
                             </div>
 
-                            <div class="col-12" v-if="searchExtended==true">
-                                <form>
-                                    <div class="form-group row">
-                                        <label for="farmName" class="col-lg-2 col-form-label pl-0">Farm name</label>
-                                        <input type="text" class="col-lg-10 form-control" v-model="filterOptions.name"
-                                            :disabled="loading" id="farmName">
-                                    </div>
-                                    <div class="form-group row px-0">
-                                        <div class="form-inline col-lg-6 px-0">
-                                            <label for="scoreMin"
-                                                class="col-4 col-form-label justify-content-start pl-0">Cupping
-                                                score</label>
-                                            <input type="text" class="col-3 form-control" id="scoreMin"
-                                                v-model="filterOptions.scaMin" :disabled="loading" placeholder="min"
-                                                min="0">
-                                            <label for="scoreMax" class="col-1 col-form-label">></label>
-                                            <input type="text" class="col-3 form-control" id="scoreMax"
-                                                v-model="filterOptions.scaMax" :disabled="loading" placeholder="max"
-                                                max="100">
-                                        </div>
-                                        <div class="form-inline col-lg-6 px-0">
-                                            <label for="listing"
-                                                class="col-12 col-lg-2 col-form-label justify-content-start pl-0">Listing</label>
-                                            <vue-multiselect id="listing" class="col-12 col-lg-10 px-0"
-                                                :disabled="loading" v-model="filterOptions.locations"
-                                                placeholder="Choose" :options="options['locations']" :multiple="true">
-                                            </vue-multiselect>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="varieties" class="col-form-label col-lg-2 pl-0">Varieties</label>
-                                        <vue-multiselect id="varieties" class="col-lg-10 px-0"
-                                            v-model="filterOptions.varieties" placeholder="Choose varieties"
-                                            label="name" track-by="id" :options="options['varieties']" :multiple="true"
-                                            :disabled="loading">
-                                        </vue-multiselect>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="processes" class="col-form-label col-lg-2 pl-0">Processes</label>
-                                        <vue-multiselect id="processes" class="col-lg-10 px-0"
-                                            v-model="filterOptions.processes" placeholder="Choose processes"
-                                            label="name" track-by="id" :options="options['processes']" :multiple="true"
-                                            :disabled="loading">
-                                        </vue-multiselect>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="certifications"
-                                            class="col-form-label col-lg-2 pl-0">Certifications</label>
-                                        <vue-multiselect id="certifications" class="col-lg-10 px-0"
-                                            v-model="filterOptions.certifications" placeholder="Choose certifications"
-                                            label="name" track-by="id" :options="options['certifications']"
-                                            :multiple="true" :disabled="loading">
-                                        </vue-multiselect>
-
-                                    </div>
-                                    <div class="form-group row">
-                                        <!-- Oculta search_extended y muestra search_basic -->
-                                        <small class="form-text text-primary mx-2">
-                                            <a href="#" v-on:click.prevent="clearSearchExtended"
-                                                class="collapse_filters">Clear filters</a>
-                                        </small>
-                                    </div>
-                                    <div class="form-group col-12 text-center">
-                                        <button type="button" class="btn btn-primary"
-                                            v-on:click.prevent="getFilteredCoffeeOfferings">Go!</button>
-                                    </div>
-                                </form>
+                            <div class="col-12 col-sm-6 text-right certifications">
+                                <img v-for="it in item.certifications" :key="it.id" :src="`images/cert_${it.id}.png`">
                             </div>
-
-
-                        </div>
-                    </div>
-                </b-modal>
-
-                <!-- Detalles -->
-                <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="xl" hide-footer
-                    header-class="modal-header-custom" dialog-class="modal_unit">
-                    <div class="col">
-                        <div class="num_results">{{ item.id}}<div class="lotlbl" lbl="lot ID"></div>
-                        </div> <!-- lbl indica texto a mostrar -->
-                        <div class="num_points f_right" lbl="points">{{item.scaScore}}</div> <!-- SCORE SCAA -->
-                    </div>
-                    <div class="row ">
-                        <!-- columna central - info lote -->
-                        <div class="col col-md-10 mx-auto">
-                            <div class="row p_header">
-                                <div class="col-12 col-sm-6 nom">
-                                    <ul>
-                                        <li class="tx_blue">Coffee lot</li>
-                                        <li>
-                                            <h3>{{item.name}}</h3> <!-- NOMBRE DEL LOTE DE CAFÉ -->
-                                        </li>
-                                        <li>{{ item.quantity }} {{ item.packing }} ({{ item.sizePerUnit }}
-                                            {{ item.unitOfMeasurement }})</li> <!-- TAMAÑO DEL LOTE -->
-                                    </ul>
-                                </div>
-
-                                <div class="col-12 col-sm-6 text-right certifications">
-                                    <img v-for="it in item.certifications" :key="it.id"
-                                        :src="`images/cert_${it.id}.png`">
-                                </div>
-                                <!-- <div class="tag_area"><span class="tag bg1">green apple</span><span
+                            <!-- <div class="tag_area"><span class="tag bg1">green apple</span><span
                                         class="tag bg2">caramel</span><span class="tag bg2">almonds</span><span
                                         class="tag bg3">raspberry</span></div> -->
-                                <div class="tag_area"><span class="tag bg1" v-for="it in item.tags"
-                                        :key="it">{{ it }}</span></div>
-                            </div>
+                            <div class="tag_area"><span class="tag bg1" v-for="it in item.tags"
+                                    :key="it">{{ it }}</span></div>
+                        </div>
 
-                            <div class="row p_header">
-                                <div class="col-12 col-sm-6">
+                        <div class="row p_header">
+                            <div class="col-12 col-sm-6">
 
-                                    <div class="farm_facts">
-                                        <ul>
-                                            <li>Varieties: <span class="badge " v-for="it in item.varieties"
-                                                    :key="it">{{ it }}</span></li>
-                                            <li>Process: <span class="badge">{{item.process}}</span></li>
-                                            <li>Drying: <span class="badge " v-for="it in item.dryings"
-                                                    :key="it">{{ it }}</span></li>
-                                        </ul>
+                                <div class="farm_facts">
+                                    <ul>
+                                        <li>Varieties: <span class="badge " v-for="it in item.varieties"
+                                                :key="it">{{ it }}</span></li>
+                                        <li>Process: <span class="badge">{{item.process}}</span></li>
+                                        <li>Drying: <span class="badge">{{item.drying}}</span></li>
+                                    </ul>
 
-                                    </div>
-
-                                </div>
-                                <div class="col-12 col-sm-6">
-                                    <div class="farm_facts text-left text-sm-right pl-5 pl-sm-0">
-                                        <ul>
-                                            <li>Packaging: <span class="badge">{{ item.packing }}</span></li>
-                                            <li>Listing: <span class="badge">{{ item.location }}</span></li>
-                                            <li>Warehouse: <span class="badge">n/a</span>
-                                            </li>
-                                        </ul>
-
-                                    </div>
                                 </div>
 
                             </div>
-                            <div class="row p_origin">
-                                <div class="tx_blue">Origin</div>
-                                <h5>{{ item.name }}</h5>
-                                <div>{{ item.town}}, {{ item.city}}</div>
+                            <div class="col-12 col-sm-6">
+                                <div class="farm_facts text-left text-sm-right pl-5 pl-sm-0">
+                                    <ul>
+                                        <li>Packaging: <span class="badge">{{ item.packing }}</span></li>
+                                        <li>Listing: <span class="badge">{{ item.location }}</span></li>
+                                        <li>Warehouse: <span class="badge">{{ item.warehouse }}</span>
+                                        </li>
+                                    </ul>
 
-                                <div class="col-12 summary_text">{{ item.description }}</div>
-                                <div class="col-12 text-center">
-                                    <b-btn variant="link" class="small tx_blue"
-                                        v-on:click.prevent="viewFarmProfile(item)">view farm profile</b-btn>
                                 </div>
                             </div>
-                            <div class="row my-5">
-                                <div class="col-2 col-sm-1 text-center">
-                                    <h2 class="tx_blue"><i class="fas fa-envelope"></i></h2>
-                                </div>
-                                <div class="col">
-                                    <div class="row"><span v-for="it in item.email" :key="it">{{ it }}</span></div>
-                                    <div class="row"><span v-for="it in item.phones" :key="it">{{ it }}</span></div>
-                                </div>
-                                <div class="col-4 col-sm-3 text-right pr-4">
-                                    <button class="btn btn-primary btn-sm" type="submit"
-                                        v-on:click.prevent="requestSample(item)">Request sample</button>
-                                </div>
-                                <!-- <div>
+
+                        </div>
+                        <div class="row p_origin">
+                            <div class="tx_blue">Origin</div>
+                            <h5>{{ item.productiveUnitName }}</h5>
+                            <div>{{ item.town}}, {{ item.city}}</div>
+
+                            <div class="col-12 summary_text">{{ item.productiveUnitDescription }}</div>
+                            <div class="col-12 text-center">
+                                <b-btn variant="link" class="small tx_blue" v-on:click.prevent="viewFarmProfile(item)">
+                                    view farm profile</b-btn>
+                            </div>
+                        </div>
+                        <div class="row my-5">
+                            <div class="col-2 col-sm-1 text-center">
+                                <h2 class="tx_blue"><i class="fas fa-envelope"></i></h2>
+                            </div>
+                            <div class="col">
+                                <div class="row"><span v-for="it in item.email" :key="it">{{ it }}</span></div>
+                                <div class="row"><span v-for="it in item.phones" :key="it">{{ it }}</span></div>
+                            </div>
+                            <div class="col-4 col-sm-3 text-right pr-4">
+                                <button class="btn btn-primary btn-sm" type="submit"
+                                    v-on:click.prevent="requestSample(item)">Request sample</button>
+                            </div>
+                            <!-- <div>
                                 <span class="text-secondary">Contact .</span>
                                 {{ item.website}}
                                 <br /> phones.
@@ -336,35 +338,38 @@
                                 <br /> emails.
                                 <span v-for="it in item.email" :key="it">{{ it}}</span>
                             </div> -->
-                            </div>
-
                         </div>
+
                     </div>
+                </div>
 
 
 
 
-                </b-modal>
+            </b-modal>
 
-            </div>
-            <!-- *** FINALIZA BLOQUE DE MODAL DE BÚSQUEDA *** -->
 
-            <div class="container-fluid content_block">
-            <!-- CONTENIDO DE WP -->                
-                @Html.Partial("Carousel")
-                <section class="section">
-                    <div class="container">
-                        @Html.GetGridHtml(Model.Content, "bodyText", "bootstrap3-fluid")
-                    </div>
-                </section>
-            </div>
+
 
         </div>
+        <!-- *** FINALIZA BLOQUE DE MODAL DE BÚSQUEDA *** -->
+
+        <div class="container-fluid content_block">
+            <!-- CONTENIDO DE WP -->
+            @Html.Partial("Carousel")
+            <section class="section">
+                <div class="container">
+                    @Html.GetGridHtml(Model.Content, "bodyText", "bootstrap3-fluid")
+                </div>
+            </section>
+        </div>
+
+    </div>
 
 
     <script type="text/javascript">
-            var endPoint = '/umbraco';
-            var imagesEndPoint = 'https://coffeesearch.azurewebsites.net';
+        var endPoint = '/umbraco';
+        var imagesEndPoint = 'https://coffeesearch.azurewebsites.net';
 
         numeral.register("locale", "gt", {
             delimiters: {
