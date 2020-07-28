@@ -56,26 +56,30 @@
     <header class="header">
         <div class="headerbar">
             <div class="logo">
-                    <div class="nav-link--home">
-                        <img class="logo-image" src="/media/1062/logogc.png" alt="Guatemalan Coffees">
-                        <!-- <img class="logo-image" src="/images/logogc.png" alt="Guatemalan Coffees"> -->
-                    </div>
+                <div class="nav-link--home">
+                    <img class="logo-image" src="/media/1062/logogc.png" alt="Guatemalan Coffees">
+                    <!-- <img class="logo-image" src="/images/logogc.png" alt="Guatemalan Coffees"> -->
+                </div>
             </div>
-            
+
             <!-- uncomment this line if you don't want it to appear in the top navigation -->
             <!--<a class="nav-link " href="/">Home</a>-->
 
             <div class="hello">
-            <!--<a class="nav-link call_search_up" s_type="https://guatemalancoffees.azurewebsites.net/umbraco/api/productiveunits/options">Explore <i class="fas fa-search"></i></a>-->
-            <!--<a id="explore_btn" class="nav-link call_search_up" s_type="https://guatemalancoffees.azurewebsites.net/umbraco/api/productiveunits/options" v-on:click="showGeneralsearch">Explore <i class="fas fa-search"></i></a>-->
-            <div class="btn lnk_m" lnk_m="/contact/">Say hello!</div> <!--link modal-->
+                <!--<a class="nav-link call_search_up" s_type="https://guatemalancoffees.azurewebsites.net/umbraco/api/productiveunits/options">Explore <i class="fas fa-search"></i></a>-->
+                <!--<a id="explore_btn" class="nav-link call_search_up" s_type="https://guatemalancoffees.azurewebsites.net/umbraco/api/productiveunits/options" v-on:click="showGeneralsearch">Explore <i class="fas fa-search"></i></a>-->
+                <div class="btn lnk_m" lnk_m="/contact/">Say hello!</div>
+                <!--link modal-->
                 <div class="redes">
-                    <div class="fb lnk_e" lnk_e="https://www.facebook.com/GuatemalanCoffeesAnacafe/" tar="new"></div> <!--link externo target new-->
+                    <div class="fb lnk_e" lnk_e="https://www.facebook.com/GuatemalanCoffeesAnacafe/" tar="new"></div>
+                    <!--link externo target new-->
                     <div class="tw lnk_e" lnk_e="https://twitter.com/guatemalacoffee/" tar="new"></div>
                     <div class="ig lnk_e" lnk_e="https://www.instagram.com/guatemalancoffees/" tar="new"></div>
                 </div>
             </div>
-            <button class="navbar-toggler navbar-dark navbar-toggler-right menu_icon" type="button" data-toggle="collapse" data-target="#mainMenuOptions" aria-controls="mainMenuOptions" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler navbar-dark navbar-toggler-right menu_icon" type="button"
+                data-toggle="collapse" data-target="#mainMenuOptions" aria-controls="mainMenuOptions"
+                aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <nav class="navbar navbar-expand-lg top-nav mainmenu">
@@ -117,11 +121,27 @@
                             </div>
                             <div>
                                 <div class="title_results">Results for
-                                    <span v-for="key in Object.keys(filterOptions)" :key="key"
-                                        v-if="filterOptions[key].length>0">
-
-                                        {{key}} : {{ filterOptions[key]}} +
-                                    </span></div>
+                                    <div class="mt-2">
+                                        <div v-if="filterOptions.name">name:<span
+                                                class="badge">{{filterOptions.name}}</span></div>
+                                        <div>altitude:<span class="badge">{{filterOptions.altitude}}</span> </div>
+                                        <div v-if="filterOptions.regions.length>0">regions: <span class="badge"
+                                                v-for="item in filterOptions.regions" :key="item">{{item}}</span>
+                                        </div>
+                                        <div v-if="filterOptions.varieties.length > 0"> varieties: <span class="badge"
+                                                v-for="item in filterOptions.varieties"
+                                                :key="item.id">{{item.name}}</span>
+                                        </div>
+                                        <div v-if="filterOptions.processes.length > 0">processes:<span class="badge"
+                                                v-for="item in filterOptions.processes"
+                                                :key="item.id">{{item.name}}</span>
+                                        </div>
+                                        <div v-if="filterOptions.certifications.length > 0">certifications:<span
+                                                class="badge" v-for="item in filterOptions.certifications"
+                                                :key="item.id">{{item.name}}</span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <small class="form-text text-primary"><a href="#" class="collapse_filters"
                                         v-on:click="()=>this.$refs.productiveUnitFilter.show()">Narrow
                                         results</a></small>
@@ -249,7 +269,8 @@
                                                 more specific.</button></small>
                                     </div>
                                     <button type="button" class="btn btn-primary" :disabled="loading"
-                                        v-on:click.prevent="getFilteredProductiveUnits">Lets go!  <i class="fa fa-spinner fa-spin" v-show="loading"></i> </button>
+                                        v-on:click.prevent="getFilteredProductiveUnits">Lets go! <i
+                                            class="fa fa-spinner fa-spin" v-show="loading"></i> </button>
                                 </form>
                             </div>
 
@@ -257,14 +278,15 @@
                                 <form>
                                     <div class="form-group row">
                                         <label for="farmName" class="col-lg-2 col-form-label pl-0">Farm name</label>
-                                        <input type="text" class="form-control col-lg-10" :disabled="loading" id="farmName">
+                                        <input type="text" class="form-control col-lg-10" :disabled="loading"
+                                            id="farmName">
                                     </div>
                                     <div class="form-group row">
                                         <label for="altitude" class="col-lg-2 col-form-label pl-0">Altitude</label>
                                         <input name="altitude" v-model="filterOptions.altitude" :disabled="loading"
                                             oninput="alt_tag.value=parseInt(this.value)"
-                                            class="col-9 col-lg-8 range-slider__range " type="range"
-                                            value="2500" min="2500" max="5800">
+                                            class="col-9 col-lg-8 range-slider__range " type="range" value="2500"
+                                            min="2500" max="5800">
                                         <output id="alt_tag" name="alt_tag" for="altitude" unit="ft"
                                             class="range-slider__value col-3 col-lg-2">2500</output>
                                     </div>
@@ -284,7 +306,8 @@
                                     <div class="form-group row">
                                         <label for="regions" class="col-form-label col-lg-2 pl-0">Regions</label>
                                         <vue-multiselect id="regions" class="col-lg-10 px-0" :disabled="loading"
-                                            v-model="filterOptions.regions"  placeholder="Search" :options="options['regions']" :multiple="true">
+                                            v-model="filterOptions.regions" placeholder="Search"
+                                            :options="options['regions']" :multiple="true">
                                         </vue-multiselect>
 
                                         <label for="certifications"
@@ -298,194 +321,196 @@
                                     </div>
                                     <div class="form-group row">
                                         <!-- Oculta search_extended y muestra search_basic -->
-                                            <small class="form-text text-primary mx-2">
-                                                <button href="#" v-on:click.prevent="clearSearchExtended" :disabled="loading"
-                                                    class="collapse_filters btn btn-link">Clear filters</button>
-                                            </small>
-                                        </div>
-                                        <div class="form-group col-12 text-center">
-                                            <button type="button" class="btn btn-primary" :disabled="loading"
-                                                v-on:click.prevent="getFilteredProductiveUnits">Lets go!  <i class="fa fa-spinner fa-spin" v-show="loading"></i> </button>
-                                        </div>
+                                        <small class="form-text text-primary mx-2">
+                                            <button href="#" v-on:click.prevent="clearSearchExtended"
+                                                :disabled="loading" class="collapse_filters btn btn-link">Clear
+                                                filters</button>
+                                        </small>
                                     </div>
-                                </form>
+                                    <div class="form-group col-12 text-center">
+                                        <button type="button" class="btn btn-primary" :disabled="loading"
+                                            v-on:click.prevent="getFilteredProductiveUnits">Lets go! <i
+                                                class="fa fa-spinner fa-spin" v-show="loading"></i> </button>
+                                    </div>
                             </div>
-
-
+                            </form>
                         </div>
+
+
                     </div>
-                </b-modal>
+            </div>
+            </b-modal>
 
-                <!-- Detalles -->
-                <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="xl" hide-footer
-                    header-class="modal-header-custom" dialog-class="modal_unit">
+            <!-- Detalles -->
+            <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="xl" hide-footer
+                header-class="modal-header-custom" dialog-class="modal_unit">
 
 
 
-                    
-                    <div class="col back">
-                        <div class="num_results">{{ item.id}}</div>
-                    </div>
-                    <!-- <div class="row"> -->
-                    <!-- columna izquierda - back to results -->
-                    <!-- <div class="col back"><a><i class="fas fa-chevron-circle-left"></i><span>go back</span></a>
+
+                <div class="col back">
+                    <div class="num_results">{{ item.id}}</div>
+                </div>
+                <!-- <div class="row"> -->
+                <!-- columna izquierda - back to results -->
+                <!-- <div class="col back"><a><i class="fas fa-chevron-circle-left"></i><span>go back</span></a>
                         </div> -->
 
-                    <!-- columna derecha info código UP -->
-                    <!-- <div class="col text-right right_col">
+                <!-- columna derecha info código UP -->
+                <!-- <div class="col text-right right_col">
                             <div class="num_results">{{ item.id}}</div>
                         </div> -->
-                    <!-- </div> -->
+                <!-- </div> -->
 
-                    <div class="row ">
-                        <!-- columna central - perfil UP -->
-                        <div class="col col-md-10 mx-auto">
-                            <div class="row p_header">
-                                <div class="col-12 col-sm-6 nom">
-                                    <ul>
-                                        <li>
-                                            <h3>{{ item.name }}</h3>
-                                        </li>
-                                        <li>{{ item.town}} - {{ item.city}}</li>
-                                        <li></li>
-                                    </ul>
-                                </div>
-                                <div class="col-12 col-sm-6 text-right certifications">
-                                    <img v-for="it in item.certifications" :key="it.id"
-                                        :src="`images/cert_${it.id}.png`">
-                                </div>
+                <div class="row ">
+                    <!-- columna central - perfil UP -->
+                    <div class="col col-md-10 mx-auto">
+                        <div class="row p_header">
+                            <div class="col-12 col-sm-6 nom">
+                                <ul>
+                                    <li>
+                                        <h3>{{ item.name }}</h3>
+                                    </li>
+                                    <li>{{ item.town}} - {{ item.city}}</li>
+                                    <li></li>
+                                </ul>
                             </div>
-                            <div class="row mx-auto">
-                                <div class="col-12">
-                                    <img class="img-fluid" v-if="showCover" :src="item.coverPhoto | defaultCover" />
+                            <div class="col-12 col-sm-6 text-right certifications">
+                                <img v-for="it in item.certifications" :key="it.id" :src="`images/cert_${it.id}.png`">
+                            </div>
+                        </div>
+                        <div class="row mx-auto">
+                            <div class="col-12">
+                                <img class="img-fluid" v-if="showCover" :src="item.coverPhoto | defaultCover" />
 
-                                    <b-carousel v-if="showGallery" id="carousel1" style="text-shadow: 1px 1px 2px #333;"
-                                        f controls indicators background="#ababab" :interval="4000" img-width="1024"
-                                        img-height="480" v-model="slide">
-                                        <!-- Slides with image only -->
-                                        <b-carousel-slide v-for="img in item.gallery" :key="img"
-                                            :img-src="img | defaultCover">
-                                        </b-carousel-slide>
-                                    </b-carousel>
+                                <b-carousel v-if="showGallery" id="carousel1" style="text-shadow: 1px 1px 2px #333;" f
+                                    controls indicators background="#ababab" :interval="4000" img-width="1024"
+                                    img-height="480" v-model="slide">
+                                    <!-- Slides with image only -->
+                                    <b-carousel-slide v-for="img in item.gallery" :key="img"
+                                        :img-src="img | defaultCover">
+                                    </b-carousel-slide>
+                                </b-carousel>
 
-                                    <div v-if="showInMap" style="height: 500px;">
-                                        <l-map ref="myMapDetails" :zoom="zoom"
-                                            :center="{ lat: item.latitude, lon: item.longitude }" :options="mapOptions">
+                                <div v-if="showInMap" style="height: 500px;">
+                                    <l-map ref="myMapDetails" :zoom="zoom"
+                                        :center="{ lat: item.latitude, lon: item.longitude }" :options="mapOptions">
 
 
-                                            <l-marker :visible="true"
-                                                :lat-lng="{ lat: item.latitude, lon: item.longitude }">
+                                        <l-marker :visible="true"
+                                            :lat-lng="{ lat: item.latitude, lon: item.longitude }">
 
-                                                <l-icon iconSize="[25, 41]" iconAnchor="[10, 44]" popupAnchor="[3, -40]"
-                                                    icon-url="marker-icon.png" className="number-icon"
-                                                    :options="{ html: `<span> 1 </span>`, className: 'number-icon', iconSize: [25, 41], iconAnchor: [10, 44], popupAnchor: [3, -40]}">
-                                                </l-icon>
+                                            <l-icon iconSize="[25, 41]" iconAnchor="[10, 44]" popupAnchor="[3, -40]"
+                                                icon-url="marker-icon.png" className="number-icon"
+                                                :options="{ html: `<span> 1 </span>`, className: 'number-icon', iconSize: [25, 41], iconAnchor: [10, 44], popupAnchor: [3, -40]}">
+                                            </l-icon>
 
-                                                <!-- <l-popup
+                                            <!-- <l-popup
                                                 :content=" `<span class='text-primary'>${marker.name}</span> <br/> (${marker.latitude} ${marker.longitude}) <br/> ${marker.town} - ${marker.city} ` "
                                                 v-on:click="showDetails(marker)" /> -->
 
-                                                <l-tooltip :options="{ permanent: true, interactive: true }"
-                                                    :content=" `<span class='text-primary'>${item.name}</span> <br/> (${item.latitude} ${item.longitude}) <br/> ${item.town} - ${item.city} ` " />
-                                            </l-marker>
+                                            <l-tooltip :options="{ permanent: true, interactive: true }"
+                                                :content=" `<span class='text-primary'>${item.name}</span> <br/> (${item.latitude} ${item.longitude}) <br/> ${item.town} - ${item.city} ` " />
+                                        </l-marker>
 
-                                            <l-tile-layer :url="url" :attribution="attribution" />
+                                        <l-tile-layer :url="url" :attribution="attribution" />
 
-                                        </l-map>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="row mx-auto">
-                                <div class="col-12 summary_text">{{ item.description }}
-                                </div>
-                            </div>
-
-                            <div class="row p_header">
-                                <div class="col-12 col-sm-7 action_bar">
-                                    <div>
-                                        <!-- Link a sección de buy en lista de lotes de la UP -->
-                                        <a href="#">
-                                            <div class="num_results tx_blue tight">{{item.coffeeOfferingsCount}}</div>
-                                        </a>
-                                    </div>
-                                    <div>
-                                        <div class="title_results">Coffee lots available</div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-5 text-right view_modes">
-                                    <!-- MAPA Y GALERÍA PUEDEN OCUPAR EL CONTAINER CLASS="main_image" -->
-                                    <a href="#" v-on:click.prevent="setShowGallery" v-if="item.gallery && item.gallery.length > 0 "><span>gallery</span><i
-                                            class="fas fa-images"></i></a>
-                                    <!-- galería de fotos (lightbox) -->
-                                    <a href="#" v-on:click.prevent="setShowInMap"><span>map</span><i
-                                            class="fas fa-map-marked-alt"></i></a>
-                                    <!-- mostrar ubicación en mapa -->
-                                    <a :href="`https://waze.com/ul?ll=${item.latitude},${item.longitude}&navigate=yes`"
-                                        target="_blank"><span>directions</span><i class="fas fa-directions"></i></a>
-                                    <!-- link a waze con coordenadas -->
-                                </div>
-                            </div>
-
-                            <div class="row p_header">
-                                <div class="col-12 col-sm-6">
-
-                                    <div class="farm_facts">
-                                        <ul>
-                                            <li v-if="item.latitude && item.latitude > 0"><i
-                                                    class="fas fa-map-marker-alt"></i> {{ item.latitude }} ,
-                                                {{ item.longitude}}</li>
-                                            <li v-if="item.maxAltitude && item.maxAltitude > 0"><i
-                                                    class="fas fa-mountain"></i>{{ item.minAltitude  | number}} - {{ item.maxAltitude  | number}} ft</li>
-                                            <li v-if="item.totalArea && item.totalArea > 0"><i
-                                                    class="fas fa-draw-polygon"></i>{{item.totalArea  | number}}
-                                            </li>
-                                            <li v-if="item.goldProductionQq && item.goldProductionQq > 0"><i
-                                                    class="fas fa-seedling"></i>{{item.goldProductionQq  | number}} qq
-                                            </li>
-                                            <li><br /></li>
-                                            <li v-if="item.awards && item.awards.length > 0"><i
-                                                    class="fas fa-award"></i><span class="badge"
-                                                    v-for="it in item.awards" :key="it">{{ it }}</span></li>
-                                        </ul>
-
-                                    </div>
-
-                                </div>
-                                <div class="col-12 col-sm-6">
-                                    <div class="farm_facts text-left text-sm-right pl-5 pl-sm-0">
-                                        <ul>
-                                            <li v-if="item.varieties && item.varieties.length > 0">Varieties: <span
-                                                    class="badge " v-for="it in item.varieties"
-                                                    :key="it.id">{{ it.name }}</span></li>
-                                            <li v-if="item.processes && item.processes.length > 0">Processes: <span
-                                                    class="badge " v-for="it in item.processes"
-                                                    :key="it.id">{{ it.name }}</span></li>
-                                            <li v-if="item.soilTypes && item.soilTypes.length > 0">Soil: <span
-                                                    class="badge" v-for="it in item.soilTypes"
-                                                    :key="it.id">{{ it.name }}</span></li>
-                                            <li v-if="item.shadowTypes && item.shadowTypes.length > 0">Shade: <span
-                                                    class="badge " v-for="it in item.shadowTypes"
-                                                    :key="it.id">{{ it.name }}</span></li>
-                                            <li v-if="item.dryingTypes && item.dryingTypes.length > 0">Drying: <span
-                                                    class="badge " v-for="it in item.dryingTypes"
-                                                    :key="it.id">{{ it.name }}</span></li>
-                                            <li v-if="item.amenities && item.amenities.length > 0">Ammenities: <span
-                                                    class="badge" v-for="it in item.amenities" :key="it">{{ it }}</span>
-                                            </li>
-                                        </ul>
-
-                                    </div>
+                                    </l-map>
                                 </div>
 
                             </div>
-                            <div class="row">
-                                <div class="col mb-5">
-                                    <button type="submit" class="btn btn-rounded action_btn"><i
-                                            class="fas fa-envelope"></i></button>
-                                    <div class="text-center py-2"><small>Contact the producer</small></div>
+                        </div>
+                        <div class="row mx-auto">
+                            <div class="col-12 summary_text">{{ item.description }}
+                            </div>
+                        </div>
+
+                        <div class="row p_header">
+                            <div class="col-12 col-sm-7 action_bar">
+                                <div>
+                                    <!-- Link a sección de buy en lista de lotes de la UP -->
+                                    <a href="#">
+                                        <div class="num_results tx_blue tight">{{item.coffeeOfferingsCount}}</div>
+                                    </a>
                                 </div>
-                                <!-- <div>
+                                <div>
+                                    <div class="title_results">Coffee lots available</div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-5 text-right view_modes">
+                                <!-- MAPA Y GALERÍA PUEDEN OCUPAR EL CONTAINER CLASS="main_image" -->
+                                <a href="#" v-on:click.prevent="setShowGallery"
+                                    v-if="item.gallery && item.gallery.length > 0 "><span>gallery</span><i
+                                        class="fas fa-images"></i></a>
+                                <!-- galería de fotos (lightbox) -->
+                                <a href="#" v-on:click.prevent="setShowInMap"><span>map</span><i
+                                        class="fas fa-map-marked-alt"></i></a>
+                                <!-- mostrar ubicación en mapa -->
+                                <a :href="`https://waze.com/ul?ll=${item.latitude},${item.longitude}&navigate=yes`"
+                                    target="_blank"><span>directions</span><i class="fas fa-directions"></i></a>
+                                <!-- link a waze con coordenadas -->
+                            </div>
+                        </div>
+
+                        <div class="row p_header">
+                            <div class="col-12 col-sm-6">
+
+                                <div class="farm_facts">
+                                    <ul>
+                                        <li v-if="item.latitude && item.latitude > 0"><i
+                                                class="fas fa-map-marker-alt"></i> {{ item.latitude }} ,
+                                            {{ item.longitude}}</li>
+                                        <li v-if="item.maxAltitude && item.maxAltitude > 0"><i
+                                                class="fas fa-mountain"></i>{{ item.minAltitude  | number}} -
+                                            {{ item.maxAltitude  | number}} ft</li>
+                                        <li v-if="item.totalArea && item.totalArea > 0"><i
+                                                class="fas fa-draw-polygon"></i>{{item.totalArea  | number}}
+                                        </li>
+                                        <li v-if="item.goldProductionQq && item.goldProductionQq > 0"><i
+                                                class="fas fa-seedling"></i>{{item.goldProductionQq  | number}} qq
+                                        </li>
+                                        <li><br /></li>
+                                        <li v-if="item.awards && item.awards.length > 0"><i
+                                                class="fas fa-award"></i><span class="badge" v-for="it in item.awards"
+                                                :key="it">{{ it }}</span></li>
+                                    </ul>
+
+                                </div>
+
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="farm_facts text-left text-sm-right pl-5 pl-sm-0">
+                                    <ul>
+                                        <li v-if="item.varieties && item.varieties.length > 0">Varieties: <span
+                                                class="badge " v-for="it in item.varieties"
+                                                :key="it.id">{{ it.name }}</span></li>
+                                        <li v-if="item.processes && item.processes.length > 0">Processes: <span
+                                                class="badge " v-for="it in item.processes"
+                                                :key="it.id">{{ it.name }}</span></li>
+                                        <li v-if="item.soilTypes && item.soilTypes.length > 0">Soil: <span class="badge"
+                                                v-for="it in item.soilTypes" :key="it.id">{{ it.name }}</span></li>
+                                        <li v-if="item.shadowTypes && item.shadowTypes.length > 0">Shade: <span
+                                                class="badge " v-for="it in item.shadowTypes"
+                                                :key="it.id">{{ it.name }}</span></li>
+                                        <li v-if="item.dryingTypes && item.dryingTypes.length > 0">Drying: <span
+                                                class="badge " v-for="it in item.dryingTypes"
+                                                :key="it.id">{{ it.name }}</span></li>
+                                        <li v-if="item.amenities && item.amenities.length > 0">Ammenities: <span
+                                                class="badge" v-for="it in item.amenities" :key="it">{{ it }}</span>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col mb-5">
+                                <button type="submit" class="btn btn-rounded action_btn"><i
+                                        class="fas fa-envelope"></i></button>
+                                <div class="text-center py-2"><small>Contact the producer</small></div>
+                            </div>
+                            <!-- <div>
                                 <span class="text-secondary">Contact .</span>
                                 {{ item.website}}
                                 <br /> phones.
@@ -493,17 +518,17 @@
                                 <br /> emails.
                                 <span v-for="it in item.email" :key="it">{{ it}}</span>
                             </div> -->
-                            </div>
-
                         </div>
+
                     </div>
+                </div>
 
 
 
 
-                </b-modal>
+            </b-modal>
 
-            </div>
+        </div>
         </div>
         <!-- *** FINALIZA BLOQUE DE MODAL DE BÚSQUEDA *** -->
 
@@ -560,8 +585,8 @@
         <div class="copy">©2020 Guatemalan National Coffee Association</div>
     </div>
     <script type="text/javascript">
-        var endPoint = 'https://coffeesearch.azurewebsites.net';
-        //var endPoint = 'https://localhost:5001';
+        // var endPoint = 'https://coffeesearch.azurewebsites.net';
+        var endPoint = 'https://localhost:5001';   
         // var endPoint = 'http://localhost:55706/umbraco';
 
         var imagesEndPoint = 'https://coffeesearch.azurewebsites.net';
@@ -823,7 +848,7 @@
                 showDetails(item) {
                     //getone/
                     this.detailsLoading = true;
-                    
+
                     this.setShowCover();
 
 

@@ -56,10 +56,10 @@
     <header class="header">
         <div class="headerbar">
             <div class="logo">
-                    <div class="nav-link--home">
-                        <!-- <img class="logo-image" src="/images/logoGC.png" alt="Guatemalan Coffees"> -->
-                        <img class="logo-image" src="/media/1062/logogc.png" alt="Guatemalan Coffees">
-                    </div>
+                <div class="nav-link--home">
+                    <!-- <img class="logo-image" src="/images/logoGC.png" alt="Guatemalan Coffees"> -->
+                    <img class="logo-image" src="/media/1062/logogc.png" alt="Guatemalan Coffees">
+                </div>
             </div>
 
             <!-- uncomment this line if you don't want it to appear in the top navigation -->
@@ -120,14 +120,34 @@
                                 <div class="num_results">{{total}}</div>
                             </div>
                             <div>
-                                <div class="title_results">Results for
-                                    <span v-for="key in Object.keys(filterOptions)" :key="key"
-                                        v-if="filterOptions[key].length>0">
+                                <div class="title_results">
+                                    <b-button v-b-toggle.collapse-filters variant="link">Results for ...</b-button>
+                                    <b-collapse id="collapse-filters" class="mt-2">
+                                        <div v-if="filterOptions.name">name:<span
+                                                class="badge">{{filterOptions.name}}</span></div>
+                                        <div>score:<span class="badge">{{filterOptions.scaMin}}</span> - <span
+                                                class="badge">{{filterOptions.scaMax}}</span> </div>
+                                        <div v-if="filterOptions.locations.length>0">locations: <span class="badge"
+                                                v-for="item in filterOptions.locations"
+                                                :key="item.id">{{item.name}}</span>
+                                        </div>
 
-                                        {{key}} : {{ filterOptions[key]}} +
-                                    </span></div>
+                                        <div v-if="filterOptions.varieties.length > 0"> varieties: <span class="badge"
+                                                v-for="item in filterOptions.varieties"
+                                                :key="item.id">{{item.name}}</span>
+                                        </div>
+                                        <div v-if="filterOptions.processes.length > 0">processes:<span class="badge"
+                                                v-for="item in filterOptions.processes"
+                                                :key="item.id">{{item.name}}</span>
+                                        </div>
+                                        <div v-if="filterOptions.certifications.length > 0">certifications:<span
+                                                class="badge" v-for="item in filterOptions.certifications"
+                                                :key="item.id">{{item.name}}</span>
+                                        </div>
+                                    </b-collapse>
+                                </div>
                                 <small class="form-text text-primary"><a href="#" class="collapse_filters"
-                                        v-on:click="()=>this.$refs.productiveUnitFilter.show()">Narrow
+                                        v-on:click="()=>this.$refs.coffeeOfferingFilter.show()">Narrow
                                         results</a></small>
                             </div>
 
@@ -166,7 +186,7 @@
                                         <li>
                                             <h5>{{ item.name }}</h5>
                                         </li>
-                                        <!-- <li>{{ item.town}}, {{ item.city}}</li> -->
+                                        <li v-if="item.town">{{ item.town}}, {{ item.city}}</li>
                                         <!-- <li>varieties: <span class="badge " v-for="it in item.varieties" :key="it">{{ it }}</span></li> -->
                                     </ul>
                                 </div>
@@ -231,7 +251,7 @@
                 </div>
 
                 <!-- Filtros -->
-                <b-modal id="productiveUnitFilter" ref="productiveUnitFilter" size="lg" hide-footer
+                <b-modal id="coffeeOfferingFilter" ref="coffeeOfferingFilter" size="lg" hide-footer
                     header-class="modal-header-custom" dialog-class="myModal">
 
                     <div class="container-fluid">
@@ -285,7 +305,8 @@
                                                 class="col-12 col-lg-2 col-form-label justify-content-start pl-0">Listing</label>
                                             <vue-multiselect id="listing" class="col-12 col-lg-10 px-0"
                                                 :disabled="loading" v-model="filterOptions.locations"
-                                                placeholder="Choose" :options="options['locations']" :multiple="true">
+                                                placeholder="Choose" label="name" track-by="name"
+                                                :options="options['locations']" :multiple="true">
                                             </vue-multiselect>
                                         </div>
                                     </div>
@@ -335,7 +356,7 @@
                 </b-modal>
 
                 <!-- Detalles -->
-                <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="xl" hide-footer
+                <b-modal id="coffeeOfferingDetails" ref="coffeeOfferingDetails" size="xl" hide-footer
                     header-class="modal-header-custom" dialog-class="modal_unit">
                     <div class="col">
                         <div class="num_results">{{ item.id}}<div class="lotlbl" lbl="lot ID"></div>
@@ -409,15 +430,18 @@
                             </div>
                             <div class="row my-5">
                                 <div class="col-2 col-sm-1 text-center">
-                                    <h2 class="tx_blue"><i class="fas fa-envelope"></i></h2>
+                                    <button class="btn btn-block text-primary"
+                                        v-on:click.prevent="showContactModal(item)">
+                                        <i class="fas fa-2x fa-envelope"></i></button>
                                 </div>
                                 <div class="col">
                                     <div class="row"><span v-for="it in item.email" :key="it">{{ it }}</span></div>
                                     <div class="row"><span v-for="it in item.phones" :key="it">{{ it }}</span></div>
+                                    <div class="row">{{item.website}}</span></div>
                                 </div>
                                 <div class="col-4 col-sm-3 text-right pr-4">
                                     <button class="btn btn-primary btn-sm" type="submit"
-                                        v-on:click.prevent="requestSample(item)">Request sample</button>
+                                        v-on:click.prevent="showRequestSampleModal(item)">Request sample</button>
                                 </div>
                                 <!-- <div>
                                 <span class="text-secondary">Contact .</span>
@@ -436,6 +460,157 @@
 
 
                 </b-modal>
+
+                <!-- Request Sample -->
+                <b-modal id="requestSampleModal" ref="requestSampleModal" size="lg" hide-footer
+                    header-class="modal-header-custom">
+
+                    <div class="num_results float-right">{{item.id}}<div lbl="lot ID" class="lotlbl"></div>
+                    </div>
+
+                    <div class="row p_header">
+                        <div class="col-md-12">
+                            <div class="tx_blue">Sample Request</div>
+                            <h3>{{item.name}}</h3>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+
+
+                        <div class="col col-md-10 mx-auto">
+
+
+
+                            <form>
+                                <div class="form-group row">
+                                    <label for="name"
+                                        class="col-lg-3 col-form-label text-right text-black-50">Name</label>
+                                    <input type="text" class="col-lg-9 form-control"
+                                        v-model="requestSampleFormData.name" :disabled="loading" id="name">
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="company"
+                                        class="col-lg-3 col-form-label text-right text-black-50">Company</label>
+                                    <input type="text" class="col-lg-9 form-control"
+                                        v-model="requestSampleFormData.company" :disabled="loading" id="company">
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="phone"
+                                        class="col-lg-3 col-form-label text-right text-black-50">Phone</label>
+                                    <input type="text" class="col-lg-9 form-control"
+                                        v-model="requestSampleFormData.phone" :disabled="loading" id="phone">
+
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="email"
+                                        class="col-lg-3 col-form-label text-right text-black-50">Email</label>
+                                    <input type="text" class="col-lg-9 form-control"
+                                        v-model="requestSampleFormData.email" :disabled="loading" id="email">
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="address"
+                                        class="col-lg-3 col-form-label text-right text-black-50">Address</label>
+                                    <input type="text" class="col-lg-9 form-control"
+                                        v-model="requestSampleFormData.address" :disabled="loading" id="address">
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="country"
+                                        class="col-lg-3 col-form-label text-right text-black-50">Country</label>
+                                    <input type="text" class="col-lg-9 form-control"
+                                        v-model="requestSampleFormData.country" :disabled="loading" id="country">
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="message"
+                                        class="col-lg-3 col-form-label text-right text-black-50">Message</label>
+                                    <textarea rows="5" class="col-lg-9 form-control"
+                                        v-model="requestSampleFormData.message" :disabled="loading"
+                                        id="message"></textarea>
+                                </div>
+
+                                <div class="form-group col-12 text-center">
+                                    <button type="button" class="btn btn-primary"
+                                        v-on:click.prevent="onRequestSample">Request</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </b-modal>
+
+                <!-- Contact -->
+
+                <b-modal id="contactModal" ref="contactModal" size="lg" hide-footer header-class="modal-header-custom">
+
+                    <div class="row p_header">
+                        <div class="col-md-12  text-center">
+                            <div class="tx_blue">Contact</div>
+                            <h3>{{item.productiveUnitName}}</h3>
+                            <div class="small">{{ item.town}}, {{ item.city}}</div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+
+
+                        <div class="col col-md-10 mx-auto">
+
+
+                            <form>
+                                <div class="form-group row">
+                                    <label for="firstName"
+                                        class="col-lg-3 col-form-label text-right text-black-50">First Name</label>
+                                    <input type="text" class="col-lg-9 form-control" v-model="contactFormData.firstName"
+                                        :disabled="loading" id="firstName">
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="lastName" class="col-lg-3 col-form-label text-right text-black-50">Last
+                                        Name</label>
+                                    <input type="text" class="col-lg-9 form-control" v-model="contactFormData.lastName"
+                                        :disabled="loading" id="lastName">
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <label for="email"
+                                        class="col-lg-3 col-form-label text-right text-black-50">Email</label>
+                                    <input type="text" class="col-lg-9 form-control" v-model="contactFormData.email"
+                                        :disabled="loading" id="email">
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <label for="message"
+                                        class="col-lg-3 col-form-label text-right text-black-50">Message</label>
+                                    <textarea rows="5" class="col-lg-9 form-control" v-model="contactFormData.message"
+                                        :disabled="loading" id="message">
+
+                        </textarea>
+                                </div>
+
+                                <div class="form-group col-12 text-center">
+                                    <button type="button" class="btn btn-primary"
+                                        v-on:click.prevent="onContact">Submit</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+
+                </b-modal>
+
+
 
             </div>
             <div class="container-fluid content_block">
@@ -618,7 +793,27 @@
 
                     showCover: true,
                     showInMap: false,
-                    showGallery: false
+                    showGallery: false,
+
+
+                    requestSampleFormData: {
+                        name: "",
+                        company: "",
+                        phone: "",
+                        email: "",
+                        address: "",
+                        country: "",
+                        message: ""
+                    },
+
+                    contactFormData: {
+                        firstName: "",
+                        lastName: "",
+                        email: "",
+                        message: ""
+                    }
+
+
                 }
             },
 
@@ -642,12 +837,72 @@
 
                 viewFarmProfile(item) {
 
-                    alert(item.name);
+                    this.$refs.coffeeOfferingDetails.hide();
+                    this.$refs.coffeeOfferingFilter.hide();
+                    this.$refs.requestSampleModal.hide();
+
+
+                    // this.$refs.contactModal.show();
 
                 },
 
-                requestSample(item) {
-                    alert(item.name);
+
+
+
+
+                showRequestSampleModal(item) {
+
+                    this.$refs.coffeeOfferingDetails.hide();
+                    this.$refs.coffeeOfferingFilter.hide();
+                    this.$refs.contactModal.hide();
+
+                    this.$refs.requestSampleModal.show();
+
+                },
+
+                onRequestSample() {
+
+                    this.loading = true;
+                    axios
+                        .post(`${endPoint}/api/coffeeofferings/requestsample`, this.requestSampleFormData)
+                        .then(response => {
+                            this.loading = false;
+                            alert('Sample Requested!');
+
+                            this.$refs.requestSampleModal.hide();
+                        })
+                        .catch(error => {
+                            alert('Error requesting sample');
+                            this.loading = false;
+                        });
+                },
+
+
+                showContactModal(item) {
+                    this.$refs.coffeeOfferingDetails.hide();
+                    this.$refs.coffeeOfferingFilter.hide();
+                    this.$refs.requestSampleModal.hide();
+                    this.$refs.contactModal.show();
+
+                },
+
+
+
+
+                onContact() {
+                    this.loading = true;
+                    axios
+                        .post(`${endPoint}/api/productiveunits/contact`, this.contactFormData)
+                        .then(response => {
+                            this.loading = false;
+                            alert('Ok!');
+
+                            this.$refs.contactModal.hide();
+                        })
+                        .catch(error => {
+                            alert('Error');
+                            this.loading = false;
+                        });
                 },
 
 
@@ -742,8 +997,8 @@
 
                     this.searchExtended = false;
                     this.main_class = "search_block_off";
-                    this.$refs.productiveUnitDetails.hide();
-                    this.$refs.productiveUnitFilter.show();
+                    this.$refs.coffeeOfferingDetails.hide();
+                    this.$refs.coffeeOfferingFilter.show();
 
                 },
 
@@ -759,7 +1014,7 @@
                         .then(response => {
                             this.item = response.data;
                             this.detailsLoading = false;
-                            this.$refs.productiveUnitDetails.show();
+                            this.$refs.coffeeOfferingDetails.show();
                         })
                         .catch(error => {
                             this.detailsLoading = false;
@@ -793,7 +1048,7 @@
                             this.currentPage = response.data.currentPage;
                             this.numberOfPages = response.data.lastPage;
                             this.loading = false;
-                            this.$refs.productiveUnitFilter.hide();
+                            this.$refs.coffeeOfferingFilter.hide();
                             this.main_class = "search_block";
                         })
                         .catch(error => {
@@ -810,7 +1065,7 @@
                         .then(response => {
                             this.dataList = response.data;
                             // this.loading = false;
-                            this.$refs.productiveUnitFilter.hide();
+                            this.$refs.coffeeOfferingFilter.hide();
                         })
                         .catch(error => {
                             // this.loading = false;

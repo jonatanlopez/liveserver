@@ -2,20 +2,25 @@
 
 Guatemalan Coffees:
     Tasks:
-        ☐ Crear Modal de Contacto
-        ☐ Crear Modal de Solicitar Muestra
-        ☐ Revisar opcion de Narrow Results en la Unidad productiva
+        ✔ Crear Modal de Contacto @done (28/7/2020 15:19:21)
+        ✔ Crear Modal de Solicitar Muestra @done (28/7/2020 15:19:24)
+        ✔ Revisar opcion de Narrow Results en la Unidad productiva @done (28/7/2020 15:36:14)
         ☐ Revisar el Enter para que haga la busqueda en los modales de filtrado
-        ☐ Revisar las certificaciones no funciona al tener campos , da error 500
-        ☐ Crear un control para mostrar los filtros seleccionados
+        ✔ Revisar las certificaciones no funciona al tener campos , da error 500 @done (28/7/2020 15:36:21)
+        ✔ Crear un control para mostrar los filtros seleccionados @done (28/7/2020 15:36:36)
+        ☐ El control de altitud en el filtro, no se envia a menos que se toque el control, revisar
+        ✘ Revisar el metodo de filtrado para que aparezcan las unidades productivas, actualmente se despliegan las 22mil, @cancelled (28/7/2020 15:37:08)
 
 
 Coffee Search Admin:
     Tasks:
-        ☐ Implementar una validacion para cuando no estoy authorizado a usar la app
+        ✔ Implementar una validacion para cuando no estoy authorizado a usar la app @done (27/7/2020 12:57:36)
         ✔ Crear pantalla de Editar de Unidad Productiva como el modelo de GC @done (24/7/2020 13:50:05)
-        ☐ Crear pantalla de Crear Lote como el modelo de GC
+        ✔ Crear pantalla de Crear Lote como el modelo de GC @done (27/7/2020 17:43:28)
         ☐ Crear un control para seleccionar una ubicacion en el mapa
-        ☐ Actualizar la libreria FontAwesome a la version 5
+        ✔ Actualizar la libreria FontAwesome a la version 5 @done (27/7/2020 12:57:29)
+        ✔ Implementar boton de cerrar sesion @done (27/7/2020 12:57:22)
+        ✔ Hacer que el metodo de los datos de las ofertas de cafe si es Admin traiga todos sino solo los de sus afiliados asociados @done (27/7/2020 17:43:24)
+
 
 
