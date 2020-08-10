@@ -410,10 +410,10 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="email"
+                                <label for="emailAddress"
                                     class="col-lg-3 col-form-label text-right text-black-50">Email</label>
-                                <input type="text" class="col-lg-9 form-control" v-model="requestSampleFormData.email"
-                                    :disabled="loading" id="email">
+                                <input type="text" class="col-lg-9 form-control" v-model="requestSampleFormData.emailAddress"
+                                    :disabled="loading" id="emailAddress">
                             </div>
 
                             <div class="form-group row">
@@ -484,10 +484,10 @@
 
 
                             <div class="form-group row">
-                                <label for="email"
+                                <label for="emailAddress"
                                     class="col-lg-3 col-form-label text-right text-black-50">Email</label>
-                                <input type="text" class="col-lg-9 form-control" v-model="contactFormData.email"
-                                    :disabled="loading" id="email">
+                                <input type="text" class="col-lg-9 form-control" v-model="contactFormData.emailAddress"
+                                    :disabled="loading" id="emailAddress">
                             </div>
 
 
@@ -657,17 +657,22 @@
                         name: "",
                         company: "",
                         phone: "",
-                        email: "",
+                        emailAddress: "",
                         address: "",
                         country: "",
-                        message: ""
+                        message: "",
+                        coffeeOfferingId: 0,
+                        productiveUnitId: 0,
+                        affiliateId: 0
                     },
 
                     contactFormData: {
                         firstName: "",
                         lastName: "",
-                        email: "",
-                        message: ""
+                        emailAddress: "",
+                        message: "",
+                        productiveUnitId: 0,
+                        affiliateId: 0
                     }
                 }
             },
@@ -713,14 +718,21 @@
 
                 onRequestSample() {
 
+                    this.requestSampleFormData.coffeeOfferingId = this.item.id;
+                    this.requestSampleFormData.affiliateId = this.item.affiliateId;
+                    this.requestSampleFormData.productiveUnitId = this.item.productiveUnitId;
+
                     this.loading = true;
                     axios
-                        .post(`${endPoint}/api/coffeeofferings/requestsample`, this.requestSampleFormData)
+                        .post(`${endPoint}/api/coffeeofferings/requestsample`, this.requestSampleFormData, {
+                            headers: {
+                                'XYZComponent': 'XYZComponent'
+                            }
+                        })
                         .then(response => {
                             this.loading = false;
-                            alert('Sample Requested!');
-
                             this.$refs.requestSampleModal.hide();
+                            alert('Sample Requested!');
                         })
                         .catch(error => {
                             alert('Error requesting sample');
@@ -742,19 +754,28 @@
 
                 onContact() {
                     this.loading = true;
+
+                    this.contactFormData.affiliateId = this.item.affiliateId;
+                    this.contactFormData.productiveUnitId = this.item.productiveUnitId;
+
                     axios
-                        .post(`${endPoint}/api/productiveunits/contact`, this.contactFormData)
+                        .post(`${endPoint}/api/productiveunits/contact`, this.contactFormData, {
+                            headers: {
+                                'XYZComponent': 'XYZComponent'
+                            }
+                        })
                         .then(response => {
                             this.loading = false;
-                            alert('Ok!');
-
                             this.$refs.contactModal.hide();
+                            alert('Su mensaje ha sido recibido!');
+
                         })
                         .catch(error => {
                             alert('Error');
                             this.loading = false;
                         });
                 },
+
 
 
                 setView(mode) {

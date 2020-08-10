@@ -194,95 +194,101 @@
                 </div>
 
                 <!-- Filtros -->
-                <b-modal id="productiveUnitFilter" ref="productiveUnitFilter" size="lg" hide-footer
-                    header-class="modal-header-custom" dialog-class="myModal" :busy="loading">
+                <b-modal id="coffeeOfferingFilter" ref="coffeeOfferingFilter" size="lg" hide-footer
+                    header-class="modal-header-custom" dialog-class="myModal">
 
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-12 ">
-                                <h5>What are you looking for?</h5>
+                            <div class="col-12 ">
+                                <h5>Let's find your coffee!</h5>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row p-3">
 
                             <!-- Grupo de búsqueda básico -->
-                            <div class="col-md-12 pt-3" v-if="searchExtended==false">
+                            <div class="col-12" v-if="searchExtended==false">
                                 <form>
-                                    <div class="form-group">
+                                    <div class="form-group row">
                                         <input type="text" id="name" name="name" class="form-control"
-                                            placeholder="Search for name, location or description." autocomplete="on"
-                                            v-model="filterOptions.name" :disabled="loading" />
+                                            placeholder="Search for farm name, variety or lot description."
+                                            autocomplete="on" v-model="filterOptions.name" />
                                         <!-- Muestra search_extended y oculta search_basic -->
-                                        <small class="form-text text-primary mx-2">
-                                            <button href="#" class="expand_filters btn btn-link" :disabled="loading"
-                                                v-on:click.prevent="showSearchExtended">Or be
-                                                more specific.</button></small>
+                                        <small class="form-text text-primary mx-2"><a href="#" class="expand_filters"
+                                                v-on:click.prevent="showSearchExtended">Or be more specific.</a></small>
                                     </div>
-                                    <button type="button" class="btn btn-primary" :disabled="loading"
-                                        v-on:click.prevent="getFilteredCoffeeOfferings">Lets go! <i
-                                            class="fa fa-spinner fa-spin" v-show="loading"></i> </button>
+                                    <div class="form-group col-12 text-center">
+                                        <button type="button" class="btn btn-primary"
+                                            v-on:click.prevent="getFilteredCoffeeOfferings">Go</button>
+                                    </div>
                                 </form>
                             </div>
 
-                            <div class="col-md-12 pt-3" v-if="searchExtended==true">
+                            <div class="col-12" v-if="searchExtended==true">
                                 <form>
                                     <div class="form-group row">
-                                        <label for="farmName" class="col-md-2 col-lg-3 text-md-right">Farm name</label>
-                                        <input type="text" class="form-control col-md-10 col-lg-9" :disabled="loading"
-                                            id="farmName">
+                                        <label for="farmName" class="col-lg-2 col-form-label pl-0">Farm name</label>
+                                        <input type="text" class="col-lg-10 form-control" v-model="filterOptions.name"
+                                            :disabled="loading" id="farmName">
+                                    </div>
+                                    <div class="form-group row px-0">
+                                        <div class="form-inline col-lg-6 px-0">
+                                            <label for="scoreMin"
+                                                class="col-4 col-form-label justify-content-start pl-0">Cupping
+                                                score</label>
+                                            <input type="text" class="col-3 form-control" id="scoreMin"
+                                                v-model="filterOptions.scaMin" :disabled="loading" placeholder="min"
+                                                min="0">
+                                            <label for="scoreMax" class="col-1 col-form-label">></label>
+                                            <input type="text" class="col-3 form-control" id="scoreMax"
+                                                v-model="filterOptions.scaMax" :disabled="loading" placeholder="max"
+                                                max="100">
+                                        </div>
+                                        <div class="form-inline col-lg-6 px-0">
+                                            <label for="listing"
+                                                class="col-12 col-lg-2 col-form-label justify-content-start pl-0">Listing</label>
+                                            <vue-multiselect id="listing" class="col-12 col-lg-10 px-0"
+                                                :disabled="loading" v-model="filterOptions.locations"
+                                                placeholder="Choose" label="name" track-by="name"
+                                                :options="options['locations']" :multiple="true">
+                                            </vue-multiselect>
+                                        </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="altitude" class="col-sm-2 col-lg-3 text-md-right">Altitude</label>
-                                        <input name="altitude" v-model="filterOptions.altitude" :disabled="loading"
-                                            oninput="alt_tag.value=parseInt(this.value)"
-                                            class="col-9 col-sm-8 col-lg-7 range-slider__range " type="range"
-                                            value="2500" min="2500" max="5800">
-                                        <output id="alt_tag" name="alt_tag" for="altitude" unit="ft"
-                                            class="col-3 col-sm-1 col-lg-2 range-slider__value">2500</output>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="varieties" class="col-md-2 text-md-right">Varieties</label>
-                                        <vue-multiselect id="varieties" class="col-md-4" :disabled="loading"
-                                            v-model="filterOptions.varieties" placeholder="Search" label="name"
-                                            track-by="id" :options="options['varieties']" :multiple="true">
-                                        </vue-multiselect>
-                                        <label for="processes" class="col-md-2 text-md-right">Processes</label>
-                                        <vue-multiselect id="processes" class="col-md-4" :disabled="loading"
-                                            v-model="filterOptions.processes" placeholder="Search" label="name"
-                                            track-by="id" :options="options['processes']" :multiple="true">
+                                        <label for="varieties" class="col-form-label col-lg-2 pl-0">Varieties</label>
+                                        <vue-multiselect id="varieties" class="col-lg-10 px-0"
+                                            v-model="filterOptions.varieties" placeholder="Choose varieties"
+                                            label="name" track-by="id" :options="options['varieties']" :multiple="true"
+                                            :disabled="loading">
                                         </vue-multiselect>
                                     </div>
-
                                     <div class="form-group row">
-                                        <label for="regions" class="col-md-2 text-md-right">Regions</label>
-                                        <vue-multiselect id="regions" class="col-md-4" :disabled="loading"
-                                            v-model="filterOptions.regions" placeholder="Search"
-                                            :options="options['regions']" :multiple="true">
+                                        <label for="processes" class="col-form-label col-lg-2 pl-0">Processes</label>
+                                        <vue-multiselect id="processes" class="col-lg-10 px-0"
+                                            v-model="filterOptions.processes" placeholder="Choose processes"
+                                            label="name" track-by="id" :options="options['processes']" :multiple="true"
+                                            :disabled="loading">
                                         </vue-multiselect>
-
+                                    </div>
+                                    <div class="form-group row">
                                         <label for="certifications"
-                                            class="col-md-2 text-md-right">Certifications</label>
-
-                                        <vue-multiselect id="certifications" class="col-md-4" :disabled="loading"
-                                            v-model="filterOptions.certifications" placeholder="Search" label="name"
-                                            track-by="id" :options="options['certifications']" :multiple="true">
+                                            class="col-form-label col-lg-2 pl-0">Certifications</label>
+                                        <vue-multiselect id="certifications" class="col-lg-10 px-0"
+                                            v-model="filterOptions.certifications" placeholder="Choose certifications"
+                                            label="name" track-by="id" :options="options['certifications']"
+                                            :multiple="true" :disabled="loading">
                                         </vue-multiselect>
 
                                     </div>
                                     <div class="form-group row">
                                         <!-- Oculta search_extended y muestra search_basic -->
-                                        <div class="col">
-                                            <small class="form-text text-primary mx-2">
-                                                <button href="#" v-on:click.prevent="clearSearchExtended"
-                                                    :disabled="loading" class="collapse_filters btn btn-link">Clear
-                                                    filters</button>
-                                            </small>
-                                        </div>
-                                        <div class="col text-center">
-                                            <button type="button" class="btn btn-primary" :disabled="loading"
-                                                v-on:click.prevent="getFilteredCoffeeOfferings">Lets go! <i
-                                                    class="fa fa-spinner fa-spin" v-show="loading"></i> </button>
-                                        </div>
+                                        <small class="form-text text-primary mx-2">
+                                            <a href="#" v-on:click.prevent="clearSearchExtended"
+                                                class="collapse_filters">Clear filters</a>
+                                        </small>
+                                    </div>
+                                    <div class="form-group col-12 text-center">
+                                        <button type="button" class="btn btn-primary"
+                                            v-on:click.prevent="getFilteredCoffeeOfferings">Go!</button>
                                     </div>
                                 </form>
                             </div>
@@ -290,6 +296,111 @@
 
                         </div>
                     </div>
+                </b-modal>
+
+                <!-- Detalles -->
+                <b-modal id="coffeeOfferingDetails" ref="coffeeOfferingDetails" size="xl" hide-footer
+                    header-class="modal-header-custom" dialog-class="modal_unit">
+                    <div class="col">
+                        <div class="num_results">{{ item.id}}<div class="lotlbl" lbl="lot ID"></div>
+                        </div> <!-- lbl indica texto a mostrar -->
+                        <div class="num_points f_right" lbl="points">{{item.scaScore}}</div> <!-- SCORE SCAA -->
+                    </div>
+                    <div class="row ">
+                        <!-- columna central - info lote -->
+                        <div class="col col-md-10 mx-auto">
+                            <div class="row p_header">
+                                <div class="col-12 col-sm-6 nom">
+                                    <ul>
+                                        <li class="tx_blue">Coffee lot</li>
+                                        <li>
+                                            <h3>{{item.name}}</h3> <!-- NOMBRE DEL LOTE DE CAFÉ -->
+                                        </li>
+                                        <li>{{ item.quantity }} {{ item.packing }} ({{ item.sizePerUnit }}
+                                            {{ item.unitOfMeasurement }})</li> <!-- TAMAÑO DEL LOTE -->
+                                    </ul>
+                                </div>
+
+                                <div class="col-12 col-sm-6 text-right certifications">
+                                    <img v-for="it in item.certifications" :key="it.id"
+                                        :src="`images/cert_${it.id}.png`">
+                                </div>
+                                <!-- <div class="tag_area"><span class="tag bg1">green apple</span><span
+                                     class="tag bg2">caramel</span><span class="tag bg2">almonds</span><span
+                                     class="tag bg3">raspberry</span></div> -->
+                                <div class="tag_area"><span class="tag bg1" v-for="it in item.tags"
+                                        :key="it">{{ it }}</span></div>
+                            </div>
+
+                            <div class="row p_header">
+                                <div class="col-12 col-sm-6">
+
+                                    <div class="farm_facts">
+                                        <ul>
+                                            <li>Varieties: <span class="badge " v-for="it in item.varieties"
+                                                    :key="it">{{ it }}</span></li>
+                                            <li>Process: <span class="badge">{{item.process}}</span></li>
+                                            <li>Drying: <span class="badge">{{item.drying}}</span></li>
+                                        </ul>
+
+                                    </div>
+
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="farm_facts text-left text-sm-right pl-5 pl-sm-0">
+                                        <ul>
+                                            <li>Packaging: <span class="badge">{{ item.packing }}</span></li>
+                                            <li>Listing: <span class="badge">{{ item.location }}</span></li>
+                                            <li>Warehouse: <span class="badge">{{ item.warehouse }}</span>
+                                            </li>
+                                        </ul>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row p_origin">
+                                <div class="tx_blue">Origin</div>
+                                <h5>{{ item.productiveUnitName }}</h5>
+                                <div>{{ item.town}}, {{ item.city}}</div>
+
+                                <div class="col-12 summary_text">{{ item.productiveUnitDescription }}</div>
+                                <div class="col-12 text-center">
+                                    <b-btn variant="link" class="small tx_blue"
+                                        v-on:click.prevent="viewFarmProfile(item)">
+                                        view farm profile</b-btn>
+                                </div>
+                            </div>
+                            <div class="row my-5">
+                                <div class="col-2 col-sm-1 text-center">
+                                    <button class="btn btn-block text-primary"
+                                        v-on:click.prevent="showContactModal(item)">
+                                        <i class="fas fa-2x fa-envelope"></i></button>
+                                </div>
+                                <div class="col">
+                                    <div class="row"><span v-for="it in item.email" :key="it">{{ it }}</span></div>
+                                    <div class="row"><span v-for="it in item.phones" :key="it">{{ it }}</span></div>
+                                </div>
+                                <div class="col-4 col-sm-3 text-right pr-4">
+                                    <button class="btn btn-primary btn-sm" type="submit"
+                                        v-on:click.prevent="showRequestSampleModal(item)">Request sample</button>
+                                </div>
+                                <!-- <div>
+                             <span class="text-secondary">Contact .</span>
+                             {{ item.website}}
+                             <br /> phones.
+                             <span v-for="it in item.phones" :key="it">{{ it}}</span>
+                             <br /> emails.
+                             <span v-for="it in item.email" :key="it">{{ it}}</span>
+                         </div> -->
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+
                 </b-modal>
 
                 <!-- Detalles -->
@@ -443,6 +554,159 @@
 
                 </b-modal>
 
+                <!-- Request Sample -->
+                <b-modal id="requestSampleModal" ref="requestSampleModal" size="lg" hide-footer
+                    header-class="modal-header-custom">
+
+                    <div class="num_results float-right">{{item.id}}<div lbl="lot ID" class="lotlbl"></div>
+                    </div>
+
+                    <div class="row p_header">
+                        <div class="col-md-12">
+                            <div class="tx_blue">Sample Request</div>
+                            <h3>{{item.name}}</h3>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+
+
+                        <div class="col col-md-10 mx-auto">
+
+
+
+                            <form>
+                                <div class="form-group row">
+                                    <label for="name"
+                                        class="col-lg-3 col-form-label text-right text-black-50">Name</label>
+                                    <input type="text" class="col-lg-9 form-control"
+                                        v-model="requestSampleFormData.name" :disabled="loading" id="name">
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="company"
+                                        class="col-lg-3 col-form-label text-right text-black-50">Company</label>
+                                    <input type="text" class="col-lg-9 form-control"
+                                        v-model="requestSampleFormData.company" :disabled="loading" id="company">
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="phone"
+                                        class="col-lg-3 col-form-label text-right text-black-50">Phone</label>
+                                    <input type="text" class="col-lg-9 form-control"
+                                        v-model="requestSampleFormData.phone" :disabled="loading" id="phone">
+
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="emailAddress"
+                                        class="col-lg-3 col-form-label text-right text-black-50">Email</label>
+                                    <input type="text" class="col-lg-9 form-control"
+                                        v-model="requestSampleFormData.emailAddress" :disabled="loading"
+                                        id="emailAddress">
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="address"
+                                        class="col-lg-3 col-form-label text-right text-black-50">Address</label>
+                                    <input type="text" class="col-lg-9 form-control"
+                                        v-model="requestSampleFormData.address" :disabled="loading" id="address">
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="country"
+                                        class="col-lg-3 col-form-label text-right text-black-50">Country</label>
+                                    <input type="text" class="col-lg-9 form-control"
+                                        v-model="requestSampleFormData.country" :disabled="loading" id="country">
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="message"
+                                        class="col-lg-3 col-form-label text-right text-black-50">Message</label>
+                                    <textarea rows="5" class="col-lg-9 form-control"
+                                        v-model="requestSampleFormData.message" :disabled="loading"
+                                        id="message"></textarea>
+                                </div>
+
+                                <div class="form-group col-12 text-center">
+                                    <button type="button" class="btn btn-primary"
+                                        v-on:click.prevent="onRequestSample">Request</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </b-modal>
+
+                <!-- Contact -->
+
+                <b-modal id="contactModal" ref="contactModal" size="lg" hide-footer header-class="modal-header-custom">
+
+                    <div class="row p_header">
+                        <div class="col-md-12  text-center">
+                            <div class="tx_blue">Contact</div>
+                            <h3>{{item.productiveUnitName}}</h3>
+                            <div class="small">{{ item.town}}, {{ item.city}}</div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+
+
+                        <div class="col col-md-10 mx-auto">
+
+
+                            <form>
+                                <div class="form-group row">
+                                    <label for="firstName"
+                                        class="col-lg-3 col-form-label text-right text-black-50">First
+                                        Name</label>
+                                    <input type="text" class="col-lg-9 form-control" v-model="contactFormData.firstName"
+                                        :disabled="loading" id="firstName">
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="lastName" class="col-lg-3 col-form-label text-right text-black-50">Last
+                                        Name</label>
+                                    <input type="text" class="col-lg-9 form-control" v-model="contactFormData.lastName"
+                                        :disabled="loading" id="lastName">
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <label for="emailAddress"
+                                        class="col-lg-3 col-form-label text-right text-black-50">Email</label>
+                                    <input type="text" class="col-lg-9 form-control"
+                                        v-model="contactFormData.emailAddress" :disabled="loading" id="emailAddress">
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <label for="message"
+                                        class="col-lg-3 col-form-label text-right text-black-50">Message</label>
+                                    <textarea rows="5" class="col-lg-9 form-control" v-model="contactFormData.message"
+                                        :disabled="loading" id="message">
+
+                        </textarea>
+                                </div>
+
+                                <div class="form-group col-12 text-center">
+                                    <button type="button" class="btn btn-primary"
+                                        v-on:click.prevent="onContact">Submit</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+
+                </b-modal>
+
+
+
             </div>
         </div>
         <!-- *** FINALIZA BLOQUE DE MODAL DE BÚSQUEDA *** -->
@@ -577,12 +841,14 @@
 
                     filterOptions: {
                         "name": "",
-                        "process": "",
-                        "minAltitude": 0,
-                        "maxAltitude": 6000,
+                        "scaMin": 0,
+                        "scaMax": 100,
+                        "processes": [],
                         "varieties": [],
+                        "certifications": [],
+                        "locations": [],
                         "pageSize": 25,
-                        "sort": "v|desc",
+                        "sort": "p|desc",
                         "page": 1
                     },
 
@@ -623,7 +889,30 @@
 
                     showCover: true,
                     showInMap: false,
-                    showGallery: false
+                    showGallery: false,
+
+
+                    requestSampleFormData: {
+                        name: "",
+                        company: "",
+                        phone: "",
+                        emailAddress: "",
+                        address: "",
+                        country: "",
+                        message: "",
+                        coffeeOfferingId: 0,
+                        productiveUnitId: 0,
+                        affiliateId: 0
+                    },
+
+                    contactFormData: {
+                        firstName: "",
+                        lastName: "",
+                        emailAddress: "",
+                        message: "",
+                        productiveUnitId: 0,
+                        affiliateId: 0
+                    }
                 }
             },
 
@@ -644,6 +933,88 @@
             },
 
             methods: {
+                viewFarmProfile(item) {
+
+                    this.$refs.coffeeOfferingDetails.hide();
+                    this.$refs.coffeeOfferingFilter.hide();
+                    this.$refs.requestSampleModal.hide();
+
+
+                    // this.$refs.contactModal.show();
+
+                },
+
+
+                showRequestSampleModal(item) {
+
+                    this.$refs.coffeeOfferingDetails.hide();
+                    this.$refs.coffeeOfferingFilter.hide();
+                    this.$refs.contactModal.hide();
+
+                    this.$refs.requestSampleModal.show();
+
+                },
+
+                onRequestSample() {
+
+                    this.requestSampleFormData.coffeeOfferingId = this.item.id;
+                    this.requestSampleFormData.affiliateId = this.item.affiliateId;
+                    this.requestSampleFormData.productiveUnitId = this.item.productiveUnitId;
+
+                    this.loading = true;
+                    axios
+                        .post(`${endPoint}/api/coffeeofferings/request-sample`, this.requestSampleFormData, {
+                            headers: {
+                                'XYZComponent': 'XYZComponent'
+                            }
+                        })
+                        .then(response => {
+                            this.loading = false;
+                            this.$refs.requestSampleModal.hide();
+                            alert('Sample Requested!');
+                        })
+                        .catch(error => {
+                            alert('Error requesting sample');
+                            this.loading = false;
+                        });
+                },
+
+
+                showContactModal(item) {
+                    this.$refs.coffeeOfferingDetails.hide();
+                    this.$refs.coffeeOfferingFilter.hide();
+                    this.$refs.requestSampleModal.hide();
+                    this.$refs.contactModal.show();
+
+                },
+
+
+
+
+                onContact() {
+                    this.loading = true;
+
+                    this.contactFormData.affiliateId = this.item.affiliateId;
+                    this.contactFormData.productiveUnitId = this.item.productiveUnitId;
+
+                    axios
+                        .post(`${endPoint}/api/productiveunits/contact`, this.contactFormData, {
+                            headers: {
+                                'XYZComponent': 'XYZComponent'
+                            }
+                        })
+                        .then(response => {
+                            this.loading = false;
+                            this.$refs.contactModal.hide();
+                            alert('Su mensaje ha sido recibido!');
+
+                        })
+                        .catch(error => {
+                            alert('Error');
+                            this.loading = false;
+                        });
+                },
+
 
                 setView(mode) {
 
@@ -677,9 +1048,9 @@
                             lon: marker.longitude
                         };
 
-                        console.log("flying to...", loc);
+                        // console.log("flying to...", loc);
 
-                        console.log(this.$refs.myMap.mapObject);
+                        // console.log(this.$refs.myMap.mapObject);
 
 
                         this.$refs.myMap.mapObject.flyTo(loc, 13);
@@ -699,12 +1070,14 @@
 
                     this.filterOptions = {
                         "name": "",
-                        "process": "",
-                        "minAltitude": 0,
-                        "maxAltitude": 6000,
+                        "scaMin": 0,
+                        "scaMax": 100,
+                        "processes": [],
                         "varieties": [],
+                        "certifications": [],
+                        "locations": [],
                         "pageSize": 25,
-                        "sort": "v|desc",
+                        "sort": "p|desc",
                         "page": 1
                     };
 
@@ -719,12 +1092,14 @@
 
                     this.filterOptions = {
                         "name": "",
-                        "process": "",
-                        "minAltitude": 0,
-                        "maxAltitude": 6000,
+                        "scaMin": 0,
+                        "scaMax": 100,
+                        "processes": [],
                         "varieties": [],
+                        "certifications": [],
+                        "locations": [],
                         "pageSize": 25,
-                        "sort": "v|desc",
+                        "sort": "p|desc",
                         "page": 1
                     };
 
@@ -732,8 +1107,8 @@
 
                     this.searchExtended = false;
                     this.main_class = "search_block_off";
-                    this.$refs.productiveUnitDetails.hide();
-                    this.$refs.productiveUnitFilter.show();
+                    this.$refs.coffeeOfferingDetails.hide();
+                    this.$refs.coffeeOfferingFilter.show();
 
                 },
 
@@ -749,7 +1124,7 @@
                         .then(response => {
                             this.item = response.data;
                             this.detailsLoading = false;
-                            this.$refs.productiveUnitDetails.show();
+                            this.$refs.coffeeOfferingDetails.show();
                         })
                         .catch(error => {
                             this.detailsLoading = false;
@@ -760,7 +1135,7 @@
                 },
 
 
-                getAllProductiveUnits() {
+                getAllCoffeeOfferings() {
                     // this.loading = true;
                     axios
                         .get(`${endPoint}/api/coffeeofferings/getall`)
@@ -783,7 +1158,7 @@
                             this.currentPage = response.data.currentPage;
                             this.numberOfPages = response.data.lastPage;
                             this.loading = false;
-                            this.$refs.productiveUnitFilter.hide();
+                            this.$refs.coffeeOfferingFilter.hide();
                             this.main_class = "search_block";
                         })
                         .catch(error => {
@@ -791,7 +1166,7 @@
                         });
                 },
 
-                searchProductiveUnits() {
+                searchCoffeeOfferings() {
                     // this.loading = true;
                     axios
                         .get(
@@ -800,7 +1175,7 @@
                         .then(response => {
                             this.dataList = response.data;
                             // this.loading = false;
-                            this.$refs.productiveUnitFilter.hide();
+                            this.$refs.coffeeOfferingFilter.hide();
                         })
                         .catch(error => {
                             // this.loading = false;
@@ -869,8 +1244,9 @@
 
             mounted() {
                 this.getCoffeeOfferingsOptions();
-                this.getFilteredCoffeeOfferings();
+                // this.getFilteredCoffeeOfferings();
             }
+
 
         })
     </script>

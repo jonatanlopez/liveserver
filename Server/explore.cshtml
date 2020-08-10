@@ -271,7 +271,7 @@
                                 </ul>
                             </div>
                             <div class="col-12 col-sm-6 text-right certifications">
-                                <img v-for="it in item.certifications" :key="it.id" :src="`images/cert_${it.id}.png`">
+                                <img v-for="it in item.certifications" :key="it.id" :src="`/images/cert_${it.id}.png`">
                             </div>
                         </div>
                         <div class="row mx-auto">
@@ -410,14 +410,22 @@
                                     class="btn btn-rounded action_btn"><i class="fas fa-envelope"></i></button>
                                 <div class="text-center py-2"><small>Contact the producer</small></div>
                             </div>
-                            <!-- <div>
-                                    <span class="text-secondary">Contact .</span>
-                                    {{ item.website}}
-                                    <br /> phones.
-                                    <span v-for="it in item.phones" :key="it">{{ it}}</span>
-                                    <br /> emails.
-                                    <span v-for="it in item.email" :key="it">{{ it}}</span>
-                                </div> -->
+                            <div>
+                                <span class="text-secondary">Contact .</span>
+                                {{ item.website}}
+                                <br /> phones.
+                                <span v-for="it in item.phones" :key="it">{{ it}}</span>
+                                <br /> emails.
+                                <span v-for="it in item.email" :key="it">{{ it}}</span>
+                                <br /> facebook.
+                                <a :href=" `https://www.facebook.com/${item.facebook}/` "
+                                    target="_blank">{{ item.facebook}}</a>
+                                <br /> instagram.
+                                <a :href=" `https://www.instagram.com/${item.instagram}/?hl=en` "
+                                    target="_blank">{{ item.instagram}}</a>
+
+
+                            </div>
                         </div>
 
                     </div>
@@ -435,8 +443,7 @@
                 <div class="row p_header">
                     <div class="col-md-12  text-center">
                         <div class="tx_blue">Contact</div>
-                        <h3>{{item.name}}</h3>
-                        
+                        <h3>{{item.productiveUnitName}}</h3>
                         <div class="small">{{ item.town}}, {{ item.city}}</div>
 
                     </div>
@@ -466,10 +473,10 @@
 
 
                             <div class="form-group row">
-                                <label for="email"
+                                <label for="emailAddress"
                                     class="col-lg-3 col-form-label text-right text-black-50">Email</label>
-                                <input type="text" class="col-lg-9 form-control" v-model="contactFormData.email"
-                                    :disabled="loading" id="email">
+                                <input type="text" class="col-lg-9 form-control" v-model="contactFormData.emailAddress"
+                                    :disabled="loading" id="emailAddress">
                             </div>
 
 
@@ -493,6 +500,7 @@
                 </div>
 
             </b-modal>
+
 
         </div>
         <div class="container-fluid content_block">
@@ -643,7 +651,7 @@
                     contactFormData: {
                         firstName: "",
                         lastName: "",
-                        email: "",
+                        emailAddress: "",
                         message: ""
                     }
                 }
@@ -676,13 +684,21 @@
 
                 onContact() {
                     this.loading = true;
+
+                    this.contactFormData.affiliateId = this.item.affiliateId;
+                    this.contactFormData.productiveUnitId = this.item.productiveUnitId;
+
                     axios
-                        .post(`${endPoint}/api/productiveunits/contact`, this.contactFormData)
+                        .post(`${endPoint}/api/productiveunits/contact`, this.contactFormData, {
+                            headers: {
+                                'XYZComponent': 'XYZComponent'
+                            }
+                        })
                         .then(response => {
                             this.loading = false;
-                            alert('Ok!');
-
                             this.$refs.contactModal.hide();
+                            alert('Su mensaje ha sido recibido!');
+
                         })
                         .catch(error => {
                             alert('Error');
