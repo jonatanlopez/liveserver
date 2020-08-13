@@ -243,7 +243,7 @@
                                                 v-model="filterOptions.scaMax" :disabled="loading" placeholder="max"
                                                 max="100">
                                         </div>
-                                        <div class="form-inline col-lg-6 px-0">
+                                        <!-- <div class="form-inline col-lg-6 px-0">
                                             <label for="listing"
                                                 class="col-12 col-lg-2 col-form-label justify-content-start pl-0">Listing</label>
                                             <vue-multiselect id="listing" class="col-12 col-lg-10 px-0"
@@ -251,7 +251,7 @@
                                                 placeholder="Choose" label="name" track-by="name"
                                                 :options="options['locations']" :multiple="true">
                                             </vue-multiselect>
-                                        </div>
+                                        </div> -->
                                     </div>
                                     <div class="form-group row">
                                         <label for="varieties" class="col-form-label col-lg-2 pl-0">Varieties</label>
@@ -349,8 +349,8 @@
                                 <div class="col-12 col-sm-6">
                                     <div class="farm_facts text-left text-sm-right pl-5 pl-sm-0">
                                         <ul>
-                                            <li>Packaging: <span class="badge">{{ item.packing }}</span></li>
-                                            <li>Listing: <span class="badge">{{ item.location }}</span></li>
+                                            <!-- <li>Packaging: <span class="badge">{{ item.packing }}</span></li> -->
+                                            <!-- <li>Listing: <span class="badge">{{ item.location }}</span></li> -->
                                             <li>Warehouse: <span class="badge">{{ item.warehouse }}</span>
                                             </li>
                                         </ul>
@@ -366,9 +366,9 @@
 
                                 <div class="col-12 summary_text">{{ item.productiveUnitDescription }}</div>
                                 <div class="col-12 text-center">
-                                    <b-btn variant="link" class="small tx_blue"
+                                    <!-- <b-btn variant="link" class="small tx_blue"
                                         v-on:click.prevent="viewFarmProfile(item)">
-                                        view farm profile</b-btn>
+                                        view farm profile</b-btn> -->
                                 </div>
                             </div>
                             <div class="row my-5">
