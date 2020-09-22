@@ -24,8 +24,9 @@
     </script>
 
     <!-- Load Vue followed by BootstrapVue -->
-    <script src="https://unpkg.com/vue@latest/dist/vue.js"></script>
-    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+    <script src="https://unpkg.com/vue@2.6.12/dist/vue.js"></script>
+    <!-- <script src="https://unpkg.com/vue-router@3.4.3/dist/vue-router.js"></script> -->
+    <script src="https://unpkg.com/bootstrap-vue@2.17.3/dist/bootstrap-vue.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
 
@@ -181,7 +182,7 @@
                                 <!-- este es el bloque de cada lote de oferta en la lista -->
                                 <!-- <div class="img" v-on:click="showDetails(item)"><img :src="item.coverPhoto | defaultCover" /></div> -->
                                 <!-- foto de la finca -->
-                                <div class="lot_nom" v-on:click="showDetails(item)">
+                                <div class="lot_nom" v-on:click="showDetails(item.id)">
                                     <ul>
                                         <li>
                                             <h5>{{ item.name }}</h5>
@@ -206,7 +207,7 @@
                                 </div>
                                 <div class="lot_actions">
                                     <div class="go">
-                                        <a class="detalle" v-on:click="showDetails(item)"><span>detail</span><i
+                                        <a class="detalle" v-on:click="showDetails(item.id)"><span>detail</span><i
                                                 class="fas fa-chevron-circle-right"></i></a>
                                         <!-- <a class="flyto" v-on:click="flyTo(item)"><span>locate</span><i class="fas fa-map-marker-alt"></i></a> -->
                                     </div>
@@ -675,6 +676,10 @@
 
         // Vue.use(require('vue-moment'));
 
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const id = urlParams.get("id");
+
 
         numeral.register("locale", "gt", {
             delimiters: {
@@ -721,6 +726,7 @@
             },
             data() {
                 return {
+                    id: id,
                     currentPage: 1,
                     numberOfPages: 1,
                     total: 0,
@@ -1002,7 +1008,7 @@
 
                 },
 
-                showDetails(item) {
+                showDetails(id) {
                     //getone/
                     this.detailsLoading = true;
 
@@ -1010,7 +1016,7 @@
 
 
                     axios
-                        .get(`${endPoint}/api/coffeeofferings/${item.id}`)
+                        .get(`${endPoint}/api/coffeeofferings/${id}`)
                         .then(response => {
                             this.item = response.data;
                             this.detailsLoading = false;
@@ -1133,6 +1139,12 @@
             },
 
             mounted() {
+
+                if (this.id && Number(this.id) > 0) {
+                    this.showDetails(Number(this.id));
+                }
+
+
                 this.getCoffeeOfferingsOptions();
                 // this.getFilteredCoffeeOfferings();
             }

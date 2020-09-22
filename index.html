@@ -169,10 +169,10 @@
                             <div class="entry" v-for="(item, index) in dataList" :key="item.id" :data-id="item.id">
                                 <div class="num_dot">{{index+1}}</div>
                                 <!-- este es el bloque de cada UP en la lista -->
-                                <div class="img" v-on:click="showDetails(item)"><img
+                                <div class="img" v-on:click="showDetails(item.id)"><img
                                         :src="item.coverPhoto | defaultCover" /></div>
                                 <!-- foto de la finca -->
-                                <div class="nom" v-on:click="showDetails(item)">
+                                <div class="nom" v-on:click="showDetails(item.id)">
                                     <ul>
                                         <li>
                                             <h5>{{ item.name }}</h5>
@@ -183,13 +183,13 @@
                                     </ul>
                                 </div>
                                 <div class="actions">
-                                    <ul v-on:click="showDetails(item)">
+                                    <ul v-on:click="showDetails(item.id)">
                                         <li><i class="fas fa-mountain"></i>{{item.maxAltitude | number}} ft</li>
                                         <li><i class="fas fa-draw-polygon"></i>{{item.totalArea | number}} Ha</li>
                                         <li><i class="fas fa-seedling"></i>{{item.goldProductionQq | number}} lb</li>
                                     </ul>
                                     <div class="go">
-                                        <a class="detalle" v-on:click="showDetails(item)"><span>detail</span><i
+                                        <a class="detalle" v-on:click="showDetails(item.id)"><span>detail</span><i
                                                 class="fas fa-chevron-circle-right"></i></a>
                                         <a class="flyto" v-on:click="flyTo(item)"><span>locate</span><i
                                                 class="fas fa-map-marker-alt"></i></a>
@@ -219,7 +219,7 @@
 
                                     <l-marker v-for="(marker, index)  in dataList" :key="marker.id" :visible="true"
                                         :lat-lng="{lat:marker.latitude, lon:marker.longitude}"
-                                        v-on:click="showDetails(marker)">
+                                        v-on:click="showDetails(marker.id)">
 
                                         <l-icon iconSize="[25, 41]" iconAnchor="[10, 44]" popupAnchor="[3, -40]"
                                             icon-url="marker-icon.png" className="number-icon"
@@ -594,6 +594,10 @@
 
         // Vue.use(require('vue-moment'));
 
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const id = urlParams.get("id");
+
 
         numeral.register("locale", "gt", {
             delimiters: {
@@ -640,6 +644,7 @@
             },
             data() {
                 return {
+                    id: id,                    
                     currentPage: 1,
                     numberOfPages: 1,
                     total: 0,
@@ -844,7 +849,7 @@
 
                 },
 
-                showDetails(item) {
+                showDetails(id) {
                     //getone/
                     this.detailsLoading = true;
 
@@ -852,7 +857,7 @@
 
 
                     axios
-                        .get(`${endPoint}/api/productiveunits/${item.id}/flat`)
+                        .get(`${endPoint}/api/productiveunits/${id}/flat`)
                         .then(response => {
                             this.item = response.data;
                             this.detailsLoading = false;
@@ -975,6 +980,11 @@
             },
 
             mounted() {
+
+                if (this.id && Number(this.id) > 0) {
+                    this.showDetails(Number(this.id));
+                }
+
                 this.getProductiveUnitsOptions();
             }
 

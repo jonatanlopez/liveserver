@@ -174,11 +174,11 @@
                                             v-model="filterOptions.name" :disabled="loading" />
                                         <!-- Muestra search_extended y oculta search_basic -->
                                         <small class="form-text text-primary mx-2">
-                                            <button href="#" class="expand_filters btn btn-link" :disabled="loading"
+                                            <a href="#" class="expand_filters btn btn-link" :disabled="loading"
                                                 v-on:click.prevent="showSearchExtended">Or be
-                                                more specific.</button></small>
+                                                more specific.</a></small>
                                     </div>
-                                    <button type="button" class="btn btn-primary" :disabled="loading"
+                                    <button type="submit" class="btn btn-primary" :disabled="loading"
                                         v-on:click.prevent="getFilteredProductiveUnits">Lets go! <i
                                             class="fa fa-spinner fa-spin" v-show="loading"></i> </button>
                                 </form>
@@ -232,296 +232,298 @@
                                     <div class="form-group row">
                                         <!-- Oculta search_extended y muestra search_basic -->
                                         <small class="form-text text-primary mx-2">
-                                            <button href="#" v-on:click.prevent="clearSearchExtended"
-                                                :disabled="loading" class="collapse_filters btn btn-link">Clear
-                                                filters</button>
+                                            <a href="#" v-on:click.prevent="clearSearchExtended" :disabled="loading"
+                                                class="collapse_filters btn btn-link">Clear
+                                                filters</a>
                                         </small>
                                     </div>
                                     <div class="form-group col-12 text-center">
-                                        <button type="button" class="btn btn-primary" :disabled="loading"
+                                        <button type="submit" class="btn btn-primary" :disabled="loading"
                                             v-on:click.prevent="getFilteredProductiveUnits">Lets go! <i
                                                 class="fa fa-spinner fa-spin" v-show="loading"></i> </button>
                                     </div>
+                                </form>
                             </div>
-                            </form>
+
                         </div>
 
 
                     </div>
-            </div>
-            </b-modal>
+                </b-modal>
 
-            <!-- Detalles -->
-            <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="xl" hide-footer
-                header-class="modal-header-custom" dialog-class="modal_unit">
-                <div class="col back">
-                    <div class="num_results">{{ item.id}}</div>
-                </div>
+                <!-- Detalles -->
+                <b-modal id="productiveUnitDetails" ref="productiveUnitDetails" size="xl" hide-footer
+                    header-class="modal-header-custom" dialog-class="modal_unit">
+                    <div class="col back">
+                        <div class="num_results">{{ item.id}}</div>
+                    </div>
 
-                <div class="row ">
-                    <!-- columna central - perfil UP -->
-                    <div class="col col-md-10 mx-auto">
-                        <div class="row p_header">
-                            <div class="col-12 col-sm-6 nom">
-                                <ul>
-                                    <li>
-                                        <h3>{{ item.name }}</h3>
-                                    </li>
-                                    <li>{{ item.town}} - {{ item.city}}</li>
-                                </ul>
+                    <div class="row ">
+                        <!-- columna central - perfil UP -->
+                        <div class="col col-md-10 mx-auto">
+                            <div class="row p_header">
+                                <div class="col-12 col-sm-6 nom">
+                                    <ul>
+                                        <li>
+                                            <h3>{{ item.name }}</h3>
+                                        </li>
+                                        <li>{{ item.town}} - {{ item.city}}</li>
+                                    </ul>
+                                </div>
+                                <div class="col-12 col-sm-6 text-right certifications">
+                                    <img v-for="it in item.certifications" :key="it.id"
+                                        :src="`/images/cert_${it.id}.png`">
+                                </div>
                             </div>
-                            <div class="col-12 col-sm-6 text-right certifications">
-                                <img v-for="it in item.certifications" :key="it.id" :src="`/images/cert_${it.id}.png`">
-                            </div>
-                        </div>
-                        <div class="row mx-auto">
-                            <div class="col-12">
-                                <img class="img-fluid" v-if="showCover" :src="item.coverPhoto | defaultCover" />
 
-                                <b-carousel v-if="showGallery" id="carousel1" style="text-shadow: 1px 1px 2px #333;"
-                                    controls indicators background="#ababab" :interval="4000" img-width="1024"
-                                    img-height="480" v-model="slide">
-                                    <!-- Slides with image only -->
-                                    <b-carousel-slide v-for="img in item.gallery" :key="img"
-                                        :img-src="img | defaultCover">
-                                    </b-carousel-slide>
-                                </b-carousel>
+                            <div class="row mx-auto">
+                                <div class="col-12">
+                                    <img class="img-fluid" v-if="showCover" :src="item.coverPhoto | defaultCover" />
 
-                                <div v-if="showInMap" style="height: 500px;">
-                                    <l-map ref="myMapDetails" :zoom="zoom"
-                                        :center="{ lat: item.latitude, lon: item.longitude }" :options="mapOptions">
+                                    <b-carousel v-if="showGallery" id="carousel1" style="text-shadow: 1px 1px 2px #333;"
+                                        controls indicators background="#ababab" :interval="4000" img-width="1024"
+                                        img-height="480" v-model="slide">
+                                        <!-- Slides with image only -->
+                                        <b-carousel-slide v-for="img in item.gallery" :key="img"
+                                            :img-src="img | defaultCover">
+                                        </b-carousel-slide>
+                                    </b-carousel>
+
+                                    <div v-if="showInMap" style="height: 500px;">
+                                        <l-map ref="myMapDetails" :zoom="zoom"
+                                            :center="{ lat: item.latitude, lon: item.longitude }" :options="mapOptions">
 
 
-                                        <l-marker :visible="true"
-                                            :lat-lng="{ lat: item.latitude, lon: item.longitude }">
+                                            <l-marker :visible="true"
+                                                :lat-lng="{ lat: item.latitude, lon: item.longitude }">
 
-                                            <l-icon iconSize="[25, 41]" iconAnchor="[10, 44]" popupAnchor="[3, -40]"
-                                                icon-url="marker-icon.png" className="number-icon"
-                                                :options="{ html: `<span> 1 </span>`, className: 'number-icon', iconSize: [25, 41], iconAnchor: [10, 44], popupAnchor: [3, -40]}">
-                                            </l-icon>
+                                                <l-icon iconSize="[25, 41]" iconAnchor="[10, 44]" popupAnchor="[3, -40]"
+                                                    icon-url="marker-icon.png" className="number-icon"
+                                                    :options="{ html: `<span> 1 </span>`, className: 'number-icon', iconSize: [25, 41], iconAnchor: [10, 44], popupAnchor: [3, -40]}">
+                                                </l-icon>
 
-                                            <!-- <l-popup
+                                                <!-- <l-popup
                                                     :content=" `<span class='text-primary'>${marker.name}</span> <br/> (${marker.latitude} ${marker.longitude}) <br/> ${marker.town} - ${marker.city} ` "
                                                     v-on:click="showDetails(marker)" /> -->
 
-                                            <l-tooltip :options="{ permanent: true, interactive: true }"
-                                                :content=" `<span class='text-primary'>${item.name}</span> <br/> (${item.latitude} ${item.longitude}) <br/> ${item.town} - ${item.city} ` " />
-                                        </l-marker>
+                                                <l-tooltip :options="{ permanent: true, interactive: true }"
+                                                    :content=" `<span class='text-primary'>${item.name}</span> <br/> (${item.latitude} ${item.longitude}) <br/> ${item.town} - ${item.city} ` " />
+                                            </l-marker>
 
-                                        <l-tile-layer :url="url" :attribution="attribution" />
+                                            <l-tile-layer :url="url" :attribution="attribution" />
 
-                                    </l-map>
+                                        </l-map>
+                                    </div>
+
                                 </div>
-
                             </div>
-                        </div>
-                        <div class="row mx-auto">
-                            <div class="col-12 summary_text">{{ item.description }}
-                            </div>
-                        </div>
 
-                        <div class="row p_header">
-                            <div class="col-12 col-sm-7 action_bar">
-                                <div>
-                                    <!-- Link a sección de buy en lista de lotes de la UP -->
-                                    <a href="#">
-                                        <div class="num_results tx_blue">{{item.coffeeOfferingsCount}}</div>
+                            <div class="row mx-auto">
+                                <div class="col-12 summary_text">{{ item.alternateDescription }}
+                                </div>
+                            </div>
+
+                            <div class="row p_header">
+                                <div class="col-12 col-sm-7 action_bar">
+                                    <div>
+                                        <!-- Link a sección de buy en lista de lotes de la UP -->
+                                        <a href="#">
+                                            <div class="num_results tx_blue">{{item.coffeeOfferingsCount}}</div>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <div class="title_results">Coffee lots available</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-5 text-right view_modes">
+                                    <!-- MAPA Y GALERÍA PUEDEN OCUPAR EL CONTAINER CLASS="main_image" -->
+                                    <a href="#" v-on:click.prevent="setShowGallery"
+                                        v-if="item.gallery && item.gallery.length > 0 ">
+                                        <span>gallery</span>
+                                        <i class="fas fa-images"></i>
                                     </a>
+                                    <!-- galería de fotos (lightbox) -->
+                                    <a href="#" v-on:click.prevent="setShowInMap">
+                                        <span>map</span><i class="fas fa-map-marked-alt"></i>
+                                    </a>
+                                    <!-- mostrar ubicación en mapa -->
+                                    <a :href="`https://waze.com/ul?ll=${item.latitude},${item.longitude}&navigate=yes`"
+                                        target="_blank"><span>directions</span><i class="fas fa-directions"></i></a>
+                                    <!-- link a waze con coordenadas -->
+                                </div>
+                            </div>
+
+                            <div class="row p_header">
+                                <div class="col-12 col-sm-6">
+
+                                    <div class="farm_facts">
+                                        <ul>
+                                            <li v-if="item.latitude && item.latitude > 0">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                                {{ item.latitude }} ,
+                                                {{ item.longitude}}
+                                            </li>
+                                            <li v-if="item.maxAltitude && item.maxAltitude > 0">
+                                                <i class="fas fa-mountain"></i>{{ item.maxAltitude  | number}} ft
+                                            </li>
+                                            <li v-if="item.totalArea && item.totalArea > 0">
+                                                <i class="fas fa-draw-polygon"></i>{{item.totalArea  | number}}
+                                            </li>
+                                            <li v-if="item.goldProductionQq && item.goldProductionQq > 0">
+                                                <i class="fas fa-seedling"></i>{{item.goldProductionQq  | number}} qq
+                                            </li>
+                                            <li><br /></li>
+                                            <li v-if="item.awards && item.awards.length > 0"><i
+                                                    class="fas fa-award"></i><span class="badge"
+                                                    v-for="it in item.awards" :key="it">{{ it }}</span></li>
+                                        </ul>
+
+                                    </div>
+
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <div class="farm_facts text-left text-sm-right pl-5 pl-sm-0">
+                                        <ul>
+                                            <li v-if="item.varieties && item.varieties.length > 0">Varieties: <span
+                                                    class="badge " v-for="it in item.varieties"
+                                                    :key="it.id">{{ it.name }}</span></li>
+                                            <li v-if="item.processes && item.processes.length > 0">Processes: <span
+                                                    class="badge " v-for="it in item.processes"
+                                                    :key="it.id">{{ it.name }}</span></li>
+                                            <li v-if="item.soilTypes && item.soilTypes.length > 0">Soil: <span
+                                                    class="badge" v-for="it in item.soilTypes"
+                                                    :key="it.id">{{ it.name }}</span></li>
+                                            <li v-if="item.shadowTypes && item.shadowTypes.length > 0">Shade: <span
+                                                    class="badge " v-for="it in item.shadowTypes"
+                                                    :key="it.id">{{ it.name }}</span></li>
+                                            <li v-if="item.dryingTypes && item.dryingTypes.length > 0">Drying: <span
+                                                    class="badge " v-for="it in item.dryingTypes"
+                                                    :key="it.id">{{ it.name }}</span></li>
+                                            <li v-if="item.amenities && item.amenities.length > 0">Ammenities: <span
+                                                    class="badge" v-for="it in item.amenities" :key="it">{{ it }}</span>
+                                            </li>
+                                            <li v-if="item.services && item.services.length > 0">Services: <span
+                                                    class="badge" v-for="it in item.services" :key="it">{{ it }}</span>
+                                            </li>
+
+                                        </ul>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col mb-5">
+                                    <button v-on:click.prevent="showContactModal(item)"
+                                        class="btn btn-rounded action_btn"><i class="fas fa-envelope"></i></button>
+                                    <div class="text-center py-2"><small>Contact the producer</small></div>
                                 </div>
                                 <div>
-                                    <div class="title_results">Coffee lots available</div>
+                                    <div v-if="item">
+                                        <div v-if="item.website">
+                                            website.
+                                            <a :href="'http://'+item.website" target="_blank">{{item.website}}</a>
+                                        </div>
+
+                                        <div v-if="item.phones && item.phones.length>0">
+                                            phones.
+                                            <a v-for="it in item.phones" :key="it" :href="'tel:+502'+ it"
+                                                target="_blank">{{'+502 ' + it}}</a>
+                                        </div>
+
+
+                                        <div v-if="item.email && item.email.length>0">
+                                            emails.
+                                            <a v-for="it in item.email" :key="it" :href="'mailto:'+ it"
+                                                target="_blank">{{it}}</a>
+                                        </div>
+
+                                        <div v-if="item.facebook">
+                                            facebook.
+                                            <a :href=" `https://www.facebook.com/${item.facebook}/` "
+                                                target="_blank">{{ item.facebook}}</a>
+                                        </div>
+
+                                        <div v-if="item.instagram"> instagram.
+                                            <a :href=" `https://www.instagram.com/${item.instagram}/?hl=en` "
+                                                target="_blank">{{ item.instagram}}</a>
+                                        </div>
+
+
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-12 col-sm-5 text-right view_modes">
-                                <!-- MAPA Y GALERÍA PUEDEN OCUPAR EL CONTAINER CLASS="main_image" -->
-                                <a href="#" v-on:click.prevent="setShowGallery"
-                                    v-if="item.gallery && item.gallery.length > 0 ">
-                                    <span>gallery</span>
-                                    <i class="fas fa-images"></i>
-                                </a>
-                                <!-- galería de fotos (lightbox) -->
-                                <a href="#" v-on:click.prevent="setShowInMap">
-                                    <span>map</span><i class="fas fa-map-marked-alt"></i>
-                                </a>
-                                <!-- mostrar ubicación en mapa -->
-                                <a :href="`https://waze.com/ul?ll=${item.latitude},${item.longitude}&navigate=yes`"
-                                    target="_blank"><span>directions</span><i class="fas fa-directions"></i></a>
-                                <!-- link a waze con coordenadas -->
-                            </div>
-                        </div>
-
-                        <div class="row p_header">
-                            <div class="col-12 col-sm-6">
-
-                                <div class="farm_facts">
-                                    <ul>
-                                        <li v-if="item.latitude && item.latitude > 0">
-                                            <i class="fas fa-map-marker-alt"></i>
-                                            {{ item.latitude }} ,
-                                            {{ item.longitude}}
-                                        </li>
-                                        <li v-if="item.maxAltitude && item.maxAltitude > 0">
-                                            <i class="fas fa-mountain"></i>{{ item.maxAltitude  | number}} ft
-                                        </li>
-                                        <li v-if="item.totalArea && item.totalArea > 0">
-                                            <i class="fas fa-draw-polygon"></i>{{item.totalArea  | number}}
-                                        </li>
-                                        <li v-if="item.goldProductionQq && item.goldProductionQq > 0">
-                                            <i class="fas fa-seedling"></i>{{item.goldProductionQq  | number}} qq
-                                        </li>
-                                        <li><br /></li>
-                                        <li v-if="item.awards && item.awards.length > 0"><i
-                                                class="fas fa-award"></i><span class="badge" v-for="it in item.awards"
-                                                :key="it">{{ it }}</span></li>
-                                    </ul>
-
-                                </div>
-
-                            </div>
-                            <div class="col-12 col-sm-6">
-                                <div class="farm_facts text-left text-sm-right pl-5 pl-sm-0">
-                                    <ul>
-                                        <li v-if="item.varieties && item.varieties.length > 0">Varieties: <span
-                                                class="badge " v-for="it in item.varieties"
-                                                :key="it.id">{{ it.name }}</span></li>
-                                        <li v-if="item.processes && item.processes.length > 0">Processes: <span
-                                                class="badge " v-for="it in item.processes"
-                                                :key="it.id">{{ it.name }}</span></li>
-                                        <li v-if="item.soilTypes && item.soilTypes.length > 0">Soil: <span class="badge"
-                                                v-for="it in item.soilTypes" :key="it.id">{{ it.name }}</span></li>
-                                        <li v-if="item.shadowTypes && item.shadowTypes.length > 0">Shade: <span
-                                                class="badge " v-for="it in item.shadowTypes"
-                                                :key="it.id">{{ it.name }}</span></li>
-                                        <li v-if="item.dryingTypes && item.dryingTypes.length > 0">Drying: <span
-                                                class="badge " v-for="it in item.dryingTypes"
-                                                :key="it.id">{{ it.name }}</span></li>
-                                        <li v-if="item.amenities && item.amenities.length > 0">Ammenities: <span
-                                                class="badge" v-for="it in item.amenities" :key="it">{{ it }}</span>
-                                        </li>
-                                        <li v-if="item.services && item.services.length > 0">Services: <span
-                                                class="badge" v-for="it in item.services" :key="it">{{ it }}</span>
-                                        </li>
-
-                                    </ul>
-
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="row">
-                            <div class="col mb-5">
-                                <button v-on:click.prevent="showContactModal(item)"
-                                    class="btn btn-rounded action_btn"><i class="fas fa-envelope"></i></button>
-                                <div class="text-center py-2"><small>Contact the producer</small></div>
-                            </div>
-                            <div v-if="item">
-                                <div v-if="item.website">
-                                    website.
-                                    <a :href="'http://'+item.website" target="_blank">{{item.website}}</a>
-                                </div>
-
-                                <div v-if="item.phones && item.phones.length>0">
-                                    phones.
-                                    <a v-for="it in item.phones" :key="it" :href="'tel:+502'+ it"
-                                        target="_blank">{{'+502 ' + it}}</a>
-                                </div>
-
-
-                                <div v-if="item.email && item.email.length>0">
-                                    emails.
-                                    <a v-for="it in item.email" :key="it" :href="'mailto:'+ it"
-                                        target="_blank">{{it}}</a>
-                                </div>
-
-                                <div v-if="item.facebook">
-                                    facebook.
-                                    <a :href=" `https://www.facebook.com/${item.facebook}/` "
-                                        target="_blank">{{ item.facebook}}</a>
-                                </div>
-
-                                <div v-if="item.instagram"> instagram.
-                                    <a :href=" `https://www.instagram.com/${item.instagram}/?hl=en` "
-                                        target="_blank">{{ item.instagram}}</a>
-                                </div>
-
-
                             </div>
                         </div>
 
                     </div>
-                </div>
+
+                </b-modal>
+
+                <!-- Contact -->
+
+                <b-modal id="contactModal" ref="contactModal" size="lg" hide-footer header-class="modal-header-custom">
+
+                    <div class="row p_header">
+                        <div class="col-md-12  text-center">
+                            <div class="tx_blue">Contact</div>
+                            <h3>{{item.name}}</h3>
+                            <div class="small">{{ item.town}}, {{ item.city}}</div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col col-md-10 mx-auto">
 
 
+                            <form>
+                                <div class="form-group row">
+                                    <label for="firstName"
+                                        class="col-lg-3 col-form-label text-right text-black-50">First
+                                        Name</label>
+                                    <input type="text" class="col-lg-9 form-control" v-model="contactFormData.firstName"
+                                        :disabled="loading" id="firstName">
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="lastName" class="col-lg-3 col-form-label text-right text-black-50">Last
+                                        Name</label>
+                                    <input type="text" class="col-lg-9 form-control" v-model="contactFormData.lastName"
+                                        :disabled="loading" id="lastName">
+                                </div>
 
 
-            </b-modal>
+                                <div class="form-group row">
+                                    <label for="emailAddress"
+                                        class="col-lg-3 col-form-label text-right text-black-50">Email</label>
+                                    <input type="text" class="col-lg-9 form-control"
+                                        v-model="contactFormData.emailAddress" :disabled="loading" id="emailAddress">
+                                </div>
 
-            <!-- Contact -->
 
-            <b-modal id="contactModal" ref="contactModal" size="lg" hide-footer header-class="modal-header-custom">
+                                <div class="form-group row">
+                                    <label for="message"
+                                        class="col-lg-3 col-form-label text-right text-black-50">Message</label>
+                                    <textarea rows="5" class="col-lg-9 form-control" v-model="contactFormData.message"
+                                        :disabled="loading" id="message"> </textarea>
+                                </div>
 
-                <div class="row p_header">
-                    <div class="col-md-12  text-center">
-                        <div class="tx_blue">Contact</div>
-                        <h3>{{item.name}}</h3>
-                        <div class="small">{{ item.town}}, {{ item.city}}</div>
+                                <div class="form-group col-12 text-center">
+                                    <button type="submit" class="btn btn-primary"
+                                        v-on:click.prevent="onContact" :disabled="loading">Submit</button>
+                                </div>
+
+                            </form>
+
+                        </div>
 
                     </div>
-                </div>
 
-                <div class="row">
-
+                </b-modal>
 
 
-                    <div class="col col-md-10 mx-auto">
-
-
-                        <form>
-                            <div class="form-group row">
-                                <label for="firstName" class="col-lg-3 col-form-label text-right text-black-50">First
-                                    Name</label>
-                                <input type="text" class="col-lg-9 form-control" v-model="contactFormData.firstName"
-                                    :disabled="loading" id="firstName">
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="lastName" class="col-lg-3 col-form-label text-right text-black-50">Last
-                                    Name</label>
-                                <input type="text" class="col-lg-9 form-control" v-model="contactFormData.lastName"
-                                    :disabled="loading" id="lastName">
-                            </div>
-
-
-                            <div class="form-group row">
-                                <label for="emailAddress"
-                                    class="col-lg-3 col-form-label text-right text-black-50">Email</label>
-                                <input type="text" class="col-lg-9 form-control" v-model="contactFormData.emailAddress"
-                                    :disabled="loading" id="emailAddress">
-                            </div>
-
-
-                            <div class="form-group row">
-                                <label for="message"
-                                    class="col-lg-3 col-form-label text-right text-black-50">Message</label>
-                                <textarea rows="5" class="col-lg-9 form-control" v-model="contactFormData.message"
-                                    :disabled="loading" id="message">
-
-                        </textarea>
-                            </div>
-
-                            <div class="form-group col-12 text-center">
-                                <button type="button" class="btn btn-primary"
-                                    v-on:click.prevent="onContact">Submit</button>
-                            </div>
-
-                        </form>
-
-                    </div>
-                </div>
-
-            </b-modal>
-
-
+            </div>
         </div>
         <div class="container-fluid content_block">
             <!-- CONTENIDO DE WP -->
@@ -532,12 +534,7 @@
                 </div>
             </section>
         </div>
-
-    </div>
-    <!-- *** FINALIZA BLOQUE DE MODAL DE BÚSQUEDA *** -->
-
-
-
+        <!-- *** FINALIZA BLOQUE DE MODAL DE BÚSQUEDA *** -->
     </div>
 
 
@@ -672,7 +669,9 @@
                         firstName: "",
                         lastName: "",
                         emailAddress: "",
-                        message: ""
+                        message: "",
+                        affiliateId: 0,
+                        productiveUnitId: 0
                     }
                 }
             },

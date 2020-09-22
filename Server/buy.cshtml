@@ -183,7 +183,7 @@
                                             v-on:click.prevent="showSearchExtended">Or be more specific.</a></small>
                                 </div>
                                 <div class="form-group col-12 text-center">
-                                    <button type="button" class="btn btn-primary"
+                                    <button type="submit" class="btn btn-primary"
                                         v-on:click.prevent="getFilteredCoffeeOfferings">Go</button>
                                 </div>
                             </form>
@@ -252,7 +252,7 @@
                                     </small>
                                 </div>
                                 <div class="form-group col-12 text-center">
-                                    <button type="button" class="btn btn-primary"
+                                    <button type="submit" class="btn btn-primary"
                                         v-on:click.prevent="getFilteredCoffeeOfferings">Go!</button>
                                 </div>
                             </form>
@@ -330,8 +330,8 @@
 
                             <div class="col-12 summary_text">{{ item.productiveUnitDescription }}</div>
                             <div class="col-12 text-center">
-                                <!--<b-btn variant="link" class="small tx_blue" v-on:click.prevent="viewFarmProfile(item)">
-                                    view farm profile</b-btn>-->
+                                <b-btn variant="link" class="small tx_blue" v-on:click.prevent="viewFarmProfile(item)">
+                                    view farm profile</b-btn>
                             </div>
                         </div>
                         <div class="row my-5">
@@ -345,7 +345,7 @@
                             </div>
                             <div class="col-4 col-sm-3 text-right pr-4">
                                 <button class="btn btn-primary btn-sm" type="submit"
-                                    v-on:click.prevent="showRequestSampleModal(item)">Request sample</button>
+                                    v-on:click.prevent="showRequestSampleModal(item)" :disabled="loading">Request sample</button>
                             </div>
                             <!-- <div>
                                 <span class="text-secondary">Contact .</span>
