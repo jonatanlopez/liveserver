@@ -124,7 +124,7 @@
                                     <div class="mt-2">
                                         <div v-if="filterOptions.name">name:<span
                                                 class="badge">{{filterOptions.name}}</span></div>
-                                        <div>altitude:<span class="badge">{{filterOptions.altitude}}</span> </div>
+                                        <div v-if="filterOptions.altitude > 0">altitude:<span class="badge">{{filterOptions.altitude}}</span> </div>
                                         <div v-if="filterOptions.regions.length>0">regions: <span class="badge"
                                                 v-for="item in filterOptions.regions" :key="item">{{item}}</span>
                                         </div>
@@ -587,9 +587,11 @@
     <script type="text/javascript">
         // var endPoint = 'https://coffeesearch.azurewebsites.net';
         var endPoint = 'https://localhost:5001';
+        // var endPoint = 'https://guatemalancoffees.com';
         // var endPoint = 'http://localhost:55706/umbraco';
 
-        var imagesEndPoint = 'https://coffeesearch.azurewebsites.net';
+        // var imagesEndPoint = 'https://coffeesearch.azurewebsites.net';
+        var imagesEndPoint = 'https://coffeesearch.guatemalancoffees.com';
         //var imagesEndPoint = 'https://localhost:5001';
 
         // Vue.use(require('vue-moment'));
@@ -644,7 +646,7 @@
             },
             data() {
                 return {
-                    id: id,                    
+                    id: id,
                     currentPage: 1,
                     numberOfPages: 1,
                     total: 0,
@@ -680,7 +682,7 @@
                         "awards": [],
                         "varieties": [],
                         "pageSize": 10,
-                        "sort": "n|asc",
+                        "sort": "d|desc",
                         "page": 1,
                         "approved": true
                     },
@@ -711,8 +713,8 @@
 
                     showMap: false,
                     searchExtended: false,
-                    viewMode: 'list',
-                    currentViewModeClass: "results_list", //results_list / results_grid / results_map  
+                    viewMode: 'grid',
+                    currentViewModeClass: "results_grid", //results_list / results_grid / results_map  
 
                     markers: [],
 
@@ -808,7 +810,7 @@
                         "awards": [],
                         "varieties": [],
                         "pageSize": 10,
-                        "sort": "n|asc",
+                        "sort": "d|desc",
                         "page": 1,
                         "approved": true
                     };
@@ -835,7 +837,7 @@
                         "awards": [],
                         "varieties": [],
                         "pageSize": 10,
-                        "sort": "n|asc",
+                        "sort": "d|desc",
                         "page": 1,
                         "approved": true
                     };
@@ -983,6 +985,8 @@
 
                 if (this.id && Number(this.id) > 0) {
                     this.showDetails(Number(this.id));
+                } else {
+                    this.getFilteredProductiveUnits();
                 }
 
                 this.getProductiveUnitsOptions();

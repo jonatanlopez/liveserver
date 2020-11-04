@@ -84,10 +84,10 @@
                         <div class="entry" v-for="(item, index) in dataList" :key="item.id" :data-id="item.id">
                             <div class="num_dot">{{index+1}}</div>
                             <!-- este es el bloque de cada lote de oferta en la lista -->
-                            <div class="img" v-on:click="showDetails(item)"><img
+                            <div class="img" v-on:click="showDetails(item.id)"><img
                                     :src="item.coverPhoto | defaultCover" /></div>
                             <!-- foto de la finca -->
-                            <div class="lot_nom" v-on:click="showDetails(item)">
+                            <div class="lot_nom" v-on:click="showDetails(item.id)">
                                 <ul>
                                     <li>
                                         <h5>{{item.productiveUnitName}} </h5>
@@ -116,7 +116,7 @@
                             </div>
                             <div class="lot_actions">
                                 <div class="go">
-                                    <a class="detalle" v-on:click="showDetails(item)"><span>detail</span><i
+                                    <a class="detalle" v-on:click="showDetails(item.id)"><span>detail</span><i
                                             class="fas fa-chevron-circle-right"></i></a>
                                     <!-- <a class="flyto" v-on:click="flyTo(item)"><span>locate</span><i class="fas fa-map-marker-alt"></i></a> -->
                                 </div>
@@ -353,7 +353,8 @@
                             </div>
                             <div class="col-4 col-sm-3 text-right pr-4">
                                 <button class="btn btn-primary btn-sm" type="submit"
-                                    v-on:click.prevent="showRequestSampleModal(item)">Request sample</button>
+                                    v-on:click.prevent="showRequestSampleModal(item)" :disabled="loading">Request
+                                    sample</button>
                             </div>
                             <!-- <div>
                                 <span class="text-secondary">Contact .</span>
@@ -539,7 +540,13 @@
 
     <script type="text/javascript">
         var endPoint = '/umbraco';
-        var imagesEndPoint = 'http://coffeesearch.guatemalancoffees.com/';
+        var imagesEndPoint = 'https://coffeesearch.guatemalancoffees.com/';
+
+
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const id = urlParams.get("id");
+
 
         numeral.register("locale", "gt", {
             delimiters: {
@@ -586,6 +593,7 @@
             },
             data() {
                 return {
+                    id: id,
                     currentPage: 1,
                     numberOfPages: 1,
                     total: 0,
@@ -708,7 +716,9 @@
                     this.$refs.coffeeOfferingFilter.hide();
                     this.$refs.requestSampleModal.hide();
 
+                    //window.location.assign(`https://www.guatemalancoffees.com/explore?id=${item.productiveUnitId}`);
 
+                    window.open(`https://www.guatemalancoffees.com/explore?id=${item.productiveUnitId}`);
                     // this.$refs.contactModal.show();
 
                 },
@@ -882,7 +892,7 @@
 
                 },
 
-                showDetails(item) {
+                showDetails(id) {
                     //getone/
                     this.detailsLoading = true;
 
@@ -890,7 +900,7 @@
 
 
                     axios
-                        .get(`${endPoint}/api/coffeeofferings/getone/${item.id}`)
+                        .get(`${endPoint}/api/coffeeofferings/getone/${id}`)
                         .then(response => {
                             this.item = response.data;
                             this.detailsLoading = false;
@@ -966,9 +976,6 @@
                         });
                 },
 
-                addProperty(propertyName) {
-                    console.log(this.optionsSelected[propertyName]);
-                },
 
                 zoomUpdate(zoom) {
                     this.currentZoom = zoom;
@@ -1014,7 +1021,10 @@
 
             mounted() {
 
-                console.log(this.$router);
+                if (this.id && Number(this.id) > 0) {
+
+                    this.showDetails(Number(this.id));
+                }
 
 
                 this.getCoffeeOfferingsOptions();
