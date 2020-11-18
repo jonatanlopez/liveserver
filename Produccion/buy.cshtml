@@ -84,8 +84,7 @@
                         <div class="entry" v-for="(item, index) in dataList" :key="item.id" :data-id="item.id">
                             <div class="num_dot">{{index+1}}</div>
                             <!-- este es el bloque de cada lote de oferta en la lista -->
-                            <div class="img" v-on:click="showDetails(item.id)"><img
-                                    :src="item.coverPhoto | defaultCover" /></div>
+                            <div class="img" v-on:click="showDetails(item.id)"><img :src="item.coverPhoto | defaultCover" /></div>
                             <!-- foto de la finca -->
                             <div class="lot_nom" v-on:click="showDetails(item.id)">
                                 <ul>
@@ -353,8 +352,7 @@
                             </div>
                             <div class="col-4 col-sm-3 text-right pr-4">
                                 <button class="btn btn-primary btn-sm" type="submit"
-                                    v-on:click.prevent="showRequestSampleModal(item)" :disabled="loading">Request
-                                    sample</button>
+                                    v-on:click.prevent="showRequestSampleModal(item)" :disabled="loading">Request sample</button>
                             </div>
                             <!-- <div>
                                 <span class="text-secondary">Contact .</span>
@@ -421,8 +419,8 @@
                             <div class="form-group row">
                                 <label for="emailAddress"
                                     class="col-lg-3 col-form-label text-right text-black-50">Email</label>
-                                <input type="text" class="col-lg-9 form-control"
-                                    v-model="requestSampleFormData.emailAddress" :disabled="loading" id="emailAddress">
+                                <input type="text" class="col-lg-9 form-control" v-model="requestSampleFormData.emailAddress"
+                                    :disabled="loading" id="emailAddress">
                             </div>
 
                             <div class="form-group row">
@@ -542,9 +540,11 @@
         var endPoint = '/umbraco';
         var imagesEndPoint = 'https://coffeesearch.guatemalancoffees.com/';
 
+
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const id = urlParams.get("id");
+
 
         numeral.register("locale", "gt", {
             delimiters: {
@@ -591,7 +591,7 @@
             },
             data() {
                 return {
-                    id: id,
+                    id:id,
                     currentPage: 1,
                     numberOfPages: 1,
                     total: 0,
@@ -658,7 +658,7 @@
 
                     markers: [],
 
-                    main_class: "search_block",
+                    main_class: "search_block_off",
 
                     slide: 0,
 
@@ -714,8 +714,10 @@
                     this.$refs.coffeeOfferingFilter.hide();
                     this.$refs.requestSampleModal.hide();
 
+                    //window.location.assign(`https://www.guatemalancoffees.com/explore?id=${item.productiveUnitId}`);
 
                     window.open(`https://www.guatemalancoffees.com/explore?id=${item.productiveUnitId}`);
+                    // this.$refs.contactModal.show();
 
                 },
 
@@ -882,7 +884,7 @@
                     this.dataList = null;
 
                     this.searchExtended = false;
-                    this.main_class = "search_block";
+                    this.main_class = "search_block_off";
                     this.$refs.coffeeOfferingDetails.hide();
                     this.$refs.coffeeOfferingFilter.show();
 
@@ -1016,11 +1018,13 @@
             },
 
             mounted() {
-
+                
                 if (this.id && Number(this.id) > 0) {
+                    
                     this.showDetails(Number(this.id));
                 }
 
+                
                 this.getCoffeeOfferingsOptions();
                 // this.getFilteredCoffeeOfferings();
             }
