@@ -542,11 +542,9 @@
         var endPoint = '/umbraco';
         var imagesEndPoint = 'https://coffeesearch.guatemalancoffees.com/';
 
-
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const id = urlParams.get("id");
-
 
         numeral.register("locale", "gt", {
             delimiters: {
@@ -660,7 +658,7 @@
 
                     markers: [],
 
-                    main_class: "search_block_off",
+                    main_class: "search_block",
 
                     slide: 0,
 
@@ -716,10 +714,8 @@
                     this.$refs.coffeeOfferingFilter.hide();
                     this.$refs.requestSampleModal.hide();
 
-                    //window.location.assign(`https://www.guatemalancoffees.com/explore?id=${item.productiveUnitId}`);
 
                     window.open(`https://www.guatemalancoffees.com/explore?id=${item.productiveUnitId}`);
-                    // this.$refs.contactModal.show();
 
                 },
 
@@ -886,7 +882,7 @@
                     this.dataList = null;
 
                     this.searchExtended = false;
-                    this.main_class = "search_block_off";
+                    this.main_class = "search_block";
                     this.$refs.coffeeOfferingDetails.hide();
                     this.$refs.coffeeOfferingFilter.show();
 
@@ -1022,10 +1018,8 @@
             mounted() {
 
                 if (this.id && Number(this.id) > 0) {
-
                     this.showDetails(Number(this.id));
                 }
-
 
                 this.getCoffeeOfferingsOptions();
                 // this.getFilteredCoffeeOfferings();
